@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/times_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp" />
+
+    <Button
+        android:id="@+id/stopTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/times_left"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/Stoptest" />
+
+    <Button
+        android:id="@+id/rebootTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/stopTest"
+        android:layout_centerHorizontal="true"
+        android:text="@string/rebootTest" />
+
+    <TextView
+        android:id="@+id/timesintervalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@+id/stopTest"
+        android:text="@string/time_interval" />
+
+    <TextView
+        android:id="@+id/timesLeftTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/timesinterTextView"
+        android:layout_alignBottom="@+id/timesinterTextView"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_toLeftOf="@+id/stopTest"
+        android:text="@string/times" />
+
+    <EditText
+        android:id="@+id/timesLeftEditText"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/timesLeftTextView"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/stopTest"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/timesintervalEditText"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/timesLeftEditText"
+        android:layout_alignBottom="@+id/timesLeftEditText"
+        android:layout_alignRight="@+id/timesinterTextView"
+        android:layout_toRightOf="@+id/stopTest"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout 
+        	
+        	android:layout_height="wrap_content"
+        	android:layout_width="fill_parent"
+       	android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical"
+        >
+        
+    <TextView
+        android:id="@+id/info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_title"
+        android:textSize="20dp" />
+            
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/info" />
+        
+    </LinearLayout>
+        
+
+</RelativeLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <lovdream.android.cit.CompassView
+        android:id="@+id/compass_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        />
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">   
+	    <Button 
+	        android:id="@+id/success_test"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:enabled="false"
+	        android:text="@string/success"
+	        />
+	    <Button 
+	        android:id="@+id/fail_test"
+	        android:layout_weight="1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/fail"
+	        />
+    </LinearLayout>
+</FrameLayout>

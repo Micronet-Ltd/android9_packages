@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/test_light_sensor"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="18"
+        android:text="@string/keytestname"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="18"
+        android:text="@string/null_item"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="18"
+        android:text="@string/null_item"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/camera"
+        android:textSize="24.0dip"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/left_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/key_left_down_text"
+        android:textSize="24.0dip"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/vup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vup"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/vdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vdown"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/headset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/headset"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/bluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/key_bluetooth_text"
+        android:textSize="24.0dip" />
+
+    <TextView
+        android:id="@+id/funs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/key_funs_text"
+        android:textSize="24.0dip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom" >
+
+        <Button
+            android:id="@+id/success_test"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="@string/success" />
+
+        <Button
+            android:id="@+id/fail_test"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="@string/fail" />
+    </LinearLayout>
+
+</LinearLayout>

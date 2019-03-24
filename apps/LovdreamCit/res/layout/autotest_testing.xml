@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical" 
+ android:id="@+id/autotesting"
+   android:layout_width="fill_parent" 
+   android:layout_height="fill_parent"
+ >
+    <TextView android:textSize="24.0dip" 
+    android:id="@+id/test_item_name" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_alignParentLeft="true" 
+    android:layout_alignParentTop="true"
+    android:text="@string/null_item" />
+    
+     <TextView android:textSize="24.0dip" 
+    android:id="@+id/empty_line" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_below="@+id/test_item_name" 
+    android:text="@string/null_item" />
+    
+     <TextView android:textSize="24.0dip" 
+    android:id="@+id/test_item_description" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:layout_below="@+id/empty_line" 
+    android:text="@string/null_item" />
+     
+    <LinearLayout android:id="@+id/listLinearLayout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_centerVertical ="true" android:layout_centerHorizontal="true" 
+		android:layout_alignParentBottom ="true" android:layout_gravity="center">
+		<Button android:id="@+id/btn_success" android:layout_width="100px"
+			android:layout_height="50px" android:text="@string/success"
+			android:clickable="true" android:layout_x="20px" android:layout_y="250px">
+		</Button>
+		
+	<Button android:id="@+id/btn_fail" android:layout_width="100px" android:layout_height="50px" android:text="@string/fail" android:clickable="true" android:layout_x="100px" android:layout_y="250px">
+		</Button>
+</LinearLayout>
+    
+</RelativeLayout>

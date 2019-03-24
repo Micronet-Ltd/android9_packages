@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <declare-styleable name="Key">  
+	 <attr name="keyCode" format="string"/>
+	 <attr name="keyName" format="string"/>
+	 <attr name="displayName" format="string"/>
+    </declare-styleable> 
+</resources>
