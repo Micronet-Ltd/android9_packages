@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">"关于手机"</string>
+    <string name="device_info_default" >"未知"</string>
+    <string name="model_number" >"型号"</string>
+    <string name="build_number">"版本号"</string>
+    <string name="inter_version">"内部版本号"</string>
+    <string name="hardware_version">"硬件版本号"</string>
+    <string name="status_prl_version">"PRL 版本"</string>
+    <string name="uim">"UIM ID"</string>
+    <string name="status_meid_number">"MEID"</string>
+    <string name="device_info_not_available" >"不可用"</string>
+    <string name="switch_on">"开启"</string>
+    <string name="switch_off">"关闭"</string>
+    <string name="test_switch">"测试开关"</string>
+     <string name="wlan_test">"Wlan测试"</string>	
+     <string name="switch_high">"High"</string>
+	 <string name="switch_middle">"MIddle"</string>
+	 <string name="switch_low">"Low"</string>
+	 <string name="yes">"确定"</string>
+    <string name="no">"取消"</string>
+    
+    <string name="reboot_message">"系统将要重启"</string>
+    <string name="test_setting">测试设置</string>
+    <string name="wlan_info">关于Wi-Fi</string>
+    <string name="wlan_wait_msg">正在获取Wi-Fi MAC地址</string>
+    <string name="wlan_mac_title">关于 Wi-Fi</string>
+    <string name="wlan_dialog_title">Wi-Fi MAC地址:</string>
+    <string name="wlan_acquire_mac_fail">获取 Wi-Fi MAC地址失败！</string>
+    <string name="wlan_dialog_ok">确定</string>
+    <string name="failed">操作失败</string>
+    
+    <string name="t_card">"T卡升级"</string>
+    <string name="gps">"GPS测试"</string>
+    <string name="modem_version">"Modem 版本号"</string>
+    <string name="test_switch_yl">"自注册开关"</string>
+    <string name="preferred_network_mode_title" msgid="2336624679902659306">"首选网络类型"</string>
+    <string name="preferred_network_mode_summary" msgid="1434820673166126609">"更改网络运行方式"</string>
+    <string name="change_imei_lable">"请输入IMEI："</string>
+      <string name="change_meid_lable">"请输入MEID："</string>
+    <string name="card_1">"IMEI1:"</string>    
+    <string name="card_2">"IMEI2:"</string> 
+    <string name="card">"MEID:"</string>
+    <string name="change_meid_title">设置IMEI</string>
+   <string name="change_meid_label">设置MEID</string>
+     <string name="submit">设置</string>
+     <string name="edit_hint">必须输入15位数字(0-9 )</string>
+     <string name="edit_meid_hint">必须14位数字(0-9)或字母(a-f)</string>
+     <string name="imei_erro_tip">卡1设置失败！所有IMEI必须是15位数字(0-9)</string>
+      <string name="imei_erro_tip1">卡2设置失败！所有IMEI必须是15位数字(0-9)</string>
+     <string name="meid_erro_tip">设置失败！必须是14位数字(0-9)或字母(a-f)</string>
+     <string name="set_successful">卡1设置成功！</string>
+          <string name="set_successful1">卡2设置成功！</string>
+     <string name="cancel">退出</string>
+     
+	<string name="device_id_check">确认</string>
+	<string name="edl_switch">强制切换下载口</string>
+	<string name="edl_switch_confirm">确认强制切换到下载口?</string>
+    <string name="sar_switch_on">Sar功能</string>
+    <string name="prompt_title">提示信息</string>
+    <string name="prompt_open_message">如需打开Sar功能，请重启手机</string>
+    <string name="prompt_close_message">如需关闭Sar功能，请重启手机</string>
+    <string name="prompt_cancle">取消</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">测试模式开关</string>
+    <string name="fast_mmi_switch">进入测试模式</string>
+    <string name="fast_mmi_result">测试结果</string>
+    <string name="mmi_switch_message">确定进入测试模式?</string>
+</resources>

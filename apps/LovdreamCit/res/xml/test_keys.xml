@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<all_keys xmlns:cit="http://schemas.android.com/apk/res/lovdream.android.cit">
+	<lovdream.android.cit.KeyTest.Key
+		cit:keyCode="KEYCODE_VOLUME_UP"
+		cit:keyName="@string/key_volume_up"/>
+	<lovdream.android.cit.KeyTest.Key
+		cit:keyCode="KEYCODE_VOLUME_DOWN"
+		cit:keyName="@string/key_volume_down"/>
+	<lovdream.android.cit.KeyTest.Key
+		cit:keyCode="KEYCODE_BACK"
+		cit:keyName="@string/key_back"/>
+	<lovdream.android.cit.KeyTest.Key
+		cit:keyCode="KEYCODE_HOME"
+		cit:keyName="@string/key_home"/>
+</all_keys>

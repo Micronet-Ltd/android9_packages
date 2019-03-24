@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/home_btn_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_btn_style"
+        android:paddingBottom="40dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="40dp"
+        android:textAllCaps="false"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:textStyle="normal"
+        android:typeface="normal"
+        android:focusable="true"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

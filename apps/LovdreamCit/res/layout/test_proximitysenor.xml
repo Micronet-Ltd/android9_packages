@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout 
+android:layout_gravity="center"
+ android:orientation="vertical" 
+ android:id="@+id/test_proximitysenor" 
+ android:layout_width="fill_parent" 
+ android:layout_height="fill_parent"
+ xmlns:android="http://schemas.android.com/apk/res/android">
+ <TextView 
+ android:textSize="24.0dip" 
+ android:id="@+id/tv_proximitysenor_info" 
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content" 
+ android:text="@string/g_null_text" 
+ android:layout_alignParentLeft="true" 
+ android:layout_alignParentTop="true" />
+   <TextView 
+ android:textSize="24.0dip" 
+ android:id="@+id/adc_values" 
+ android:layout_below="@+id/tv_proximitysenor_info"
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content" 
+ android:text="@string/g_null_text" 
+ android:layout_alignParentLeft="true" />
+ <ImageView 
+ android:id="@+id/test_proximitysensor_gray" 
+ android:visibility="invisible" 
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content" 
+ android:src="@drawable/test_gray" 
+ android:layout_centerInParent="true" />
+ <ImageView 
+ android:id="@+id/test_proximitysensor_green" 
+ android:visibility="invisible" 
+ android:layout_width="wrap_content" 
+ android:layout_height="wrap_content" 
+ android:src="@drawable/test_green" 
+ android:layout_centerInParent="true" />
+
+<LinearLayout android:id="@+id/listLinearLayout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_centerVertical ="true" android:layout_alignParentBottom ="true">
+		
+		<Button android:id="@+id/btn_success" android:layout_width="150dp" android:layout_height="100dp" android:text="@string/success" android:clickable="true" android:layout_x="20dp" android:layout_y="250dp">
+		</Button><Button android:id="@+id/btn_fail" android:layout_width="150dp" android:layout_height="100dp" android:text="@string/fail" android:clickable="true" android:layout_x="100dp" android:layout_y="250dp">
+		</Button>
+	
+</LinearLayout>
+</RelativeLayout>

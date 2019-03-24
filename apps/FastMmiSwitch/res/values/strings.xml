@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fast Mmi Switch</string>
+    <string name="fast_mmi_switch">Enter test mode</string>
+    <string name="fast_mmi_result">Test result</string>
+    <string name="mmi_switch_message">Confirm to enter test mode?</string>
+</resources>

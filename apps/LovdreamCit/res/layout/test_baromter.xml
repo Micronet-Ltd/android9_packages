@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:orientation="vertical" 
+ android:id="@+id/test_gyro_sensor"
+  android:background="@drawable/white"
+   android:layout_width="fill_parent" 
+   android:layout_height="fill_parent"
+ >
+    <TextView android:textSize="24.0dip" 
+    android:id="@+id/tv_info_x" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:textColor="@color/black"
+    android:text="@string/g_null_text" />
+
+
+    <LinearLayout android:id="@+id/listLinearLayout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_centerVertical ="true" android:layout_alignParentBottom ="true">
+		
+		<Button android:id="@+id/btn_success" android:layout_width="150dp" android:layout_height="100dp" android:text="@string/success" android:clickable="true" android:layout_x="20dp" android:layout_y="250dp">
+		</Button><Button android:id="@+id/btn_fail" android:layout_width="150dp" android:layout_height="100dp" android:text="@string/fail" android:clickable="true" android:layout_x="100dp" android:layout_y="250dp">
+		</Button>
+	
+</LinearLayout>
+
+</RelativeLayout>

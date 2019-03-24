@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:id="@+id/test_key"
+	android:background="@drawable/white"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<ScrollView android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:scrollbars="vertical" android:fadingEdge="vertical">
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<LinearLayout
+				android:orientation="vertical" android:id="@+id/test_key_listLinearLayout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:textSize="24.0dip"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:textColor="#000000"
+					android:maxLines="18" android:text="@string/keytestname" />
+
+				<TextView android:textSize="24.0dip"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:maxLines="18" android:text="@string/null_item" />
+				<TextView android:textSize="24.0dip"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:maxLines="18" android:text="@string/null_item" />
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+
+	<LinearLayout android:id="@+id/buttonlist"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_centerVertical ="true" android:layout_alignParentBottom ="true">
+		<Button android:id="@+id/btn_success"
+            android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:layout_height="100dp"
+			android:text="@string/success"
+			android:enabled="false" android:clickable="true"
+			>
+		</Button>
+		<Button android:id="@+id/btn_fail"
+            android:layout_weight="1"
+			android:layout_width="wrap_content"
+			android:layout_height="100dp"
+			android:text="@string/fail"
+			android:clickable="true"
+			>
+		</Button>
+	</LinearLayout>
+</RelativeLayout>
+

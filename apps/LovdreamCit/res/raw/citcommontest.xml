@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestItems>
+    <item name = "FMRadio" />
+    <item name = "GPS"/>
+    <item name = "Calibration"/>
+    <item name = "Motion Sensor" />
+<!--  <item name = "proximity sensor"/> 
+    <item name = "Light Sensor"/>
+    <item name = "Magnetic Sensor"/>   -->
+ <!-- <item name = "FlashLight" />
+      <item name = "CMMB"/>
+      <item name = "TVOut"/>  -->
+    <item name = "Wifi and Bluetooth"/>
+    <item name = "Temperature"/>
+    <item name = "MasterClear"/>  
+</TestItems>
+
+

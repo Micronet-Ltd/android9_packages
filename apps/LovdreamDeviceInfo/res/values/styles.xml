@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        <item name="android:background">#ffffffff</item>
+        <item name="android:colorBackground">#ffeeeeee</item>
+    -->
+    <style name="myTheme" parent="@android:style/Theme.Material.Light">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+</resources>
