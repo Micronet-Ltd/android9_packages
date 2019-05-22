@@ -75,7 +75,10 @@ public class UsbDetailsFunctionsController extends UsbDetailsController
 
     @Override
     protected void refresh(boolean connected, long functions, int powerRole, int dataRole) {
-        if (!connected || dataRole != UsbPort.DATA_ROLE_DEVICE) {
+    	//add by xxf for bug 0019092
+    	boolean isSupportDRP = mUsbBackend.isSupportDRP();
+        if (!connected || (isSupportDRP && dataRole != UsbPort.DATA_ROLE_DEVICE)) {
+        	//add by xxf for bug 0019092
             mProfilesContainer.setEnabled(false);
         } else {
             // Functions are only available in device mode

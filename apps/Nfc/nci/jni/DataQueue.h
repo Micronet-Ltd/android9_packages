@@ -19,6 +19,7 @@
  */
 
 #pragma once
+#include <cstdlib>
 #include <list>
 #include "Mutex.h"
 #include "NfcJniUtil.h"

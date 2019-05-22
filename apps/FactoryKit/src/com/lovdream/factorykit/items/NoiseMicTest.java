@@ -15,22 +15,26 @@ import android.media.AudioManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.content.Context;
+
 import java.io.FileInputStream;
 
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
-import com.lovdream.LovdreamDeviceManager;
+import com.swfp.utils.ServiceUtil;
+
 
 public class NoiseMicTest extends TestItemBase implements Runnable{
 
 	private static final String TAG = "noise_mic";
+	
+	private Context mContext;
 
 	private static final int MSG_PLAY = 0x11;
 	private static final int MSG_RECORD = 0x12;
 	private static final int STATE_RECORDING = 1;
 	private static final int STATE_PLAYING = 2;
 
-	private static final String RECORD_FILE = "/data/vendor/ftm_pcm_record.wav";
+	private static final String RECORD_FILE = "/data/vendor/audio/ftm_pcm_record.wav";
 
 	private static final String AUDIO_FTM = "mm-audio-ftm";
 	private static final String defaultFTMConfig = "/vendor/etc/ftm_test_config";
@@ -39,18 +43,11 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 
 	private static String defaultTunnel = "18";
 
-	private static final int SAMPLE_RATE = 48000;
-	private static final int BUFFER_SIZE = 1024;
-
 	private TextView mStatusText;
 	private ImageView mStatusIcon;
 
 	private Process mTestProcess;
 	private boolean running = false;
-
-
-	private byte[] mBuffer = new byte[BUFFER_SIZE];
-	private AudioTrack mTrack;
 
 	private String buildCmds(){
 		//cmdline eg: mm-audio-ftm -tc 252 -c /vendor/etc/ftm_test_config -d 120 -v 60
@@ -64,7 +61,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 		cmds[6] = defaultTimeout;
 		cmds[7] = "-v";
 		cmds[8] = defaultVolume;
-                String a = cmds[0]+"*"+cmds[1]+"*"+cmds[2]+"*"+cmds[3]+"*"+cmds[4]+"*"+cmds[5]+"*"+cmds[6]+"*"+cmds[7]+"*"+cmds[8];
+        String a = cmds[0]+"*"+cmds[1]+"*"+cmds[2]+"*"+cmds[3]+"*"+cmds[4]+"*"+cmds[5]+"*"+cmds[6]+"*"+cmds[7]+"*"+cmds[8];
 		return a;
 		//return cmds;
 	}
@@ -82,6 +79,22 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 			}
 		}
 	};
+	
+	
+    public void runProcess(String cmds){
+        String rc = cmds.replace("*"," ");
+        String[] cmd = rc.split(" ");
+        for(String s : cmd){
+            Log.d("fy",s);
+        }
+        try {
+            mTestProcess = Runtime.getRuntime().exec(cmd);
+            mTestProcess.waitFor();
+        } catch (Exception e) {
+        	Log.d(TAG,"e--->"+e);
+        }
+
+    }
 
 	@Override
 	public void run(){
@@ -91,22 +104,15 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 				mHandler.sendEmptyMessage(MSG_RECORD);
 				Log.d(TAG,"process start");
 				String cmds = buildCmds();
-				/*for(String s : cmds){
-					Log.d(TAG,s);
-				}*/
-                                      ldm.runProcess(cmds);
+				ServiceUtil.getInstance().runProcess(cmds, mContext);
 				Log.d(TAG,"process exit");
 				
 				mHandler.sendEmptyMessage(MSG_PLAY);
-				FileInputStream fin = new FileInputStream(RECORD_FILE);
-				int readSize = 0;
-				while(((readSize = fin.read(mBuffer)) != -1) && running){
-					mTrack.write(mBuffer,0,readSize);
-				}
-				fin.close();
+				ServiceUtil.getInstance().startPlayFm(mContext);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			Log.d(TAG,"e--->"+e);
 			postFail();
 		}
 	}
@@ -121,25 +127,18 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 	public String getTestMessage(){
 		return getActivity().getString(R.string.noise_mic_test_mesg);
 	}
-    private LovdreamDeviceManager ldm;
-    private Context mContext;
+
+    
 
 	@Override
 	public void onStartTest(){
-                    mContext = getActivity();
-                    ldm = (LovdreamDeviceManager)mContext.getSystemService(Context.LOVDREAMDEVICES_SERVICE);
-
+		mContext = getActivity();
 		String arg[] = getParameter("tc");
-		if((arg != null) && (arg[0] != null)){
+		if ((arg != null) && (arg[0] != null)) {
 			defaultTunnel = arg[0];
 		}
-
 		running = true;
 		new Thread(this).start();
-
-		mTrack = new AudioTrack(AudioManager.STREAM_MUSIC,SAMPLE_RATE,AudioFormat.CHANNEL_OUT_MONO,AudioFormat.ENCODING_PCM_16BIT,BUFFER_SIZE,AudioTrack.MODE_STREAM);
-		mTrack.setPlaybackRate(SAMPLE_RATE);
-		mTrack.play();
 	}
 
 	@Override
@@ -148,9 +147,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 		if(mTestProcess != null){
 			mTestProcess.destroy();
 		}
-		mTrack.stop();
-		mTrack.release();
-		mTrack = null;
+		ServiceUtil.getInstance().stopPlayFm(mContext);
 	}
 
 	@Override

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include <stdio.h>
 #include <string.h>
 #if !defined(NXPLOG__H_INCLUDED)
@@ -22,9 +23,9 @@
 #include <android-base/stringprintf.h>
 #include <base/logging.h>
 #include <cutils/properties.h>
+#include "nfc_config.h"
 
 using android::base::StringPrintf;
-
 extern bool nfc_debug_enabled;
 
 const char* NXPLOG_ITEM_EXTNS = "NxpExtns";
@@ -48,7 +49,8 @@ nci_log_level_t gLog_level;
  *
  * Description      Sets the global log level for all modules.
  *                  This value is set by Android property
- *nfc.nxp_log_level_global. If value can be overridden by module log level.
+ *nfc.nxp_log_level_global.
+ *                  If value can be overridden by module log level.
  *
  * Returns          The value of global log level
  *
@@ -82,7 +84,8 @@ static void phNxpLog_SetHALLogLevel(uint8_t level) {
   int len;
   char valueStr[PROPERTY_VALUE_MAX] = {0};
 
-  if (GetNxpNumValue(NAME_NXPLOG_HAL_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_HAL_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_HAL_LOGLEVEL);
     gLog_level.hal_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
     ;
@@ -111,7 +114,8 @@ static void phNxpLog_SetExtnsLogLevel(uint8_t level) {
   unsigned long num = 0;
   int len;
   char valueStr[PROPERTY_VALUE_MAX] = {0};
-  if (GetNxpNumValue(NAME_NXPLOG_EXTNS_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_EXTNS_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_EXTNS_LOGLEVEL);
     gLog_level.extns_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
     ;
@@ -140,7 +144,8 @@ static void phNxpLog_SetTmlLogLevel(uint8_t level) {
   unsigned long num = 0;
   int len;
   char valueStr[PROPERTY_VALUE_MAX] = {0};
-  if (GetNxpNumValue(NAME_NXPLOG_TML_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_TML_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_TML_LOGLEVEL);
     gLog_level.tml_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
     ;
@@ -169,7 +174,8 @@ static void phNxpLog_SetDnldLogLevel(uint8_t level) {
   unsigned long num = 0;
   int len;
   char valueStr[PROPERTY_VALUE_MAX] = {0};
-  if (GetNxpNumValue(NAME_NXPLOG_FWDNLD_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_FWDNLD_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_FWDNLD_LOGLEVEL);
     gLog_level.dnld_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
     ;
@@ -198,11 +204,13 @@ static void phNxpLog_SetNciTxLogLevel(uint8_t level) {
   unsigned long num = 0;
   int len;
   char valueStr[PROPERTY_VALUE_MAX] = {0};
-  if (GetNxpNumValue(NAME_NXPLOG_NCIX_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_NCIX_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_NCIX_LOGLEVEL);
     gLog_level.ncix_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
   }
-  if (GetNxpNumValue(NAME_NXPLOG_NCIR_LOGLEVEL, &num, sizeof(num))) {
+  if (NfcConfig::hasKey(NAME_NXPLOG_NCIR_LOGLEVEL)) {
+    num = NfcConfig::getUnsigned(NAME_NXPLOG_NCIR_LOGLEVEL);
     gLog_level.ncir_log_level =
         (level > (unsigned char)num) ? level : (unsigned char)num;
     ;
@@ -223,23 +231,30 @@ static void phNxpLog_SetNciTxLogLevel(uint8_t level) {
  * Function         phNxpLog_InitializeLogLevel
  *
  * Description      Initialize and get log level of module from libnfc-nxp.conf
- *or Android runtime properties. The Android property nfc.nxp_global_log_level
- *is to define log level for all modules. Modules log level
- *will override global level. The Android property will
- *override the level in libnfc-nxp.conf
+ *or
+ *                  Android runtime properties.
+ *                  The Android property nfc.nxp_global_log_level is to
+ *                  define log level for all modules. Modules log level will
+ *override global level.
+ *                  The Android property will override the level
+ *                  in libnfc-nxp.conf
  *
  *                  Android property names:
  *                      nfc.nxp_log_level_global    * defines log level for all
- *modules nfc.nxp_log_level_extns     * extensions module log
+ *modules
+ *                      nfc.nxp_log_level_extns     * extensions module log
  *                      nfc.nxp_log_level_hal       * Hal module log
  *                      nfc.nxp_log_level_dnld      * firmware download module
- *log nfc.nxp_log_level_tml       * TML module log nfc.nxp_log_level_nci       *
- *NCI transaction log
+ *log
+ *                      nfc.nxp_log_level_tml       * TML module log
+ *                      nfc.nxp_log_level_nci       * NCI transaction log
  *
  *                  Log Level values:
  *                      NXPLOG_LOG_SILENT_LOGLEVEL  0        * No trace to show
  *                      NXPLOG_LOG_ERROR_LOGLEVEL   1        * Show Error trace
- *only NXPLOG_LOG_WARN_LOGLEVEL    2        * Show Warning trace and Error trace
+ *only
+ *                      NXPLOG_LOG_WARN_LOGLEVEL    2        * Show Warning
+ *trace and Error trace
  *                      NXPLOG_LOG_DEBUG_LOGLEVEL   3        * Show all traces
  *
  * Returns          void

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.io.FileWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import com.swfp.utils.ProjectControlUtil;
+
 public class CrashHandler implements UncaughtExceptionHandler{
 
 	public static final String TRACE_FILE = "/mnt/sdcard/cit.log";
@@ -44,6 +46,7 @@ public class CrashHandler implements UncaughtExceptionHandler{
 	public void uncaughtException(Thread t, Throwable e){
 		saveStackTrace(e);
 		SystemProperties.set(CRASH_PROP,String.valueOf(true));
+		ProjectControlUtil.comeCit(false);
 		e.printStackTrace();
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}

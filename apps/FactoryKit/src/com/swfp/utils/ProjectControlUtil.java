@@ -33,6 +33,11 @@ public class ProjectControlUtil {
 	
 	
 	public static final boolean IS_TYPE_C = isC551 || isC600 ||isC802|| isC600x ;
+	
+	
+	public static void comeCit(boolean isComing){
+		SystemProperties.set("persist.sys.at.cit", String.valueOf(isComing));
+	}
 
 	
 	

@@ -17,10 +17,8 @@
 package com.android.nfc;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.os.UserManager;
-
 import com.android.nfc.RegisteredComponentCache.ComponentInfo;
 import com.android.nfc.handover.HandoverDataParser;
 import com.android.nfc.handover.PeripheralHandoverService;
@@ -224,8 +222,9 @@ class NfcDispatcher {
         }
 
         public boolean isWebIntent() {
-            return ndefUri != null && ndefUri.normalizeScheme().getScheme() != null &&
-                ndefUri.normalizeScheme().getScheme().startsWith("http");
+            if (ndefUri == null) return false;
+            if (ndefUri.normalizeScheme().getScheme() == null) return false;
+            return ndefUri != null && ndefUri.normalizeScheme().getScheme().startsWith("http");
         }
 
         public String getUri() {
@@ -315,7 +314,7 @@ class NfcDispatcher {
 
         if (ndef != null) {
             message = ndef.getCachedNdefMessage();
-        } else {
+        }else {
             NfcBarcode nfcBarcode = NfcBarcode.get(tag);
             if (nfcBarcode != null && nfcBarcode.getType() == NfcBarcode.TYPE_KOVIO) {
                 message = decodeNfcBarcodeUri(nfcBarcode);
@@ -428,7 +427,7 @@ class NfcDispatcher {
         // All tags of NfcBarcode technology and Kovio type have lengths of a multiple of 16 bytes
         if (tagId.length >= 4
                 && (tagId[1] == URI_PREFIX_HTTP_WWW || tagId[1] == URI_PREFIX_HTTPS_WWW
-                    || tagId[1] == URI_PREFIX_HTTP || tagId[1] == URI_PREFIX_HTTPS)) {
+                || tagId[1] == URI_PREFIX_HTTP || tagId[1] == URI_PREFIX_HTTPS)) {
             // Look for optional URI terminator (0xfe), used to indicate the end of a URI prior to
             // the end of the full NfcBarcode payload. No terminator means that the URI occupies the
             // entire length of the payload field. Exclude checking the CRC in the final two bytes
@@ -556,13 +555,9 @@ class NfcDispatcher {
                 return false;
             }
             Intent appLaunchIntent = pm.getLaunchIntentForPackage(firstPackage);
-            if (appLaunchIntent != null) {
-                ResolveInfo ri = pm.resolveActivity(appLaunchIntent, 0);
-                if (ri != null && ri.activityInfo != null && ri.activityInfo.exported &&
-                        dispatch.tryStartActivity(appLaunchIntent)) {
-                    if (DBG) Log.i(TAG, "matched AAR to application launch");
-                    return true;
-                }
+            if (appLaunchIntent != null && dispatch.tryStartActivity(appLaunchIntent)) {
+                if (DBG) Log.i(TAG, "matched AAR to application launch");
+                return true;
             }
             // Find the package in Market:
             Intent marketIntent = getAppSearchIntent(firstPackage);
@@ -581,18 +576,9 @@ class NfcDispatcher {
             return true;
         }
 
-        try {
-            UserHandle currentUser = new UserHandle(ActivityManager.getCurrentUser());
-            PackageManager pm = mContext.createPackageContextAsUser("android", 0,
-                        currentUser).getPackageManager();
-            ResolveInfo ri = pm.resolveActivity(intent, 0);
-
-            if (ri != null && ri.activityInfo != null && ri.activityInfo.exported && dispatch.tryStartActivity()) {
-                if (DBG) Log.i(TAG, "matched NDEF");
-                return true;
-            }
-        } catch (NameNotFoundException ignore) {
-            Log.e(TAG, "Could not create user package context");
+        if (dispatch.tryStartActivity()) {
+            if (DBG) Log.i(TAG, "matched NDEF");
+            return true;
         }
 
         return false;
@@ -634,9 +620,7 @@ class NfcDispatcher {
             if (filterMatch(tagTechs, info.techs) &&
                     isComponentEnabled(pm, info.resolveInfo)) {
                 // Add the activity as a match if it's not already in the list
-                // Check if exported flag is not explicitly set to false to prevent
-                // SecurityExceptions.
-                if (!matches.contains(info.resolveInfo) && info.resolveInfo.activityInfo.exported) {
+                if (!matches.contains(info.resolveInfo)) {
                     matches.add(info.resolveInfo);
                 }
             }
@@ -698,7 +682,6 @@ class NfcDispatcher {
 
         return true;
     }
-
 
     /**
      * Tells the ActivityManager to resume allowing app switches.
