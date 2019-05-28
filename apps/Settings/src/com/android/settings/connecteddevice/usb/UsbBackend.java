@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 /**
  * Provides access to underlying system USB functionality.
@@ -102,6 +103,23 @@ public class UsbBackend {
         updatePorts();
         return mPortStatus == null ? UsbPort.DATA_ROLE_NONE : mPortStatus.getCurrentDataRole();
     }
+    
+    /**
+     * 是否支持DRP
+     * http://www.eeworld.com.cn/xfdz/2015/0323/article_40868.html
+     *   DRP(Dual Role Port): 双角色端口，DRP既可以做DFP(Host)，也可以做UFP(Device)，
+     *   也可以在DFP与UFP间动态切换。
+     *   典型的DRP设备是电脑(电脑可以作为USB的主机，
+     *   也可以作为被充电的设备（苹果新推出的MAC Book Air）)，
+     *   具OTG功能的手机(手机可以作为被充电和被读数据的设备，
+     *   也可以作为主机为其他设备提供电源或者读取U盘数据)，
+     *   移动电源(放电和充电可通过一个USB Type-C，即此口可以放电也可以充电)。
+     * add by xxf for bug 0019092
+     * 
+     * **/
+    public boolean isSupportDRP(){
+    	return mPortStatus != null && mPortStatus.isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE);
+    }
 
     public void setPowerRole(int role) {
         int newDataRole = getDataRole();
@@ -142,6 +160,12 @@ public class UsbBackend {
     }
 
     public boolean areAllRolesSupported() {
+    	Log.d("xxfppp", "mPortStatus--->"+mPortStatus);
+    	if(mPortStatus!=null){
+    		boolean s = mPortStatus.isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE);
+    		Log.d("xxfppp", "s--->"+s);
+    	}
+    	
         return mPort != null && mPortStatus != null
                 && mPortStatus
                 .isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE)
@@ -207,17 +231,26 @@ public class UsbBackend {
         UsbPort[] ports = mUsbManager.getPorts();
         if (ports == null) {
             return;
+        }else{
+        	  for (int i = 0; i < ports.length; i++) {
+        	       	 Log.d("xxfuuu", "ports["+i+"]---->"+ports[i]);
+        			}
         }
         // For now look for a connected port, in the future we should identify port in the
         // notification and pick based on that.
         final int N = ports.length;
+        Log.d("xxfuuu", "N---->"+N);
         for (int i = 0; i < N; i++) {
             UsbPortStatus status = mUsbManager.getPortStatus(ports[i]);
+            Log.d("xxfuuu", "status---->"+status.toString());
             if (status.isConnected()) {
                 mPort = ports[i];
                 mPortStatus = status;
+                Log.d("xxfuuu", "mPort---->"+mPort.toString());
+                Log.d("xxfuuu", "mPortStatus---->"+mPortStatus.toString());
                 break;
             }
         }
+        
     }
 }

@@ -1,6 +1,8 @@
 
 package com.lovdream.factorykit;
 
+import com.swfp.utils.ProjectControlUtil;
+
 import android.app.Application;
 
 public class FactoryKitApplication extends Application{

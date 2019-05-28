@@ -13,7 +13,6 @@ import android.media.AudioManager;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.lovdream.LovdreamDeviceManager;
 import com.lovdream.factorykit.TestItemBase;
 import com.swfp.utils.ProjectControlUtil;
 

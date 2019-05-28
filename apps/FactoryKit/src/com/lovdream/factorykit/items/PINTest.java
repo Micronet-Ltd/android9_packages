@@ -2,11 +2,12 @@
 package com.lovdream.factorykit.items;
 
 import android.view.View;
-
 import android.content.Context;
 
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
+import com.swfp.utils.ServiceUtil;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,10 +15,9 @@ import java.io.IOException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import android.widget.Button;
 import android.os.SystemProperties;
-import com.lovdream.LovdreamDeviceManager;
+
 
 public class PINTest extends TestItemBase{
 
@@ -32,7 +32,6 @@ public class PINTest extends TestItemBase{
 	public String getTestMessage(){
             return getActivity().getString(R.string.test_fourteenpin_prompt);
 	}
-    private LovdreamDeviceManager ldm;
     private Context mContext;
 	private static final String[] BACK_CTRL_NODES = {
 		"sys/class/ext_dev/function/power_en",
@@ -45,10 +44,8 @@ public class PINTest extends TestItemBase{
 	@Override
 	public void onStartTest(){
                 mContext = getActivity();
-                ldm = (LovdreamDeviceManager)mContext.getSystemService(Context.LOVDREAMDEVICES_SERVICE);
 		for(String s : BACK_CTRL_NODES){
-                     ldm.writeToFile(s, 1+"");
-			//writeValue(s,1);
+			ServiceUtil.getInstance().writeToFile(s, 1+"", mContext);
 		}
             //setPinStatus(true);
 	}
@@ -56,7 +53,7 @@ public class PINTest extends TestItemBase{
 	@Override
 	public void onStopTest(){
                     for(String s : BACK_CTRL_NODES){
-                     ldm.writeToFile(s, 0+"");
+                    	ServiceUtil.getInstance().writeToFile(s, 0+"", mContext);
 			//writeValue(s,1);
 		}
             //setPinStatus(false);

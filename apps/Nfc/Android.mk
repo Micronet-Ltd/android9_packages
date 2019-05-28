@@ -19,7 +19,11 @@ LOCAL_CERTIFICATE := platform
 
 LOCAL_JNI_SHARED_LIBRARIES := libnfc_nci_jni
 
-LOCAL_STATIC_JAVA_LIBRARIES := android-support-v4
+LOCAL_JAVA_LIBRARIES := com.nxp.nfc
+
+LOCAL_STATIC_JAVA_LIBRARIES := android-support-core-utils
+LOCAL_STATIC_JAVA_LIBRARIES +=android.hardware.secure_element-V1.0-java
+LOCAL_STATIC_JAVA_LIBRARIES +=vendor.nxp.nxpwiredse-V1.0-java
 
 LOCAL_PROGUARD_ENABLED := disabled
 

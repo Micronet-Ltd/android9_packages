@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <android-base/stringprintf.h>
 #include <base/logging.h>
 #include <errno.h>
@@ -266,7 +265,7 @@ static jboolean nativeLlcpConnectionlessSocket_doClose(JNIEnv* e, jobject o) {
   jfieldID f = e->GetFieldID(c.get(), "mHandle", "I");
   jint handle = e->GetIntField(o, f);
 
-  tNFA_STATUS status = NFA_P2pDisconnect((tNFA_HANDLE)handle, FALSE);
+  tNFA_STATUS status = NFA_P2pDisconnect((tNFA_HANDLE)handle, false);
   if (status != NFA_STATUS_OK) {
     LOG(ERROR) << StringPrintf("%s: disconnect failed, status = %d", __func__,
                                status);

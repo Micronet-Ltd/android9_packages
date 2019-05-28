@@ -35,7 +35,9 @@ extern bool nfc_debug_enabled;
 
 namespace android {
 extern void startStopPolling(bool isStartPolling);
-}
+extern void nativeNfcTag_releaseRfInterfaceMutexLock();
+extern void nativeNfcTag_acquireRfInterfaceMutexLock();
+}  // namespace android
 
 /*****************************************************************************
 **

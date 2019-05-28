@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class SnepMessenger {
-    private static final String TAG = "SnepMessager";
+    private static final String TAG = "SnepMessenger";
     private static final boolean DBG = false;
     private static final int HEADER_LENGTH = 6;
     final LlcpSocket mSocket;
@@ -202,9 +202,9 @@ public class SnepMessenger {
         }
 
         if (NfcService.sIsDtaMode) {
-            if (!mIsClient && (requestField == SnepMessage.RESPONSE_CONTINUE)||  // added for TC_S_BIT_B1_01_X
+            if (!mIsClient && (requestField == SnepMessage.RESPONSE_CONTINUE ||  // added for TC_S_BIT_B1_01_X
                               requestField == SnepMessage.RESPONSE_SUCCESS ||
-                              requestField == SnepMessage.RESPONSE_NOT_FOUND) {
+                              requestField == SnepMessage.RESPONSE_NOT_FOUND)) {
                 if (DBG) Log.d(TAG, "errorneous response received, disconnecting client");
                 close();
             }

@@ -228,7 +228,7 @@
     <string name="back_headset_mesg">Please test the earphone on the back</string>
     <string name="back_headset">Back Headset</string>
     
-    <string name="back_mic_mesg">待定待定</string>
+    <string name="back_mic_mesg">Back MIC Testing</string>
     <string name="back_mic">Back MIC</string>
 
     <string name="hoare_test_mesg">Please close the magnet to the Holzer </string>

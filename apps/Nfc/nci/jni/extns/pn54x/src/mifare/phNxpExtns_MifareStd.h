@@ -80,6 +80,9 @@ extern uint8_t current_key[];
     }                                           \
   } /* Key used during NDEF format */
 
+#define PH_FRINFC_CHECK_NDEF_TIMEOUT \
+  (2000U) /* Mifare Check Ndef timeout value in milliseconds.*/
+
 #ifndef NCI_MAX_DATA_LEN
 #define NCI_MAX_DATA_LEN 300
 #endif
