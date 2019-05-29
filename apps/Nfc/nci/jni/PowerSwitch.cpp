@@ -13,12 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/******************************************************************************
+ *
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2015 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ ******************************************************************************/
 /*
  *  Adjust the controller's power states.
  */
 #include "PowerSwitch.h"
 #include "NfcJniUtil.h"
+#include "SecureElement.h"
 #include "nfc_config.h"
 
 #include <android-base/stringprintf.h>
@@ -288,7 +307,7 @@ bool PowerSwitch::setPowerOffSleepState(bool sleep) {
           NFA_DM_PWR_MODE_OFF_SLEEP;  // if power adjustment is ok, then this is
                                       // the expected state
       DLOG_IF(INFO, nfc_debug_enabled) << StringPrintf("%s: try power off", fn);
-      stat = NFA_PowerOffSleepMode(TRUE);
+      stat = NFA_PowerOffSleepMode(true);
       if (stat == NFA_STATUS_OK) {
         mPowerStateEvent.wait();
         mCurrLevel = LOW_POWER;
@@ -314,7 +333,7 @@ bool PowerSwitch::setPowerOffSleepState(bool sleep) {
                                  // expected state
       DLOG_IF(INFO, nfc_debug_enabled)
           << StringPrintf("%s: try full power", fn);
-      stat = NFA_PowerOffSleepMode(FALSE);
+      stat = NFA_PowerOffSleepMode(false);
       if (stat == NFA_STATUS_OK) {
         mPowerStateEvent.wait();
         if (mCurrDeviceMgtPowerState != NFA_DM_PWR_MODE_FULL) {

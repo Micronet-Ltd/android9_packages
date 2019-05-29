@@ -13,12 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/******************************************************************************
+ *
+ *  The original Work has been changed by NXP Semiconductors.
+ *
+ *  Copyright (C) 2015-2018 NXP Semiconductors
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ ******************************************************************************/
 #pragma once
+#include <JNIHelp.h>
 #include <jni.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <sys/queue.h>
+#include "Nxp_Features.h"
 
 /* Discovery modes -- keep in sync with NFCManager.DISCOVERY_MODE_* */
 #define DISCOVERY_MODE_TAG_READER 0
@@ -64,6 +84,16 @@
 #define NDEF_MODE_READ_WRITE 2
 #define NDEF_MODE_UNKNOWN 3
 
+#if (NXP_EXTNS == TRUE)
+#define VEN_POWER_STATE_ON 9
+#define VEN_POWER_STATE_OFF 10
+#define NFC_FORUM_POLL 0
+#define EMVCO_POLL_MODE 1
+#define SETCONFIGLENPOS 3
+#define PROPSETCONFIGMINLEN 4
+// ESE Suppored Technologies
+#define TARGET_TYPE_ISO14443_3A_3B 11
+#endif
 /* Name strings for target types. These *must* match the values in
  * TagTechnology.java */
 #define TARGET_TYPE_UNKNOWN (-1)
@@ -77,12 +107,34 @@
 #define TARGET_TYPE_MIFARE_CLASSIC 8
 #define TARGET_TYPE_MIFARE_UL 9
 #define TARGET_TYPE_KOVIO_BARCODE 10
+#define TARGET_TYPE_ISO14443_4A 11
+#define TARGET_TYPE_ISO14443_4B 12
+
+/* Setting VEN_CFG  */
+#define NFC_MODE_ON 3
+#define NFC_MODE_OFF 2
 
 // define a few NXP error codes that NFC service expects;
 // see external/libnfc-nxp/src/phLibNfcStatus.h;
 // see external/libnfc-nxp/inc/phNfcStatus.h
 #define NFCSTATUS_SUCCESS (0x0000)
 #define NFCSTATUS_FAILED (0x00FF)
+#if (NXP_EXTNS == TRUE)
+/*NFCEE recovery maximum timeout value*/
+#define MAX_EE_RECOVERY_TIMEOUT 10000
+/* NFC states: Primarily used to decide SPI signal handling (whether to discard
+ * or accept)*/
+typedef enum {
+  NFC_OFF = 0x00, /* Default state */
+  NFC_INITIALIZING_IN_PROGRESS =
+      0x01,     /* Initializing not complete (RF discovery not enabled yet) */
+  NFC_ON = 0x02 /* NFC is fully ON*/
+} eNfcState;
+#define NFC_CMD_TIMEOUT \
+  2000 /* 2 sec timeout to wait on the semaphore for the command sent */
+#define ONE_SECOND_MS 1000
+#define DWP_LINK_ACTV_TIMEOUT 4000
+#endif
 
 struct nfc_jni_native_data {
   /* Thread handle */
@@ -146,4 +198,9 @@ int register_com_android_nfc_NativeP2pDevice(JNIEnv* e);
 int register_com_android_nfc_NativeLlcpConnectionlessSocket(JNIEnv* e);
 int register_com_android_nfc_NativeLlcpServiceSocket(JNIEnv* e);
 int register_com_android_nfc_NativeLlcpSocket(JNIEnv* e);
+int register_com_android_nfc_NativeNfcSecureElement(JNIEnv* e);
+int register_com_android_nfc_NativeNfcAla(JNIEnv* e);
+#if (NXP_EXTNS == TRUE)
+int register_com_android_nfc_NativeNfcMposManager(JNIEnv* e);
+#endif
 }  // namespace android

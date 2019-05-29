@@ -16,14 +16,13 @@ import java.io.FileOutputStream;
 
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
-import com.lovdream.LovdreamDeviceManager;
 import com.swfp.utils.ProjectControlUtil;
+import com.swfp.utils.ServiceUtil;
 
 public class BackLedTest extends TestItemBase{
 
 
    private final String ledPath = "/sys/class/ext_dev/function/gpio_en";
-    private LovdreamDeviceManager ldm;
     private Context mContext;
 
 	@Override
@@ -39,13 +38,11 @@ public class BackLedTest extends TestItemBase{
 	@Override
 	public void onStartTest(){
 	                mContext = getActivity();
-                ldm = (LovdreamDeviceManager)mContext.getSystemService(Context.LOVDREAMDEVICES_SERVICE);
-                ldm.writeToFile(ledPath, 1+"");
+	                ServiceUtil.getInstance().writeToFile(ledPath, 1+"", mContext);
 	}
 
 	@Override
 	public void onStopTest(){
-	
-		ldm.writeToFile(ledPath, 0+"");
+		ServiceUtil.getInstance().writeToFile(ledPath, 0+"", mContext);
 	}
 }

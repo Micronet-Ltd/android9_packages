@@ -185,12 +185,14 @@ public class Main extends PreferenceActivity {
 	@Override
 	public void onResume(){
 		super.onResume();
+		ProjectControlUtil.comeCit(true);
 		mSbManager.disable(StatusBarManager.DISABLE_EXPAND);
 	}
 
 	@Override
 	public void onPause(){
 		super.onPause();
+		ProjectControlUtil.comeCit(false);
 		mSbManager.disable(StatusBarManager.DISABLE_NONE);
 	}
 

@@ -1,4 +1,3 @@
-
 package com.lovdream.factorykit.items;
 
 import android.os.Handler;
@@ -17,56 +16,49 @@ import java.io.FileOutputStream;
 
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
-import com.lovdream.LovdreamDeviceManager;
+import com.swfp.utils.ServiceUtil;
 
-public class ButtonBacklight extends TestItemBase implements Runnable{
+public class ButtonBacklight extends TestItemBase implements Runnable {
 
 	private static final String BUTTON_LED_PATH = "/sys/class/leds/button-backlight/brightness";
 
 	private final int BLINK_INTERVAL = 800;
 	private Handler mHandler = new Handler();
 	private boolean lightEnabled = false;
-        private LovdreamDeviceManager ldm;
-        private Context mContext;
+	private Context mContext;
+
 	@Override
-	public String getKey(){
+	public String getKey() {
 		return "button_light";
 	}
 
 	@Override
-	public String getTestMessage(){
+	public String getTestMessage() {
 		return getActivity().getString(R.string.button_light_mesg);
 	}
 
 	@Override
-	public void onStartTest(){
-                mContext = getActivity();
-                ldm = (LovdreamDeviceManager)mContext.getSystemService(Context.LOVDREAMDEVICES_SERVICE);
-		mHandler.postDelayed(this,BLINK_INTERVAL);
+	public void onStartTest() {
+		mContext = getActivity();
+		mHandler.postDelayed(this, BLINK_INTERVAL);
 	}
 
 	@Override
-	public void onStopTest(){
+	public void onStopTest() {
 		mHandler.removeCallbacks(this);
 		setBrightness(false);
 	}
 
 	@Override
-	public void run(){
+	public void run() {
 		lightEnabled = !lightEnabled;
 		setBrightness(lightEnabled);
-		mHandler.postDelayed(this,BLINK_INTERVAL);
+		mHandler.postDelayed(this, BLINK_INTERVAL);
 	}
-	
-	private void setBrightness(boolean enable){
+
+	private void setBrightness(boolean enable) {
 		try {
-                        String value = enable ? "20": "0";
-                        ldm.writeToFile(BUTTON_LED_PATH, value);
-			/*FileOutputStream fos = new FileOutputStream(BUTTON_LED_PATH);
-			String value = enable ? "20": "0";
-			fos.write(value.getBytes());
-			fos.flush();
-			fos.close();*/
+			ServiceUtil.getInstance().setButtonBackLight(enable, mContext);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

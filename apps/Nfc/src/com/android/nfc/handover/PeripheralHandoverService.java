@@ -96,7 +96,7 @@ public class PeripheralHandoverService extends Service implements BluetoothPerip
                 handleBluetoothStateChanged(intent);
             }
         }
-    };
+   };
 
     public PeripheralHandoverService() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -109,7 +109,6 @@ public class PeripheralHandoverService extends Service implements BluetoothPerip
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         synchronized (sLock) {
             if (mStartId != 0) {
                 mStartId = startId;
@@ -266,6 +265,11 @@ public class PeripheralHandoverService extends Service implements BluetoothPerip
         }
     }
 
+   @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     boolean hasConnectedBluetoothDevices() {
         Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
 
@@ -298,11 +302,6 @@ public class PeripheralHandoverService extends Service implements BluetoothPerip
         } catch (RemoteException e) {
             // Ignore
         }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     @Override

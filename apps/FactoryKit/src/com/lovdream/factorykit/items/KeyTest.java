@@ -4,7 +4,10 @@ package com.lovdream.factorykit.items;
 import android.view.View;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.widget.LinearLayout;
@@ -20,6 +23,8 @@ import com.lovdream.factorykit.TestItemBase;
 public class KeyTest extends TestItemBase{
 
 	public static final String TAG = "factorykit";
+	private KeyBroadCastReceiver mKeyBroadCastReceiver;
+	private Context mContext;
 
 	ArrayList<Key> testKeys;
 	private Vibrator mVibrator;
@@ -40,7 +45,27 @@ public class KeyTest extends TestItemBase{
 			}
 		}
 	}
+	
+	private class KeyBroadCastReceiver extends BroadcastReceiver{
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			KeyEvent event = null;
+			if("cit.menu.test".equals(action)){
+				event =new  KeyEvent(0, KeyEvent.KEYCODE_APP_SWITCH);
+			}
+			
+			if("cit.home.test".equals(action)){
+				event =new  KeyEvent(0, KeyEvent.KEYCODE_HOME);
+			}
+			if(event!=null){
+				onKeyUp(event.getKeyCode(), event);
+			}
+			
+		}
+		
+	} 
 	private String getKeyDisplayName(int keyCode){
 		int resId = -1;
 		switch(keyCode){
@@ -148,6 +173,13 @@ public class KeyTest extends TestItemBase{
 
 	@Override
 	public void onStartTest(){
+		mKeyBroadCastReceiver =new KeyBroadCastReceiver();
+		mContext =getActivity();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("cit.menu.test");
+		filter.addAction("cit.home.test");
+		filter.addAction("cit_test_recent");
+		mContext.registerReceiver(mKeyBroadCastReceiver, filter);
 		String keyNames[] = getParameter("keyCode");
 		if(keyNames == null){
 			Toast.makeText(getActivity(),R.string.load_config_error,Toast.LENGTH_SHORT);
@@ -170,7 +202,9 @@ public class KeyTest extends TestItemBase{
 	@Override
 	public void onStopTest(){
 		SystemProperties.set("sys.cit_keytest","false");
+		mContext.unregisterReceiver(mKeyBroadCastReceiver);
 	}
+	
 
 	@Override
 	public View getTestView(LayoutInflater inflater){

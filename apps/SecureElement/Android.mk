@@ -1,4 +1,3 @@
-ifneq ($(TARGET_HAS_LOW_RAM), true)
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -11,9 +10,10 @@ LOCAL_MODULE_TAGS := optional
 
 LOCAL_STATIC_JAVA_LIBRARIES := android.hardware.secure_element-V1.0-java
 
+LOCAL_STATIC_JAVA_LIBRARIES += vendor.nxp.nxpese-V1.0-java
+
 LOCAL_PROGUARD_ENABLED := disabled
 
 include $(BUILD_PACKAGE)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
-endif
