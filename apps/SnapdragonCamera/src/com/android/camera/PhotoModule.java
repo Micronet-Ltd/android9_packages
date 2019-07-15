@@ -603,6 +603,7 @@ public class PhotoModule
         setupDualCameraMode();
 
         mUI = new PhotoUI(activity, this, parent);
+        mUI.setCameraId(mCameraId);
 
         if (mOpenCameraThread == null) {
             mOpenCameraThread = new OpenCameraThread();
@@ -760,7 +761,7 @@ public class PhotoModule
         mPendingSwitchCameraId = -1;
         mSnapshotOnIdle = false;
         setCameraId(mCameraId);
-
+        mUI.setCameraId(mCameraId);
         // from onPause
         try {
             if (mOpenCameraThread != null) {
@@ -814,7 +815,7 @@ public class PhotoModule
     // either open a new camera or switch cameras
     private void openCameraCommon() {
         loadCameraPreferences();
-
+        mUI.setCameraId(mCameraId);
         mUI.onCameraOpened(mPreferenceGroup, mPreferences, mParameters, this, this);
         if (mIsImageCaptureIntent) {
             mUI.overrideSettings(CameraSettings.KEY_CAMERA_HDR_PLUS,
@@ -3133,7 +3134,11 @@ public class PhotoModule
         }
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+            if(true){
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+            } else {
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+            }
         }
     }
 
@@ -4038,6 +4043,9 @@ public class PhotoModule
         //value: 3 - 1280x720
         //value: 4 - 1920x1080
         int preview_resolution = SystemProperties.getInt("persist.vendor.camera.preview.size", 0);
+        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product"))) {
+            preview_resolution = 3;
+        }
         switch (preview_resolution) {
             case 1: {
                 optimalSize.width = 640;
