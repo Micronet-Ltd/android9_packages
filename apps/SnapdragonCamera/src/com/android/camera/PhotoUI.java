@@ -457,6 +457,10 @@ public class PhotoUI implements PieListener,
                     }
                 }
             }
+            /*if (android.os.SystemProperties.get("ro.build.product").equals("msm8953_64_c801")) {
+                scaledTextureHeight = 1280;
+                scaledTextureWidth = 720;
+            }*/
 
             Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
                     + ", scaledTextureHeight = " + scaledTextureHeight);
@@ -469,6 +473,14 @@ public class PhotoUI implements PieListener,
                 lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
                         (int) scaledTextureHeight, Gravity.CENTER);
             }
+
+            if ( true && mCameraId==0) {
+                scaledTextureWidth = 800;
+                scaledTextureHeight = scaledTextureWidth/mAspectRatio;
+                lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
+                        (int) scaledTextureHeight, Gravity.CENTER);
+            }
+
             if(mScreenRatio == CameraUtil.RATIO_4_3) {
                 lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
                 lp.setMargins(0, mTopMargin, 0, mBottomMargin);
@@ -502,7 +514,10 @@ public class PhotoUI implements PieListener,
         }
         mIsLayoutInitializedAlready = true;
     }
-
+    private int mCameraId = 0;
+    public void setCameraId(int cameraId) {
+        mCameraId=cameraId;
+    }
     public void setSurfaceTextureSizeChangedListener(SurfaceTextureSizeChangedListener listener) {
         mSurfaceTextureSizeListener = listener;
     }

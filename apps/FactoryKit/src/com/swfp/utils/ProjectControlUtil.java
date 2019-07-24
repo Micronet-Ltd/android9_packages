@@ -51,7 +51,7 @@ public class ProjectControlUtil {
 	
 	//重力是否两个方向;
 	public static boolean isGravitySenorHasTwoDirection () {
-		boolean isHasTwo= !(isC802 ||  isC600 || isC601);
+		boolean isHasTwo= !(isC802 ||  isC600 || isC601 || isC801);
 		return isHasTwo;
 	}
 

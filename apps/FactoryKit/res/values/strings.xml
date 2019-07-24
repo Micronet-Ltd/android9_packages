@@ -214,6 +214,7 @@
 	<string name="product_info">Product information</string>
     <string name="model">Model</string>
     <string name="soft_version">SW Version</string>
+    <string name="hardware_version">hardware Version</string>
     <string name="internal_version">Custom version</string>
     <string name="baseband_version">Baseband version</string>
     <string name="tp_info">TP Info</string>

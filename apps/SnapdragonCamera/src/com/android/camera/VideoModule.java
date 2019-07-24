@@ -278,6 +278,7 @@ public class VideoModule implements CameraModule,
                     mActivity, mCameraId, mHandler,
                     mActivity.getCameraOpenErrorCallback());
         }
+        mUI.setCameraId(mCameraId);
         if (mCameraDevice == null) {
             // Error.
             return;
@@ -500,6 +501,7 @@ public class VideoModule implements CameraModule,
 
         CameraSettings.upgradeGlobalPreferences(mPreferences.getGlobal(), activity);
         mCameraId = getPreferredCameraId(mPreferences);
+        mUI.setCameraId(mCameraId);
 
         mPreferences.setLocalId(mActivity, mCameraId);
         CameraSettings.upgradeLocalPreferences(mPreferences.getLocal());
@@ -1194,7 +1196,11 @@ public class VideoModule implements CameraModule,
         mUI.setDisplayOrientation(mCameraDisplayOrientation);
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+            if(true){
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+            } else {
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+            }
         }
     }
 
@@ -1239,7 +1245,7 @@ public class VideoModule implements CameraModule,
         }
 
         setDisplayOrientation();
-        mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+        mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
         setCameraParameters(true);
 
         try {
@@ -1459,7 +1465,7 @@ public class VideoModule implements CameraModule,
             // SurfaceView we will have to take everything into account so the
             // display rotation is considered.
             mCameraDevice.setDisplayOrientation(
-                    CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId));
+                    CameraUtil.getDisplayOrientation(mDisplayRotation+180, mCameraId));
             mCameraDevice.startPreview();
             mPreviewing = true;
             mMediaRecorder.setPreviewDisplay(mUI.getSurfaceHolder().getSurface());
@@ -2267,6 +2273,10 @@ public class VideoModule implements CameraModule,
      private void qcomSetCameraParameters(){
         // add QCOM Parameters here
         // Set color effect parameter.
+        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product"))) {
+            mDesiredPreviewWidth = 1280;
+            mDesiredPreviewHeight = 720;
+        }
         Log.i(TAG,"NOTE: qcomSetCameraParameters " + videoWidth + " x " + videoHeight);
         String colorEffect = mPreferences.getString(
             CameraSettings.KEY_COLOR_EFFECT,
@@ -2840,6 +2850,7 @@ public class VideoModule implements CameraModule,
         mCameraId = mPendingSwitchCameraId;
         mPendingSwitchCameraId = -1;
         setCameraId(mCameraId);
+        mUI.setCameraId(mCameraId);
 
         closeCamera();
         mUI.collapseCameraControls();

@@ -153,6 +153,10 @@ public class VideoUI implements PieRenderer.PieListener,
             return false;
         }
     }
+    private int mCameraId;
+    public void setCameraId(int cameraId){
+        mCameraId=cameraId;
+    }
 
     private class SettingsPopup extends PopupWindow {
         public SettingsPopup(View popup) {
@@ -465,7 +469,10 @@ public class VideoUI implements PieRenderer.PieListener,
                     }
                 }
             }
-
+            if (android.os.SystemProperties.get("ro.build.product").equals("msm8953_64_c801")) {
+                scaledTextureHeight = 1280;
+                scaledTextureWidth = 720;
+            }
             Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
                     + ", scaledTextureHeight = " + scaledTextureHeight);
 
@@ -478,6 +485,13 @@ public class VideoUI implements PieRenderer.PieListener,
                 lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
                         (int) scaledTextureHeight, Gravity.CENTER);
             }
+        }
+
+        if ( true && mCameraId==0) {
+            scaledTextureWidth = 800;
+            scaledTextureHeight = scaledTextureWidth/mAspectRatio;
+            lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
+                    (int) scaledTextureHeight, Gravity.CENTER);
         }
 
         if (mSurfaceTextureUncroppedWidth != scaledTextureWidth ||
