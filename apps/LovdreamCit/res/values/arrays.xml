@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string-array name="TestTypeStrings"> 
+        <item>PCBA auto test</item>
+        <item>Machine auto test</item>
+        <item>Single test</item>
+        <item>Deputy board test</item>
+        <item>Test result</item>
+    </string-array>
+    
+    <string-array name="TestResult"> 
+        <item>PCBA auto test result</item>
+        <item>Machine auto test result</item>
+    </string-array>
+    
+    <string-array name="DeputyBoardTestStrings">
+        <item>RecerverLoopback</item>
+        <item>Charge</item>
+		<item >Button lights</item>
+		<item>Breathing light</item>
+		<item>Keypad</item>
+		
+		<item>CheckSIM</item><!-- 5 -->
+		<item>Proximity Senor</item><!-- 6 -->
+		<item>Font Camera</item><!-- 7  -->
+    </string-array>
+    
+    <string-array name="OneByOneTypeStrings">
+        <item>Test Flag</item>
+        <item>Speaker and Storage</item>
+        <item>Camera</item>
+        <item>CheckSIM</item>
+        <item>RecerverLoopback</item>
+        <item>Vibrate</item>
+        <item>HeadsetLoopback</item>
+        <item>FM Radio</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi</item>
+        <item>Bluetooth</item>
+        <item>Charge</item>
+		<item>Light Senor</item>
+		<item>Proximity Senor</item>
+		<item>TP Proximity Senor</item>
+        <item >Backlight test</item>
+        <item >Button lights</item>
+        <item >Flash test</item>
+        <item>GPS Test</item>
+        <item>LCD</item>
+        <item>Touch</item>
+        <item>Version</item>
+        <item>Sleep/Wake</item>
+        <item>Temperature</item>
+        <item>Breathing light</item>
+        <item>Gyro</item>
+        <!--  <item>MachineAuto NFC</item>-->
+        <item> NFC Test</item>
+        <item>MasterClear</item>
+        <item>Touch 2</item>
+        <item>Device info</item>
+        <item >TP test</item>
+        <item >Hall Test</item>
+		<item >All Keypad</item>
+		<item>Compass</item>
+		<item>HeartBeat</item>
+		<item>HotTF</item>
+		<item>OTG Test</item>
+		<item>BackRecerverLoopback</item>
+		<item >Reboot Test</item>
+		<item>Barometer</item>
+		<item>Reset Key</item>
+		<item>Two Color Lights</item>
+                <item>5GWIFI</item>
+                <item>Back OTG</item>
+		<item>Back Charge</item>
+                <item>8 Pin</item>
+		<item>14 Pin测试</item><!--47--> 
+		<item>Side OTG</item>
+		<item>External antenna</item>
+    </string-array>
+    
+    <string-array name="CommonTestStrings">
+        <item>Speaker and Storage</item>
+        <item>CheckSIM</item>
+        <item>Camera</item>
+        <item>Charge</item>
+        <item>Sleep/Wake</item>
+        <item>Vibrate</item>
+        <item>RecerverLoopback</item>
+        <item>HeadsetLoopback</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi</item>
+        <item>Bluetooth</item>    
+        <item>LCD</item>
+        <item>Touch</item>
+        <item>Temperature</item>
+        <item>GPS Test</item>
+        <item>FM Radio</item>
+		<item>Light Senor</item>
+		<item>Proximity Senor</item>
+        <item>MasterClear</item>
+        <item>Version</item>
+        <item >Backlight test</item>
+        <item >Button lights</item>
+        <item>TP Proximity Senor</item>
+        <item >Flash test</item>
+    	<item >Reboot Test</item>
+    	<item>Breathing light</item>
+        <item>Gyro</item>
+        <!--  <item>MachineAuto NFC</item>-->
+        <item>NFC Test</item>
+        <item>PCBA Auto NFC</item>
+        <item>Touch 2</item>
+        <item>Device info</item>
+        <item >TP test</item>
+        <item >Hall Test</item>
+		<item >All Keypad</item>
+		<item>Test Flag</item>
+		<item>Compass</item>
+		<item>HeartBeat</item>
+		<item>HotTF</item>
+		<item>OTG Test</item>
+		<item>BackRecerverLoopback</item>
+		<item >Reboot Test</item>
+		<item>Barometer</item>
+		<item>8 Pin</item>
+		<item>Reset Key</item>
+		<item>Back OTG</item>
+		<item>Two Color Lights</item>
+		<item>Back Charge</item>
+                <item>4G FT</item>
+                <item>5GWIFI</item><!-- 49 -->
+                <item>Code Test</item><!-- 50 -->
+		<item>14 Pin测试</item><!--47--> 
+		<item>Side OTG</item>
+		<item>Finger print</item>
+		<item>Wirless charge</item>
+		<item>External antenna</item>
+    </string-array>
+    
+    <string-array name="MonoTestStrings">
+        <item>Speaker and Storage</item>
+        <item>CheckSIM</item>
+        <item>Camera</item>
+        <item>Charge</item>
+        <item>Sleep/Wake</item>
+        <item>Vibrate</item>
+        <item>RecerverLoopback</item>
+        <item>HeadsetLoopback</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi</item>
+        <item>Bluetooth</item>  
+        <item>FM Radio</item> 
+        <item>Version</item>   
+<!--    <item >Reboot Test</item> -->
+        <item >Backlight test</item>
+        <item >Button lights</item>
+    </string-array>    
+    
+    <string-array name="MachineAutoTestStrings">
+        <item>Version</item>
+        <item>Speaker and Storage</item>
+        <item>Camera</item>
+        <item>RecerverLoopback</item>
+        <item>BackRecerverLoopback</item>
+        <item>Vibrate</item>
+        <item>HeadsetLoopback</item>
+        <item>FM Radio</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <item >Button lights</item>
+        <item >Flash test</item>
+         <item>LCD</item>
+         <item>Touch</item>
+         <item>Sleep/Wake</item>
+         <item>Breathing light</item>
+         <item>Gyro</item>
+         <item>NFC Test</item>
+         <item >Hall Test</item>
+         <item>Compass</item>
+         <item>OTG Test</item>
+         <item>8 Pin</item>
+         <item>Back OTG</item>
+         <item>CheckSIM</item>
+         <item>Wifi</item>
+         <item>Bluetooth</item>
+         <item>Charge</item>
+         <item>Light Senor</item>
+         <item>Proximity Senor</item>
+         <item>GPS Test</item>
+         <item>Two Color Lights</item>
+         <item >All Keypad</item>
+         <item>Back Charge</item>
+	<item>5GWIFI</item>
+	<item>14 Pin</item>
+	<item>Side OTG</item>
+	<item>External antenna</item>
+    </string-array>
+    
+        <string-array name="MachineAutoTestResultStrings">
+        <item>Version</item>
+        <item>Speaker and Storage</item>
+        <item>Camera</item>
+        <item>RecerverLoopback</item>
+        <item>BackRecerverLoopback</item>
+        <item>Vibrate</item>
+        <item>HeadsetLoopback</item>
+        <item>FM Radio</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <item >Button lights</item>
+        <item >Flash test</item>
+         <item>LCD</item>
+         <item>Touch</item>
+         <item>Sleep/Wake</item>
+         <item>Breathing light</item>
+         <item>Gyro</item>
+         <item>NFC Test</item>
+         <item >Hall Test</item>
+         <item>Compass</item>
+         <item>OTG Test</item>
+         <item>8 Pin</item>
+         <item>Back OTG</item>
+         <item>CheckSIM</item>
+         <item>Wifi</item>
+         <item>Bluetooth</item>
+         <item>Charge</item>
+         <item>Light Senor</item>
+         <item>Proximity Senor</item>
+         <item>GPS Test</item>
+         <item>Two Color Lights</item>
+         <item >All Keypad</item>
+         <item>Back Charge</item>
+	<item>5GWIFI</item>
+	<item>14 Pin</item>
+	<item>Side OTG</item>
+	<item>External antenna</item>
+    </string-array>
+    
+    <string-array name="PCBAAutoTestStrings">
+        <item>Version</item>
+        <item>Speaker and Storage</item>
+        <item>Camera</item>
+        <item>RecerverLoopback</item>
+        <item>BackRecerverLoopback</item>
+        <item>Vibrate</item>
+        <item>HeadsetLoopback</item>
+        <item>FM Radio</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <item >Button lights</item>
+        <item >Flash test</item>
+         <item>Sleep/Wake</item>
+         <item>Breathing light</item>
+         <item>Gyro</item>
+         <item>NFC Test</item>
+         <item >Hall Test</item>
+         <item>Compass</item>
+         <item>OTG Test</item>
+         <item>8 Pin</item>
+         <item>Back OTG</item>
+         <item>CheckSIM</item>
+         <item>Wifi</item>
+         <item>Bluetooth</item>
+         <item>Charge</item>
+         <item>Light Senor</item>
+         <item>Proximity Senor</item>
+         <item>GPS Test</item>
+         <item>Two Color Lights</item>
+         <item >All Keypad</item>
+         <item>Back Charge</item>
+         <item>4G FT</item><!-- 31 -->
+         <item>Code Test</item><!-- 32 --> 
+	<item>5GWIFI</item>
+	<item>14 Pin</item> 
+	<item>Side OTG</item>
+	<item>External antenna</item>
+   </string-array> 
+    
+    <string-array name="PCBAAutoTestResultStrings">
+        <item>Version</item>
+        <item>Speaker and Storage</item>
+        <item>Camera</item>
+        <item>RecerverLoopback</item>
+        <item>BackRecerverLoopback</item>
+        <item>Vibrate</item>
+        <item>HeadsetLoopback</item>
+        <item>FM Radio</item>
+        <item>Keypad</item>
+        <item>Motion Sensor</item>
+        <item >Button lights</item>
+        <item >Flash test</item>
+         <item>Sleep/Wake</item>
+         <item>Breathing light</item>
+         <item>Gyro</item>
+         <item>NFC Test</item>
+         <item >Hall Test</item>
+         <item>Compass</item>
+         <item>OTG Test</item>
+         <item>8 Pin</item>
+         <item>Back OTG</item>
+         <item>CheckSIM</item>
+         <item>Wifi</item>
+         <item>Bluetooth</item>
+         <item>Charge</item>
+         <item>Light Senor</item>
+         <item>Proximity Senor</item>
+         <item>GPS Test</item>
+         <item>Two Color Lights</item>
+         <item >All Keypad</item>
+         <item>Back Charge</item>
+         <item>4G FT</item><!-- 31 -->
+         <item>Code Test</item><!-- 32 -->
+	<item>5GWIFI</item>
+	<item>14 Pin</item>
+	<item>Side OTG</item>
+	<item>External antenna</item>
+    </string-array> 
+    
+    <string-array name="FASTMMITestStrings">
+        <item>CAMERA_BACK</item>
+		<item>CAMERA_FRONT</item>
+		<item>BATTERY</item>
+		<item>LCD</item>
+		<item>KEYPADBACKLIGHT</item>
+		<item>FLASHLIGHT</item>
+		<item>LED_RED</item>
+		<item>LED_GREEN</item>
+		<item>GSENSOR</item>
+		<item>LSENSOR</item>
+		<item>MSENSOR</item>
+		<item>PSENSOR</item>
+		<item>SDCARD</item>
+		<item>SIMCARD</item>
+		<item>TOUCH</item>
+		<item>SOFT_KEYS</item>
+		<item>HARDWARE_KEYS</item>
+		<item>VIBRATOR</item>
+		<item>AUDIO_HANDSET</item>
+		<item>AUDIO_HEADSET</item>
+		<item>AUDIO_LOUDSPEAKER</item>
+		<item>WIFI</item>
+		<item>FM</item>
+		<item>BLUETOOTH</item>
+		<item>GPS_GARDEN</item>
+    </string-array> 
+      
+</resources>

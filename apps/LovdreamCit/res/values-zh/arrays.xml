@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string-array name="TestTypeStrings"> 
+        <item>PCBA自动测试</item>
+        <item>整机自动测试</item>
+        <item>单项测试</item>
+        <item>副板测试</item>
+        <item>测试结果</item>
+    </string-array>
+    
+    <string-array name="TestResult"> 
+        <item>PCBA自动测试结果</item>
+        <item>整机自动测试结果</item>
+    </string-array>
+    
+     <string-array name="DeputyBoardTestStrings">
+        <item>话筒回路测试</item> <!-- 0 -->
+        <item>充电测试</item> <!-- 1 -->
+		<item >按键灯</item> <!-- 2 -->
+		<item>呼吸灯</item> <!-- 3 -->
+		<item>键盘测试</item><!-- 4 -->
+		<item>检测SIM/UIM</item><!-- 5 -->
+		<item>距离感应</item><!-- 6 -->
+		<item>照相机前摄</item><!-- 7  -->
+    </string-array>
+    
+    <string-array name="OneByOneTypeStrings">
+        <item>Test Flag</item><!-- 0 -->
+        <item>扬声器和存储卡</item> <!-- 1 -->
+        <item>照相机</item> <!-- 2 -->
+        <item>检测SIM/UIM</item> <!-- 3 -->
+        <item>话筒回路测试</item> <!-- 4 -->
+        <item>振动测试</item> <!-- 5 -->
+        <item>耳机测试</item> <!-- 6 -->
+        <item>收音机</item> <!-- 7 -->
+        <item>键盘测试</item> <!-- 8 -->
+        <item>重力感应</item> <!-- 9 -->
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi测试</item> <!-- 10 -->
+        <item>蓝牙测试</item> <!-- 11 -->
+        <item>充电测试</item> <!-- 12 -->
+		<item>光感应</item> <!-- 13 -->
+		<item>距离感应</item> <!-- 14 -->
+		<item>触屏距离感应</item> <!-- 15 -->
+        <item >背光测试</item> <!-- 16 -->
+        <item >按键灯</item> <!-- 17 -->
+       	<item >闪光灯测试</item> <!-- 18 -->
+        <item>GPS测试</item> <!-- 19 -->
+        <item>LCD</item> <!-- 20 -->
+        <item>触屏</item> <!-- 21 -->
+        <item>版本</item> <!-- 22 -->
+        <item>睡眠/唤醒</item> <!-- 23 -->
+        <item>温度</item> <!-- 24 -->
+        <item>呼吸灯</item> <!-- 25 -->
+        <item>陀螺仪</item> <!-- 26 -->
+        <item>NFC测试</item> <!-- 27 -->
+        <!--<item>PCBA自动测试 NFC</item>  28 -->
+        <item>恢复出厂设置</item> <!-- 28 -->
+        <item>宫格测试</item> <!-- 29 -->
+        <item >器件信息</item><!-- 30 -->
+        <item >TP断线测试</item><!-- 31 -->
+        <item >霍尔功能测试</item><!-- 32 -->
+		<item>全键盘测试</item><!-- 33 -->
+		<item>指南针</item><!-- 34 -->
+		<item>心率仪</item><!-- 35 -->
+		<item>T卡热插拔</item><!-- 36 -->
+		<item>OTG测试</item><!-- 37 -->
+		<item>副MIC回路测试</item> <!-- 38 -->
+		<item >重启测试</item><!--  39 -->
+		<item>气压计</item><!-- 40 -->
+		<item>Reset 键</item><!-- 41 -->
+		<item>三色灯</item><!-- 42 -->
+                <item>5GWIFI</item><!--43-->
+                <item>背夹OTG测试</item><!-- 44 -->
+                <item>背夹充电</item><!-- 45 -->
+                <item>8 Pin测试</item><!-- 46 -->  
+                <item>14 Pin测试</item><!--47--> 
+		<item>侧边OTG</item><!--48-->
+		<item>外置天线</item>
+		<item>指纹测试</item>
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+    
+    <string-array name="CommonTestStrings">  
+        <item>扬声器和存储卡</item><!-- 0 -->
+        <item>检测SIM/UIM</item><!-- 1 -->
+        <item>照相机</item><!-- 2 -->
+        <item>充电测试</item><!-- 3 -->
+        <item>睡眠/唤醒</item><!-- 4 -->
+        <item>振动测试</item><!--  5-->
+        <item>话筒回路测试</item><!-- 6 -->
+        <item>耳机测试</item><!-- 7 -->
+        <item>键盘测试</item><!-- 8 -->
+         <item>重力感应</item><!-- 9 -->
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi测试</item><!-- 10 -->
+        <item>蓝牙测试</item><!-- 11 -->
+        <item>LCD</item><!-- 12 -->
+        <item>触屏</item><!-- 13 -->
+        <item>温度</item><!-- 14 -->
+        <item>GPS测试</item><!-- 15 -->
+        <item>收音机</item><!--  16-->
+		<item>光感应</item><!--  17-->
+		<item>距离感应</item><!-- 18 -->
+        <item>恢复出厂设置</item><!--  19-->
+        <item>版本</item><!-- 20 -->
+        <item >背光测试</item><!-- 21 -->
+        <item >按键灯</item><!--22  -->
+        <item>触屏距离感应</item><!--23  -->
+        <item >闪光灯测试</item><!-- 24 -->
+		<item >重启测试</item><!--25  -->
+		<item>呼吸灯</item><!--26  -->
+        <item>陀螺仪</item><!-- 27 -->
+        <!--  <item>整机自动测试 NFC</item>-->
+         <item>NFC测试</item><!-- 28 -->
+        <item>PCBA自动测试 NFC</item><!--29  -->
+        <item>宫格测试</item><!-- 30 -->
+        <item >器件信息</item><!-- 31 -->
+        <item >TP断线测试</item><!--32  -->
+        <item >霍尔功能测试</item><!--33  -->
+		<item>全键盘测试</item><!-- 34 -->
+		<item>Test Flag</item><!-- 35 -->
+		<item>指南针</item><!-- 36 -->
+		<item>心率仪</item><!-- 37 -->
+		<item>T卡热插拔</item><!-- 38 -->
+		<item>OTG测试</item><!--39  -->
+		<item>副MIC回路测试</item><!--  40-->
+		<item >重启测试</item><!-- 41 -->
+		<item>气压计</item><!-- 42 -->
+		<item>8 Pin测试</item><!-- 43 -->
+		<item>Reset 键</item><!-- 44 -->
+		<item>背夹OTG测试</item><!-- 45 -->
+		<item>三色灯</item><!-- 46 -->
+		<item>背夹充电</item><!-- 47 -->
+                <item>4G FT</item><!-- 48 --> 
+                <item>5GWIFI</item><!-- 49 --> 
+                <item>明码测试</item><!-- 50 -->      
+		<item>14 Pin测试</item><!--51-->      
+		<item>侧边OTG</item><!--52-->   
+		<item>指纹测试</item>
+		<item>无线充电</item>
+		<item>外置天线</item> 
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+    
+    <string-array name="MonoTestStrings"> 
+        <item>扬声器和存储卡</item>
+        <item>检测SIM/UIM</item>
+        <item>照相机</item>
+        <item>充电测试</item>
+        <item>睡眠/唤醒</item>
+        <item>振动测试</item>
+        <item>话筒回路测试</item>
+        <item>耳机测试</item>
+        <item>键盘测试</item>
+         <item>重力感应</item>
+        <!--item>Magnetic Sensor</item-->
+        <item>Wifi测试</item>
+        <item>蓝牙测试</item>
+        <item>收音机</item>
+        <item>版本</item>
+<!--    <item >重启测试</item> -->
+        <item >背光测试</item>
+        <item >按键灯</item>
+    </string-array>    
+    
+    <string-array name="MachineAutoTestStrings">
+        <item>版本</item> <!-- 0 -->
+		<item>扬声器和存储卡</item><!-- 1 -->
+		<item>照相机</item><!-- 2 -->
+		<item>话筒回路测试</item><!-- 3 -->
+		<item>副MIC回路测试</item><!-- 4 -->
+		<item>振动测试</item><!-- 5 -->
+		<item>耳机测试</item><!-- 6 -->
+		<item>收音机</item><!-- 7 -->
+		<item>键盘测试</item><!-- 8 -->
+		<item>重力感应</item><!-- 9 -->
+		<item>按键灯</item><!-- 10 -->
+		<item>闪光灯测试</item><!-- 11 -->
+		<item>LCD</item><!-- 12 -->
+		<item>触屏</item><!-- 13 -->
+		<item>睡眠/唤醒</item><!-- 14 -->
+		<item>呼吸灯</item><!-- 15 -->
+		<item>陀螺仪</item><!-- 16 -->
+		<item>NFC测试</item><!-- 17 -->
+		<item>霍尔功能测试</item><!-- 18 -->
+		<item>指南针</item><!-- 19 -->
+		<item>OTG测试</item><!-- 20 -->
+		<item>8 Pin测试</item><!-- 21 -->
+		<item>背夹OTG测试</item><!-- 22 -->
+		<item>检测SIM/UIM</item><!-- 23 -->
+		<item>Wifi测试</item><!-- 24 -->
+		<item>蓝牙测试</item><!-- 25 -->
+		<item>充电测试</item><!-- 26 -->
+		<item>光感应</item><!-- 27 -->
+		<item>距离感应</item><!-- 28 -->
+		<item>GPS测试</item><!-- 29 -->
+		<item>三色灯</item><!-- 30 -->
+		<item>全键盘测试</item><!-- 31 -->
+		<item>背夹充电</item><!-- 32 -->
+                <item>5GWIFI</item>
+                <item>14 Pin测试</item><!--34--> 
+		<item>侧边OTG</item><!--35--> 
+		<item>外置天线</item>
+		<item>指纹测试</item>
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+    
+    <string-array name="MachineAutoTestResultStrings">
+        <item>版本</item> <!-- 0 -->
+		<item>扬声器和存储卡</item><!-- 1 -->
+		<item>照相机</item><!-- 2 -->
+		<item>话筒回路测试</item><!-- 3 -->
+		<item>副MIC回路测试</item><!-- 4 -->
+		<item>振动测试</item><!-- 5 -->
+		<item>耳机测试</item><!-- 6 -->
+		<item>收音机</item><!-- 7 -->
+		<item>键盘测试</item><!-- 8 -->
+		<item>重力感应</item><!-- 9 -->
+		<item>按键灯</item><!-- 10 -->
+		<item>闪光灯测试</item><!-- 11 -->
+		<item>LCD</item><!-- 12 -->
+		<item>触屏</item><!-- 13 -->
+		<item>睡眠/唤醒</item><!-- 14 -->
+		<item>呼吸灯</item><!-- 15 -->
+		<item>陀螺仪</item><!-- 16 -->
+		<item>NFC测试</item><!-- 17 -->
+		<item>霍尔功能测试</item><!-- 18 -->
+		<item>指南针</item><!-- 19 -->
+		<item>OTG测试</item><!-- 20 -->
+		<item>8 Pin测试</item><!-- 21 -->
+		<item>背夹OTG测试</item><!-- 22 -->
+		<item>检测SIM/UIM</item><!-- 23 -->
+		<item>Wifi测试</item><!-- 24 -->
+		<item>蓝牙测试</item><!-- 25 -->
+		<item>充电测试</item><!-- 26 -->
+		<item>光感应</item><!-- 27 -->
+		<item>距离感应</item><!-- 28 -->
+		<item>GPS测试</item><!-- 29 -->
+		<item>三色灯</item><!-- 30 -->
+		<item>全键盘测试</item><!-- 31 -->
+		<item>背夹充电</item><!-- 32 -->
+		<item>5GWIFI</item>
+		<item>14 Pin测试</item><!--34-->
+		<item>侧边OTG</item><!--35--> 
+		<item>外置天线</item>
+		<item>指纹测试</item>
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+    
+    <string-array name="PCBAAutoTestStrings">
+		<item>版本</item> <!-- 0 -->
+		<item>扬声器和存储卡</item> <!-- 1 -->
+		<item>照相机</item> <!-- 2 -->
+		<item>话筒回路测试</item> <!--3  -->
+		<item>副MIC回路测试</item> <!-- 5 -->
+		<item>振动测试</item> <!-- 5 -->
+		<item>耳机测试</item> <!--6  -->
+		<item>收音机</item> <!-- 7 -->
+		<item>键盘测试</item> <!-- 8 -->
+		<item>重力感应</item> <!-- 9 -->
+		<item>按键灯</item> <!--  10-->
+		<item>闪光灯测试</item> <!--  11-->
+		<item>睡眠/唤醒</item> <!--12  -->
+		<item>呼吸灯</item> <!--  13-->
+		<item>陀螺仪</item> <!-- 14 -->
+		<item>NFC测试</item> <!--15  -->
+		<item>霍尔功能测试</item> <!--16  -->
+		<item>指南针</item> <!--17  -->
+		<item>OTG测试</item> <!-- 18 -->
+		<item>8 Pin测试</item><!-- 19 -->
+		<item>背夹OTG测试</item><!-- 20 -->
+		<item>检测SIM/UIM</item> <!-- 21 -->
+		<item>Wifi测试</item> <!-- 22 -->
+		<item>蓝牙测试</item> <!-- 23 -->
+		<item>充电测试</item> <!--24  -->
+		<item>光感应</item> <!-- 25 -->
+		<item>距离感应</item> <!-- 26 -->
+		<item>GPS测试</item> <!-- 27 -->
+		<item>三色灯</item><!-- 28 -->
+		<item>全键盘测试</item><!-- 29 -->
+		<item>背夹充电</item><!-- 30 -->
+                <item>4G FT</item><!-- 31 -->
+                <item>明码测试</item><!-- 32 -->
+		<item>5GWIFI</item>
+		<item>14 Pin测试</item><!--34-->
+		<item>侧边OTG</item><!--35-->
+		<item>外置天线</item> 
+		<item>指纹测试</item>
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+   
+    <string-array name="PCBAAutoTestResultStrings">
+       	<item>版本</item> <!-- 0 -->
+		<item>扬声器和存储卡</item> <!-- 1 -->
+		<item>照相机</item> <!-- 2 -->
+		<item>话筒回路测试</item> <!--3  -->
+		<item>副MIC回路测试</item> <!-- 5 -->
+		<item>振动测试</item> <!-- 5 -->
+		<item>耳机测试</item> <!--6  -->
+		<item>收音机</item> <!-- 7 -->
+		<item>键盘测试</item> <!-- 8 -->
+		<item>重力感应</item> <!-- 9 -->
+		<item>按键灯</item> <!--  10-->
+		<item>闪光灯测试</item> <!--  11-->
+		<item>睡眠/唤醒</item> <!--12  -->
+		<item>呼吸灯</item> <!--  13-->
+		<item>陀螺仪</item> <!-- 14 -->
+		<item>NFC测试</item> <!--15  -->
+		<item>霍尔功能测试</item> <!--16  -->
+		<item>指南针</item> <!--17  -->
+		<item>OTG测试</item> <!-- 18 -->
+		<item>8 Pin测试</item><!-- 19 -->
+		<item>背夹OTG测试</item><!-- 20 -->
+		<item>检测SIM/UIM</item> <!-- 21 -->
+		<item>Wifi测试</item> <!-- 22 -->
+		<item>蓝牙测试</item> <!-- 23 -->
+		<item>充电测试</item> <!--24  -->
+		<item>光感应</item> <!-- 25 -->
+		<item>距离感应</item> <!-- 26 -->
+		<item>GPS测试</item> <!-- 27 -->
+		<item>三色灯</item><!-- 28 -->
+		<item>全键盘测试</item><!-- 29 -->
+		<item>背夹充电</item><!-- 30 -->
+                <item>4G FT</item><!-- 31 -->
+                <item>明码测试</item><!-- 32 -->
+		<item>5GWIFI</item><!--33-->
+		<item>14 Pin测试</item><!--34--> 
+		<item>侧边OTG</item><!--35-->
+		<item>外置天线</item>
+		<item>指纹测试</item>
+		<item>前置闪光灯测试</item><!-- 24 -->
+    </string-array>
+    <string-array name="FASTMMITestStrings">
+        <item>CAMERA_BACK</item>
+		<item>CAMERA_FRONT</item>
+		<item>BATTERY</item>
+		<item>LCD</item>
+		<item>KEYPADBACKLIGHT</item>
+		<item>FLASHLIGHT</item>
+		<item>LED_RED</item>
+		<item>LED_GREEN</item>
+		<item>GSENSOR</item>
+		<item>LSENSOR</item>
+		<item>MSENSOR</item>
+		<item>PSENSOR</item>
+		<item>SDCARD</item>
+		<item>SIMCARD</item>
+		<item>TOUCH</item>
+		<item>SOFT_KEYS</item>
+		<item>HARDWARE_KEYS</item>
+		<item>VIBRATOR</item>
+		<item>AUDIO_HANDSET</item>
+		<item>AUDIO_HEADSET</item>
+		<item>AUDIO_LOUDSPEAKER</item>
+		<item>WIFI</item>
+		<item>FM</item>
+		<item>BLUETOOTH</item>
+		<item>GPS_GARDEN</item>
+    </string-array> 
+    
+</resources>

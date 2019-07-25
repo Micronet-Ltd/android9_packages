@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  <RadioGroup
+  android:id="@+id/wlan_switch"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <RadioButton
+    	android:id="@+id/switch_high"
+ 	    android:layout_width="wrap_content" 
+  	    android:layout_height="wrap_content" 
+  	    android:text="@string/switch_high"
+  	    />
+    <RadioButton
+    	android:id="@+id/switch_middle"
+ 	    android:layout_width="wrap_content" 
+  	    android:layout_height="wrap_content" 
+  	    android:text="@string/switch_middle"
+  	    />
+    <RadioButton
+    	android:id="@+id/switch_low"
+ 	    android:layout_width="wrap_content" 
+  	    android:layout_height="wrap_content" 
+  	    android:text="@string/switch_low"
+  	    />		
+</RadioGroup>
+  
+  
+</LinearLayout>

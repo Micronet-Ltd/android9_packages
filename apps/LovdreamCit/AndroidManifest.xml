@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="lovdream.android.cit"
+      android:sharedUserId="android.uid.system" 
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.HARDWARE_TEST" />
+    <uses-permission android:name="android.permission.INJECT_EVENTS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCAION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.REBOOT"/>
+    <uses-permission android:name="android.permission.SHUTDOWN"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.NFC" />
+	<uses-permission android:name="android.permission.SHUTDOWN"/>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+	<uses-permission android:name="android.permission.BLUETOOTH"/>  
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+	
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" ></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" ></uses-permission>
+	
+    <application android:icon="@drawable/icon" android:label="@string/app_name"
+           		 android:process="system">
+    
+		<activity android:name=".CITMain" android:label="@string/app_name"  android:screenOrientation="portrait" >
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".CITAuto" android:label="@string/app_name" android:screenOrientation="portrait" />
+		<activity android:name=".PCBATest" android:label="@string/pcba_test_text" android:screenOrientation="portrait" />
+		
+		<receiver android:name="CITBroadcastReceiver">
+			<intent-filter>
+				<action android:name="com.android.lovdream.cit" />
+				<data android:scheme="cit_secret_code" android:host="789" />
+			</intent-filter>
+		</receiver>
+		
+<activity android:name=".SpeakAndStorageTest" android:process="com.android.music" android:label="@string/app_name" />	
+<activity android:name=".LCDTest" android:label="@string/test_lcd" android:screenOrientation="portrait" />
+<activity android:name=".GPSTest" android:label="@string/test_gps_test" android:screenOrientation="portrait" />
+<activity android:name=".LightSenor" android:label="@string/test_light_senor" android:screenOrientation="portrait" />
+<activity android:name=".MagneticTest" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".MotionSenorTest" android:label="@string/test_motion_sensor" android:screenOrientation="portrait" />
+<activity android:name=".ProximitySenor" android:label="@string/test_proximity_senor" android:screenOrientation="portrait" />
+<activity android:name=".HallTest" android:label="@string/test_hall" android:screenOrientation="portrait" />
+<activity android:name=".StorageTest" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".TouchTest" android:label="@string/test_touch" android:screenOrientation="portrait" />
+<activity android:name=".TouchTest2" android:label="@string/test_touch" android:screenOrientation="portrait" />
+<activity android:name=".AllKeyTest" android:label="@string/app_name" android:screenOrientation="portrait"/>
+<activity android:name=".AllKeyTestPCBA" android:label="@string/app_name" android:screenOrientation="portrait"/>
+<activity android:name=".KeyTest" android:label="@string/test_keypad" android:screenOrientation="portrait" />
+<activity android:name=".KeyTestDeputyBoard" android:label="@string/test_keypad" android:screenOrientation="portrait" />    
+<activity android:name=".FMTest" android:label="@string/test_fm_radio" android:screenOrientation="portrait" android:process="lovdream.android.cit"/>
+<activity android:name=".Version" android:label="@string/test_version" android:screenOrientation="portrait" />
+<activity android:name=".FlashTest" android:label="@string/test_flash_test" android:screenOrientation="portrait" />
+<activity android:name=".FlashTestFront" android:label="@string/test_flash_front_test" android:screenOrientation="portrait" />
+<activity android:name=".WifiTest" android:label="@string/test_wifi" android:screenOrientation="portrait" />
+<activity android:name=".WifiTestNew" android:label="@string/test_wifi" android:screenOrientation="portrait" />
+<activity android:name=".WifiConnectTest" android:label="@string/test_wifi" android:screenOrientation="portrait" />
+<activity android:name=".Wifi5GConnectTest" android:label="@string/test_5gwifi" android:screenOrientation="portrait" />
+<activity android:name=".WifiAdjustment" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".BluetoothDut" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".TouchTest3" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".BluetoothTest" android:label="@string/test_bluetooth" android:screenOrientation="portrait" />
+<activity android:name=".BluetoothTestNew" android:label="@string/test_bluetooth" android:screenOrientation="portrait" />
+<activity android:name=".CITOneByOne" android:label="@string/app_name"  android:screenOrientation="portrait" />
+<activity android:name=".Headset" android:label="@string/test_headsetLoopback" android:screenOrientation="portrait" />
+<activity android:name=".Recerver" android:label="@string/test_recerverLoopback" android:screenOrientation="portrait" />
+<activity android:name=".FactoryTestResultDetail" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".FingerPrintTest" android:label="@string/app_name" android:screenOrientation="portrait" android:process="lovdream.android.cit"/>
+<activity android:name=".DeputyBoardTest" android:label="@string/app_name" />
+<activity android:name=".ExternalAntennaTest" android:label="@string/app_name" />
+<activity android:name=".FactoryTestResult" android:label="@string/app_name" android:screenOrientation="portrait" >
+    <intent-filter>
+		<action android:name="android.intent.action.FactoryTestResult" />
+	</intent-filter>
+</activity>      
+<activity android:name=".TestResult" android:label="@string/app_name" android:screenOrientation="portrait" >
+    <intent-filter>
+		<action android:name="android.intent.action.TestResult" />
+	</intent-filter>
+</activity>  
+<activity android:name=".PCBAorMachineResult" android:label="@string/app_name" android:screenOrientation="portrait" />
+<activity android:name=".PCBAorMachineResultDetail" android:label="@string/app_name" android:screenOrientation="portrait" />  
+<activity android:name=".WifiAndBt" android:label="@string/app_name" android:screenOrientation="portrait" >
+    <intent-filter>
+		<action android:name="android.intent.action.WifiAndBt" />
+	</intent-filter>
+</activity>   
+<activity android:name=".TouchProximitySenor" android:label="@string/app_name" android:screenOrientation="portrait" />
+<!-- library usage -->
+		<activity android:name="RebootTest"
+		    	  android:screenOrientation="portrait" 	>
+		    
+		</activity>
+		<receiver android:name="bootReceiver" android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"/>
+			</intent-filter>
+		</receiver>
+<receiver android:name="EmergencyDialerUnlockReceiver">
+               <intent-filter>
+                       <action android:name="android.intent.action.EmergencyDialerUnlock"/>
+               </intent-filter>
+</receiver>
+<activity android:name=".ScreenTest" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:screenOrientation="portrait" />
+<activity android:name=".BacklightTest" android:label="@string/test_backlight_test" android:screenOrientation="portrait" ></activity>
+<activity android:name=".ButtonLights" android:label="@string/test_button_lights" android:screenOrientation="portrait" ></activity>
+<activity android:name=".BreathingLight" android:label="@string/test_breathing_light" android:screenOrientation="portrait" ></activity>
+<activity android:name=".GyroSensor" android:label="@string/test_gyro" android:screenOrientation="portrait" ></activity>
+<activity android:name=".NFCTest" android:label="@string/test_nfc" android:screenOrientation="portrait" android:process="lovdream.android.cit"></activity>
+<activity android:name=".PCBANfc" android:label="@string/test_nfc" android:screenOrientation="portrait" android:process="lovdream.android.cit"></activity>
+<activity android:name=".HeartBeatTest" android:label="@string/heart_beat" android:screenOrientation="portrait" ></activity>
+<activity android:name=".CompassTest" android:label="@string/test_gyro" android:screenOrientation="portrait" ></activity>
+<activity android:name=".BarometerTest" android:label="@string/test_barometer" android:screenOrientation="portrait" ></activity>
+<activity android:name=".EightPinTest" android:label="@string/test_eightpin" android:screenOrientation="portrait" />
+<!-- add 8pin-otg by wt start -->
+<activity android:name=".EightPinOtgTest" android:label="@string/test_eight_otg" android:screenOrientation="portrait" />
+<!-- add 8pin-otg by wt end -->
+<!--add side otg by zzj start  -->
+<activity android:name=".SideOtgTest" android:label="@string/test_side_otg" android:screenOrientation="portrait" />
+<!--add side otg by zzj end  -->
+<activity android:name=".OtgTest" android:label="@string/test_otg" android:screenOrientation="portrait" />
+<activity android:name=".TestFlag" android:label="@string/test_flag_title" android:screenOrientation="portrait" />
+<activity android:name=".HotTFTest" android:label="@string/hot_tf" android:screenOrientation="portrait" />
+<activity android:name=".TwoColorLights" android:label="@string/two_color_light" android:screenOrientation="portrait" />
+<activity android:name=".RenameAppBack" android:label="@string/rename_app_back" android:screenOrientation="portrait" >
+    <intent-filter>
+		<action android:name="android.intent.action.RenameAppBack" />
+	</intent-filter>
+</activity>
+
+<activity android:name=".DeviceInfoCit" android:label="@string/device_info_cit" android:screenOrientation="portrait" >
+    <intent-filter>
+		<action android:name="android.intent.action.DeviceInfoCit" />
+	</intent-filter>
+</activity>
+    
+               
+    </application>
+
+
+</manifest> 

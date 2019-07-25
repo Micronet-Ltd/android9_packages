@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="@string/test_setting">
+        <PreferenceScreen 
+        android:title="@string/test_switch"
+        >
+        <intent
+        android:targetPackage="com.android.lovdream"
+        android:targetClass="com.android.lovdream.TestSwitch"
+        />
+        </PreferenceScreen>
+        <PreferenceScreen 
+            android:key="yl_auto_reg_switch"
+        android:title="@string/test_switch_yl"
+        >
+        <intent
+        android:targetPackage="com.android.lovdream"
+        android:targetClass="com.android.lovdream.YLAutoRegSwitch"
+        />
+        </PreferenceScreen>
+        <PreferenceScreen  android:key="tcard"
+            android:title="@string/t_card"
+          >
+        </PreferenceScreen>
+
+        <!--PreferenceScreen
+        android:title="@string/gps"
+        >
+        <intent
+        android:targetPackage="lovdream.android.cit"
+        android:targetClass="lovdream.android.cit.GPSTest"
+        />
+        </PreferenceScreen-->
+
+        <Preference android:key="inter_version" 
+                style="?android:preferenceInformationStyle"
+                android:title="@string/inter_version"
+                android:summary="@string/device_info_default"/>
+        
+        <Preference android:key="modem_version" 
+                style="?android:preferenceInformationStyle"
+                android:title="@string/modem_version"
+                android:summary="@string/device_info_default"/>
+
+    <Preference
+        android:key="preferred_network_mode_key"
+        android:summary="@string/preferred_network_mode_summary"
+        android:title="@string/preferred_network_mode_title" >
+    </Preference>
+
+    <!-- add by hudayu for bug 0017847 -->
+    <SwitchPreference
+        android:key="sar_switch"
+        android:title="@string/sar_switch_on"
+        />
+
+    <!--Preference
+        android:key="edl_switch"
+        android:title="@string/edl_switch"
+		>
+    </Preference-->
+
+</PreferenceScreen>

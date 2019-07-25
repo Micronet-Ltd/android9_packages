@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">About phone</string>
+    <string name="device_info_default">Unknown</string>
+    <string name="model_number">Model number</string>
+    <string name="build_number">Build number</string>
+    <string name="inter_version">Inter Version</string>
+    <string name="hardware_version">"Hardware Version"</string>
+    <string name="status_prl_version">PRL Version</string>
+    <string name="uim">"UIM ID"</string>
+    <string name="status_meid_number">"MEID"</string>
+    <string name="device_info_not_available">Not available</string>
+    <string name="switch_on">"ON"</string>
+    <string name="switch_off">"OFF"</string>
+     <string name="test_switch">"Test Switch"</string>
+     <string name="wlan_test">"Wlan Test"</string>
+     <string name="switch_high">"High"</string>
+	 <string name="switch_middle">"MIddle"</string>
+	 <string name="switch_low">"Low"</string>	 
+	 <string name="yes">"Yes"</string>
+    <string name="no">"No"</string>
+    <string name="reboot_message">"System will be reboot"</string>
+    <string name="test_setting">Test Settings</string>
+    
+    <string name="wlan_info">About Wi-Fi</string>
+    <string name="wlan_wait_msg">Getting MAC Address</string>
+    <string name="wlan_mac_title">About Wi-Fi</string>
+    <string name="wlan_dialog_title">Wi-Fi MAC Address</string>
+    <string name="wlan_acquire_mac_fail">Getting Wi-Fi MAC failed!</string>
+    <string name="wlan_dialog_ok">OK</string>
+    <string name="failed">Operation failed</string>
+    <string name="t_card">"T Card Upgrade"</string>
+     <string name="gps">"Test GPS"</string>
+     <string name="modem_version">"Modem version"</string>
+   	<string name="test_switch_yl">Auto regist switch</string>
+   	<string name="preferred_network_mode_title">Network Mode</string>
+    <string name="preferred_network_mode_summary">Change the network operating mode</string>
+    <string name="change_imei_lable">" Please Input IMEI:"</string>
+      <string name="change_meid_lable">" Please Input Meid:"</string>
+    <string name="card_1">"IMEI1:"</string>
+       <string name="card_2">"IMEI2:"</string> 
+        <string name="card">"MEID:"</string>
+     <string name="change_meid_title">Reset IMEI</string>
+        <string name="change_meid_label">Reset MEID</string>
+     <string name="submit">OK</string>
+     <string name="edit_hint">Must enter 15 digits (0-9)</string>
+       <string name="edit_meid_hint">Must 14 digits(0-9) or letters(a-f)</string>
+     <string name="imei_erro_tip">Card 1 Setting failed! Must be 15 digits (0-9)</string>
+      <string name="imei_erro_tip1">Card 2 Setting failed! Must be 15 digits (0-9)</string>
+      <string name="meid_erro_tip">Setting failed! Must be 14 digits(0-9) or letters(a-f)</string>
+     <string name="set_successful">Card 1 Set Successfully！</string>
+      <string name="set_successful1">Card 2 Set Successfully！</string>
+      <string name="cancel">Exit</string>
+
+<!--0013141 add by zj -->
+      <string name="home_label">HwModuleTest</string>
+      <string name="home_command_red">Red</string>
+      <string name="home_command_green">Green</string>
+      <string name="home_command_blue">Blue</string>
+      <string name="home_command_receiver">Receiver</string>
+      <string name="home_command_vibration">Vibration</string>
+      <string name="home_command_dimming">Dimming</string>
+      <string name="home_command_megaCam">Mega cam</string>
+      <string name="home_command_sensor">Sensor</string>
+      <string name="home_command_touch">Touch</string>
+      <string name="home_command_sleep">Sleep</string>
+      <string name="home_command_speaker">Speaker</string>
+      <string name="home_command_subKey">Sub key</string>
+      <string name="home_command_frontCam">Front cam</string>
+      <string name="home_command_lowFrequency">LOW FREQUENCY</string>
+      <string name="home_command_sensorHubTest">SensorHubTest</string>
+      <string name="home_command_black">Black</string>
+      <string name="home_command_hallIc">HALL  IC</string>
+
+      <string name="device_id_number">1223121</string>
+      <string name="device_id_imei1">IMEI1</string>
+      <string name="device_id_imei2">IMEI2</string>
+      <string name="device_id_sn">SN</string>
+      <string name="device_id_meid">MEID</string>
+      <string name="device_id_check">check</string>
+	<string name="device_id_title">IMEI(MEID) and S/N</string>
+      
+	<string name="edl_switch">Switch to edl</string>
+	<string name="edl_switch_confirm">Confirm?</string>
+  <string name="sar_switch_on">Sar function</string>
+  <string name="prompt_title">Prompt message</string>
+  <string name="prompt_open_message">To open the Sar function, please restart your phone</string>
+  <string name="prompt_close_message">To close the Sar function, please restart your phone</string>
+  <string name="prompt_cancle">Cancle</string>
+</resources>
