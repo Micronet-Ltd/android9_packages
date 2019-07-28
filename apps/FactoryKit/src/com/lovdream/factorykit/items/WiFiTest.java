@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
@@ -141,6 +142,7 @@ public class WiFiTest extends TestItemBase{
 
 		mWifiManager = (WifiManager) getActivity()
 				.getSystemService(Context.WIFI_SERVICE);
+		
 	}
 
 	CountDownTimer mCountDownTimer = new CountDownTimer(OUT_TIME, SCAN_INTERVAL){
@@ -236,6 +238,9 @@ public class WiFiTest extends TestItemBase{
 					return;
 				}
 				WifiInfo info = (WifiInfo)intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
+				if((info == null)){
+					 info = mWifiManager.getConnectionInfo();
+				}
 				logd(info);
 				if((info != null) && getTestSSID().equals(formatSSID(info.getSSID()))){
 					String connection_success_msg = getString(R.string.connection_success,getTestSSID());
