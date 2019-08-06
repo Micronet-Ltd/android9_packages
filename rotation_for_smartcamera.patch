@@ -1,0 +1,34 @@
+diff --git a/apps/SnapdragonCamera/src/com/android/camera/PhotoUI.java b/apps/SnapdragonCamera/src/com/android/camera/PhotoUI.java
+index 3e89da3..25f37b5 100755
+--- a/apps/SnapdragonCamera/src/com/android/camera/PhotoUI.java
++++ b/apps/SnapdragonCamera/src/com/android/camera/PhotoUI.java
+@@ -1104,6 +1104,7 @@ public class PhotoUI implements PieListener,
+     }
+ 
+     public void setDisplayOrientation(int orientation) {
++	orientation=0;
+         if (mFaceView != null) {
+             mFaceView.setDisplayOrientation(orientation);
+         }
+@@ -1411,6 +1412,8 @@ public class PhotoUI implements PieListener,
+ 
+     public void setOrientation(int orientation, boolean animation) {
+         mOrientation = orientation;
++	orientation=0;
++	animation=true; 
+         mCameraControls.setOrientation(orientation, animation);
+         if (mMenuHelp != null)
+             mMenuHelp.setOrientation(orientation, animation);
+diff --git a/apps/SnapdragonCamera/src/com/android/camera/VideoUI.java b/apps/SnapdragonCamera/src/com/android/camera/VideoUI.java
+index 7d167ff..8e47795 100755
+--- a/apps/SnapdragonCamera/src/com/android/camera/VideoUI.java
++++ b/apps/SnapdragonCamera/src/com/android/camera/VideoUI.java
+@@ -1209,6 +1209,8 @@ public class VideoUI implements PieRenderer.PieListener,
+     }
+ 
+     public void setOrientation(int orientation, boolean animation) {
++	orientation=0;
++	animation=true; 
+         mCameraControls.setOrientation(orientation, animation);
+         if (mMenuLayout != null)
+             mMenuLayout.setOrientation(orientation, animation);
