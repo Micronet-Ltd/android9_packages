@@ -489,8 +489,7 @@
     <string name="dialog_ok">OK</string>
 
     <!-- Low-memory dialog message [CHAR LIMIT=NONE] -->
-    <string name="spaceIsLow_content" product="default">Your SD card is running out of space. Change the quality setting or delete some images or other files.</string>
-
+    <string name="spaceIsLow_content" product="default">Out of space. Change the quality setting or delete some images or other files.</string>
     <!-- Camera format string for new image files. Passed to java.text.SimpleDateFormat. -->
     <string name="image_file_name_format" translatable="false">"'IMG'_yyyyMMdd_HHmmss"</string>
 
