@@ -3134,10 +3134,10 @@ public class PhotoModule
         }
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            if(true){
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-            } else {
+            if(true/*is it is smartcamera*/){
                 mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+            } else {
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
             }
         }
     }

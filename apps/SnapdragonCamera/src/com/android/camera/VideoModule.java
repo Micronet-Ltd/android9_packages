@@ -1196,10 +1196,10 @@ public class VideoModule implements CameraModule,
         mUI.setDisplayOrientation(mCameraDisplayOrientation);
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            if(true){
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-            } else {
+            if(true/*if it is smartcamera*/){
                 mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+            } else {
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
             }
         }
     }
