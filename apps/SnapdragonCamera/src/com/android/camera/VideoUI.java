@@ -1209,6 +1209,8 @@ public class VideoUI implements PieRenderer.PieListener,
     }
 
     public void setOrientation(int orientation, boolean animation) {
+	orientation=0;
+	animation=true; 
         mCameraControls.setOrientation(orientation, animation);
         if (mMenuLayout != null)
             mMenuLayout.setOrientation(orientation, animation);
