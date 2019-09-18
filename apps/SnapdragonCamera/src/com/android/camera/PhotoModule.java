@@ -3121,9 +3121,12 @@ public class PhotoModule
     }
 
     private void setDisplayOrientation() {
-        mDisplayRotation = CameraUtil.getDisplayRotation(mActivity);
-        mDisplayOrientation = CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId);
-        mCameraDisplayOrientation = mDisplayOrientation;
+        mDisplayRotation = CameraUtil.getDisplayRotation(mActivity);        
+        
+        mDisplayOrientation = CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId);                
+        
+        mCameraDisplayOrientation = mDisplayOrientation;        
+	 
         // This will be called again in checkDisplayRotation(), so there
         // should not be any problem even if mUI is null.
         if (mUI != null) {
@@ -3132,14 +3135,10 @@ public class PhotoModule
         if (mFocusManager != null) {
             mFocusManager.setDisplayOrientation(mDisplayOrientation);
         }
-        // Change the camera display orientation
-        if (mCameraDevice != null) {
-            if(true/*is it is smartcamera*/){
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
-            } else {
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-            }
-        }
+        // Change the camera display orientation	
+        if (mCameraDevice != null) {	 	      
+	  mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+        }     
     }
 
     /** Only called by UI thread. */
@@ -4042,8 +4041,9 @@ public class PhotoModule
         //value: 2 - 720x480
         //value: 3 - 1280x720
         //value: 4 - 1920x1080
+        String boardType = SystemProperties.get("persist.vendor.board.config", "");
         int preview_resolution = SystemProperties.getInt("persist.vendor.camera.preview.size", 0);
-        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product"))) {
+        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product")) && !boardType.equals("smartcam")) {
             preview_resolution = 3;
         }
         switch (preview_resolution) {
