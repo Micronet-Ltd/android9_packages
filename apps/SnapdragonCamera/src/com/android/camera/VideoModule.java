@@ -47,6 +47,8 @@ import android.os.Message;
 import android.os.SystemProperties;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
+import android.os.SystemProperties;
+
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
@@ -1196,11 +1198,7 @@ public class VideoModule implements CameraModule,
         mUI.setDisplayOrientation(mCameraDisplayOrientation);
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            if(true/*if it is smartcamera*/){
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
-            } else {
-                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-            }
+           mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);            
         }
     }
 
@@ -1245,7 +1243,7 @@ public class VideoModule implements CameraModule,
         }
 
         setDisplayOrientation();
-        mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+        mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
         setCameraParameters(true);
 
         try {
@@ -1465,7 +1463,7 @@ public class VideoModule implements CameraModule,
             // SurfaceView we will have to take everything into account so the
             // display rotation is considered.
             mCameraDevice.setDisplayOrientation(
-                    CameraUtil.getDisplayOrientation(mDisplayRotation+180, mCameraId));
+                    CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId));
             mCameraDevice.startPreview();
             mPreviewing = true;
             mMediaRecorder.setPreviewDisplay(mUI.getSurfaceHolder().getSurface());
@@ -2273,10 +2271,12 @@ public class VideoModule implements CameraModule,
      private void qcomSetCameraParameters(){
         // add QCOM Parameters here
         // Set color effect parameter.
-        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product"))) {
+        String boardType = SystemProperties.get("persist.vendor.board.config", "");
+        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product")) && !boardType.equals("smartcam")) {
             mDesiredPreviewWidth = 1280;
             mDesiredPreviewHeight = 720;
         }
+        
         Log.i(TAG,"NOTE: qcomSetCameraParameters " + videoWidth + " x " + videoHeight);
         String colorEffect = mPreferences.getString(
             CameraSettings.KEY_COLOR_EFFECT,
