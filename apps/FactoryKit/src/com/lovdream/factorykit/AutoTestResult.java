@@ -1,7 +1,11 @@
 package com.lovdream.factorykit;
 
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.TelephonyManager;
 import android.app.Fragment;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -18,19 +22,35 @@ import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import com.lovdream.factorykit.Config.TestItem;
+import com.swfp.utils.ServiceUtil;
+
 
 public class AutoTestResult extends Fragment{
 
 	private static final String TAG = Main.TAG;
+	private static final String CURRENT = "/sys/class/power_supply/bms/current_now";
+    StringBuilder data;
+    public static final String PASS = "Pass,";
+    public static final String FAIL = "Fail,";
+    public static final String NULL = "Not Tested,";
+    FactoryKitApplication app;
+    Config config;
+    ArrayList<TestItem> mItems;
 
 	private String buildTestResult(){
-
-		FactoryKitApplication app = (FactoryKitApplication)getActivity().getApplication();
-		Config config = app.getTestConfig();
-		ArrayList<TestItem> mItems = config.getTestItems();
-
+	
+		app = (FactoryKitApplication)getActivity().getApplication();
+		config = app.getTestConfig();
+		mItems = config.getTestItems();
+		
+		saveResultsToCsv();
+		
 		String failItems = "";
 		for(TestItem item : mItems){
 			if(item.inAutoTest && (config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_FAIL)){
@@ -72,4 +92,80 @@ public class AutoTestResult extends Fragment{
 		super.onDetach();
 		getActivity().setTitle(R.string.app_name);
 	}
+	
+	private void saveResultsToCsv() {
+        data = getPhoneData(new StringBuilder());
+        String filename = "/sdcard/test_results.csv";
+        BufferedWriter bufferedWriter = null;
+        try {
+            File file = new File(filename);
+            file.delete();
+            bufferedWriter = new BufferedWriter(new FileWriter(file));
+            bufferedWriter.write(("1,"));
+            bufferedWriter.write(data.substring(0, data.length()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bufferedWriter != null) {
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    private StringBuilder getPhoneData(StringBuilder results) {
+        WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        results.append(Build.getSerial() + ",");
+        results.append(telephonyManager.getImei() + ",");
+        String deviceId=telephonyManager.getImei();
+        if (deviceId == null || !deviceId.startsWith("35343610") || deviceId.length()!=15 || !deviceId.matches("\\d+")) {
+            Log.e(TAG,"Bad IMEI: "+deviceId);
+            results.append(FAIL);
+        } else {
+            Log.i(TAG,"IMEI: "+deviceId);
+            results.append(PASS);
+        }
+        results.append(getBuildVersion(Build.DISPLAY) + ",");
+        results.append(wInfo.getMacAddress() + ",");
+        results.append(getCurrent() + ",");
+
+        for(TestItem item : mItems){
+			if(item.inAutoTest){                
+                if(config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_FAIL){
+                    results.append(FAIL);
+                } else if(config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_PASS) {
+                    results.append(PASS);
+                } else {
+                    results.append(NULL);
+                }
+			}
+		}
+        
+        return results;
+
+    }
+    
+    private String getBuildVersion(String fullVersion){
+        String temp = fullVersion.substring(0, Build.DISPLAY.lastIndexOf("_"));
+        return temp.substring(temp.indexOf(Build.MODEL));
+    }
+    
+    private int  getCurrent() {
+		int mCurrent = 0;
+		try {
+			mCurrent=Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT));
+			mCurrent=Math.abs(mCurrent);
+		} catch (Exception e) {
+			mCurrent =0;
+			e.printStackTrace();
+		}
+		
+		return  mCurrent;
+	}
+    
 }
