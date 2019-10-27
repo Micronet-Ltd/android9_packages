@@ -62,6 +62,8 @@ import com.android.camera.ui.RotateTextToast;
 import com.android.camera.ui.ZoomRenderer;
 import com.android.camera.util.CameraUtil;
 
+import android.os.SystemProperties;
+
 public class VideoUI implements PieRenderer.PieListener,
         PreviewGestures.SingleTapListener,
         CameraRootView.MyDisplayListener,
@@ -152,6 +154,10 @@ public class VideoUI implements PieRenderer.PieListener,
         } else {
             return false;
         }
+    }
+    private int mCameraId;
+    public void setCameraId(int cameraId){
+        mCameraId=cameraId;
     }
 
     private class SettingsPopup extends PopupWindow {
@@ -465,20 +471,30 @@ public class VideoUI implements PieRenderer.PieListener,
                     }
                 }
             }
-
-            Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
-                    + ", scaledTextureHeight = " + scaledTextureHeight);
-
-            if (((rotation == 0 || rotation == 180) && scaledTextureWidth > scaledTextureHeight)
-                    || ((rotation == 90 || rotation == 270)
-                        && scaledTextureWidth < scaledTextureHeight)) {
-                lp = new FrameLayout.LayoutParams((int) scaledTextureHeight,
-                        (int) scaledTextureWidth, Gravity.CENTER);
-            } else {
+            
+             String boardType = SystemProperties.get("persist.vendor.board.config", "");
+            if (boardType.equals("smartcam")) {                                
+                scaledTextureWidth = 800;
+                scaledTextureHeight = scaledTextureWidth/mAspectRatio;
+                
                 lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
                         (int) scaledTextureHeight, Gravity.CENTER);
             }
-        }
+            else{		
+		Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
+			+ ", scaledTextureHeight = " + scaledTextureHeight);
+
+		if (((rotation == 0 || rotation == 180) && scaledTextureWidth > scaledTextureHeight)
+			|| ((rotation == 90 || rotation == 270)
+			    && scaledTextureWidth < scaledTextureHeight)) {
+		    lp = new FrameLayout.LayoutParams((int) scaledTextureHeight,
+			    (int) scaledTextureWidth, Gravity.CENTER);
+		} else {
+		    lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
+			    (int) scaledTextureHeight, Gravity.CENTER);
+		}
+            }
+        }        
 
         if (mSurfaceTextureUncroppedWidth != scaledTextureWidth ||
                 mSurfaceTextureUncroppedHeight != scaledTextureHeight) {
@@ -1195,6 +1211,8 @@ public class VideoUI implements PieRenderer.PieListener,
     }
 
     public void setOrientation(int orientation, boolean animation) {
+	//orientation=0;
+	//animation=true; 
         mCameraControls.setOrientation(orientation, animation);
         if (mMenuLayout != null)
             mMenuLayout.setOrientation(orientation, animation);

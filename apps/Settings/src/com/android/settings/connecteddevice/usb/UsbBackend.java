@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 /**
  * Provides access to underlying system USB functionality.
@@ -102,6 +103,10 @@ public class UsbBackend {
         updatePorts();
         return mPortStatus == null ? UsbPort.DATA_ROLE_NONE : mPortStatus.getCurrentDataRole();
     }
+    
+    public boolean isSupportDRP(){
+    	return mPortStatus != null && mPortStatus.isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE);
+    }
 
     public void setPowerRole(int role) {
         int newDataRole = getDataRole();
@@ -142,6 +147,12 @@ public class UsbBackend {
     }
 
     public boolean areAllRolesSupported() {
+    	Log.d("xxfppp", "mPortStatus--->"+mPortStatus);
+    	if(mPortStatus!=null){
+    		boolean s = mPortStatus.isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE);
+    		Log.d("xxfppp", "s--->"+s);
+    	}
+    	
         return mPort != null && mPortStatus != null
                 && mPortStatus
                 .isRoleCombinationSupported(UsbPort.POWER_ROLE_SINK, UsbPort.DATA_ROLE_DEVICE)
@@ -207,15 +218,23 @@ public class UsbBackend {
         UsbPort[] ports = mUsbManager.getPorts();
         if (ports == null) {
             return;
+        }else{
+        	  for (int i = 0; i < ports.length; i++) {
+        	       	 Log.d("xxfuuu", "ports["+i+"]---->"+ports[i]);
+        			}
         }
         // For now look for a connected port, in the future we should identify port in the
         // notification and pick based on that.
         final int N = ports.length;
+        Log.d("xxfuuu", "N---->"+N);
         for (int i = 0; i < N; i++) {
             UsbPortStatus status = mUsbManager.getPortStatus(ports[i]);
+            Log.d("xxfuuu", "status---->"+status.toString());
             if (status.isConnected()) {
                 mPort = ports[i];
                 mPortStatus = status;
+                Log.d("xxfuuu", "mPort---->"+mPort.toString());
+                Log.d("xxfuuu", "mPortStatus---->"+mPortStatus.toString());
                 break;
             }
         }

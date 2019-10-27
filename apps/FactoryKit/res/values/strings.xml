@@ -214,6 +214,7 @@
 	<string name="product_info">Product information</string>
     <string name="model">Model</string>
     <string name="soft_version">SW Version</string>
+    <string name="hardware_version">hardware Version</string>
     <string name="internal_version">Custom version</string>
     <string name="baseband_version">Baseband version</string>
     <string name="tp_info">TP Info</string>
@@ -228,7 +229,7 @@
     <string name="back_headset_mesg">Please test the earphone on the back</string>
     <string name="back_headset">Back Headset</string>
     
-    <string name="back_mic_mesg">待定待定</string>
+    <string name="back_mic_mesg">Back MIC Testing</string>
     <string name="back_mic">Back MIC</string>
 
     <string name="hoare_test_mesg">Please close the magnet to the Holzer </string>

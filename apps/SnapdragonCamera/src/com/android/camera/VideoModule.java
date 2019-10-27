@@ -47,6 +47,8 @@ import android.os.Message;
 import android.os.SystemProperties;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
+import android.os.SystemProperties;
+
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
@@ -278,6 +280,7 @@ public class VideoModule implements CameraModule,
                     mActivity, mCameraId, mHandler,
                     mActivity.getCameraOpenErrorCallback());
         }
+        mUI.setCameraId(mCameraId);
         if (mCameraDevice == null) {
             // Error.
             return;
@@ -500,6 +503,7 @@ public class VideoModule implements CameraModule,
 
         CameraSettings.upgradeGlobalPreferences(mPreferences.getGlobal(), activity);
         mCameraId = getPreferredCameraId(mPreferences);
+        mUI.setCameraId(mCameraId);
 
         mPreferences.setLocalId(mActivity, mCameraId);
         CameraSettings.upgradeLocalPreferences(mPreferences.getLocal());
@@ -1194,7 +1198,7 @@ public class VideoModule implements CameraModule,
         mUI.setDisplayOrientation(mCameraDisplayOrientation);
         // Change the camera display orientation
         if (mCameraDevice != null) {
-            mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+           mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);            
         }
     }
 
@@ -2267,6 +2271,12 @@ public class VideoModule implements CameraModule,
      private void qcomSetCameraParameters(){
         // add QCOM Parameters here
         // Set color effect parameter.
+        String boardType = SystemProperties.get("persist.vendor.board.config", "");
+        if ("msm8953_64_c801".equals(android.os.SystemProperties.get("ro.build.product")) && !boardType.equals("smartcam")) {
+            mDesiredPreviewWidth = 1280;
+            mDesiredPreviewHeight = 720;
+        }
+        
         Log.i(TAG,"NOTE: qcomSetCameraParameters " + videoWidth + " x " + videoHeight);
         String colorEffect = mPreferences.getString(
             CameraSettings.KEY_COLOR_EFFECT,
@@ -2840,6 +2850,7 @@ public class VideoModule implements CameraModule,
         mCameraId = mPendingSwitchCameraId;
         mPendingSwitchCameraId = -1;
         setCameraId(mCameraId);
+        mUI.setCameraId(mCameraId);
 
         closeCamera();
         mUI.collapseCameraControls();

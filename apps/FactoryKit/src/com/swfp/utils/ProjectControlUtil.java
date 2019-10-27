@@ -33,6 +33,11 @@ public class ProjectControlUtil {
 	
 	
 	public static final boolean IS_TYPE_C = isC551 || isC600 ||isC802|| isC600x ;
+	
+	
+	public static void comeCit(boolean isComing){
+		SystemProperties.set("persist.sys.at.cit", String.valueOf(isComing));
+	}
 
 	
 	
@@ -46,7 +51,7 @@ public class ProjectControlUtil {
 	
 	//重力是否两个方向;
 	public static boolean isGravitySenorHasTwoDirection () {
-		boolean isHasTwo= !(isC802 ||  isC600 || isC601);
+		boolean isHasTwo= !(isC802 ||  isC600 || isC601 || isC801);
 		return isHasTwo;
 	}
 

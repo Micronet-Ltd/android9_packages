@@ -214,6 +214,7 @@
 	<string name="product_info">产品信息</string>
     <string name="model">型号</string>
     <string name="soft_version">软件版本</string>
+    <string name="hardware_version">硬件版本</string>
     <string name="internal_version">内部版本号</string>
     <string name="baseband_version">基带版本</string>
     <string name="tp_info">TP信息</string>
@@ -229,7 +230,7 @@
      <string name="back_headset_mesg">请测试背夹耳机</string>
     <string name="back_headset">背夹耳机</string>
     
-      <string name="back_mic_mesg">待定待定</string>
+      <string name="back_mic_mesg">正在测试背夹mic</string>
     <string name="back_mic">背夹MIC</string>
 
     <string name="hoare_test_mesg">请使用磁铁靠近霍尔感应区</string>

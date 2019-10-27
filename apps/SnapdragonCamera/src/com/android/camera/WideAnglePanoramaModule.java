@@ -1129,7 +1129,9 @@ public class WideAnglePanoramaModule
             // as Panoroma will add 90 degree rotation compensation during
             // postprocessing, we need to consider both camera mount angle and
             // this compensation angle
+            
             mCameraDevice.setDisplayOrientation(0);
+            
 
             if (mCameraTexture != null)
             mCameraTexture.setOnFrameAvailableListener(this);

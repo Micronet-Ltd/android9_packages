@@ -15,15 +15,10 @@
 			android:screenOrientation="portrait"
 			android:resizeableActivity="false"
 			android:label="@string/app_name">
-			
-			<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <intent-filter>
+           	<action android:name="lovdream.intent.action.FACTORY_KIT" />	
                 <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="lovdream.intent.action.FACTORY_KIT" />
             </intent-filter>
             
         </activity>

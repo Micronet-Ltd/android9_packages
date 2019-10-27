@@ -79,6 +79,8 @@ public class SystemCodeRoutingManager {
                     Log.d(TAG, "    " + t3tIdentifier.systemCode +
                             "/" + t3tIdentifier.nfcid2 +
                             "/" + t3tIdentifier.t3tPmm);
+
+                    Log.d(TAG, "    " + t3tIdentifier.systemCode + "/");
                 }
             }
             mConfiguredT3tIdentifiers = t3tIdentifiers;

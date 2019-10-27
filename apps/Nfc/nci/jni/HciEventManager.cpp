@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "HciEventManager.h"
+#include "SecureElement.h"
 #include <android-base/stringprintf.h>
 #include <base/logging.h>
 #include <nativehelper/ScopedLocalRef.h>
@@ -24,7 +25,8 @@
 extern bool nfc_debug_enabled;
 const char* APP_NAME = "NfcNci";
 uint8_t HciEventManager::sEsePipe;
-uint8_t HciEventManager::sSimPipe;
+uint8_t HciEventManager::sSim1Pipe;
+uint8_t HciEventManager::sSim2Pipe;
 
 using android::base::StringPrintf;
 
@@ -37,13 +39,59 @@ HciEventManager& HciEventManager::getInstance() {
 
 void HciEventManager::initialize(nfc_jni_native_data* native) {
   mNativeData = native;
-  tNFA_STATUS nfaStat = NFA_HciRegister(const_cast<char*>(APP_NAME),
-                                        (tNFA_HCI_CBACK*)&nfaHciCallback, true);
-  if (nfaStat != NFA_STATUS_OK) {
-    LOG(ERROR) << "HCI registration failed; status=" << nfaStat;
+  tNFA_HCI_GET_GATE_PIPE_LIST gatePipeInfo;
+  gatePipeInfo.status = NFA_STATUS_FAILED;
+  bool isEseAvailable = false, isUicc1Avaialble = false,
+       isUicc2Avaialble = false;
+  tNFA_STATUS nfaStat = NFA_STATUS_FAILED;
+  uint8_t ActualNumEe = nfcFL.nfccFL._NFA_EE_MAX_EE_SUPPORTED;
+  tNFA_EE_INFO mEeInfo[ActualNumEe];
+
+  if ((nfaStat = NFA_AllEeGetInfo(&ActualNumEe, mEeInfo)) != NFA_STATUS_OK) {
+    LOG(ERROR) << StringPrintf("%s: fail get info; error=0x%X", __func__,
+                               nfaStat);
+    ActualNumEe = 0;
+  } else {
+    for (int xx = 0; xx < ActualNumEe; xx++) {
+      if ((mEeInfo[xx].ee_handle == SecureElement::EE_HANDLE_0xF3) &&
+          (mEeInfo[xx].ee_status == 0x00)) {
+        isEseAvailable = true;
+      } else if ((mEeInfo[xx].ee_handle ==
+                  SecureElement::getInstance().EE_HANDLE_0xF4) &&
+                 (mEeInfo[xx].ee_status == 0x00)) {
+        isUicc1Avaialble = true;
+      } else if ((mEeInfo[xx].ee_handle == SecureElement::EE_HANDLE_0xF8) &&
+                 (mEeInfo[xx].ee_status == 0x00)) {
+        isUicc2Avaialble = true;
+      }
+    }
   }
-  sEsePipe = NfcConfig::getUnsigned(NAME_OFF_HOST_ESE_PIPE_ID, 0x16);
-  sSimPipe = NfcConfig::getUnsigned(NAME_OFF_HOST_SIM_PIPE_ID, 0x0A);
+
+  gatePipeInfo = SecureElement::getInstance().getGateAndPipeInfo();
+
+  if (gatePipeInfo.status == NFA_STATUS_OK) {
+    for (uint8_t xx = 0; xx < gatePipeInfo.num_uicc_created_pipes; xx++) {
+      if (isEseAvailable &&
+          (gatePipeInfo.uicc_created_pipe[xx].dest_host ==
+           (SecureElement::EE_HANDLE_0xF3 & ~NFA_HANDLE_GROUP_EE))) {
+        sEsePipe = gatePipeInfo.uicc_created_pipe[xx].pipe_id;
+      } else if (gatePipeInfo.uicc_created_pipe[xx].dest_host ==
+                 (SecureElement::getInstance().EE_HANDLE_0xF4 &
+                  ~NFA_HANDLE_GROUP_EE)) {
+        if (isUicc1Avaialble &&
+            gatePipeInfo.uicc_created_pipe[xx].pipe_id == 0x0A) {
+          sSim1Pipe = gatePipeInfo.uicc_created_pipe[xx].pipe_id;
+        } else if (isUicc2Avaialble &&
+                   gatePipeInfo.uicc_created_pipe[xx].pipe_id == 0x23) {
+          sSim2Pipe = gatePipeInfo.uicc_created_pipe[xx].pipe_id;
+        }
+      }
+    }
+  }
+
+  DLOG_IF(INFO, nfc_debug_enabled) << StringPrintf(
+      "%s: sEsePipe : 0x%0x   sSim1Pipe : 0x%0x  sSim2Pipe : 0x%0x", __func__,
+      sEsePipe, sSim1Pipe, sSim2Pipe);
 }
 
 void HciEventManager::notifyTransactionListenersOfAid(std::vector<uint8_t> aid,
@@ -132,22 +180,24 @@ std::vector<uint8_t> HciEventManager::getDataFromBerTlv(
   return std::vector<uint8_t>();
 }
 
-void HciEventManager::nfaHciCallback(tNFA_HCI_EVT event,
-                                     tNFA_HCI_EVT_DATA* eventData) {
+void HciEventManager::nfaHciEvtHandler(tNFA_HCI_EVT event,
+                                       tNFA_HCI_EVT_DATA* eventData) {
   if (eventData == nullptr) {
     return;
   }
-
-  DLOG_IF(INFO, nfc_debug_enabled) << StringPrintf(
-      "event=%d code=%d pipe=%d len=%d", event, eventData->rcvd_evt.evt_code,
-      eventData->rcvd_evt.pipe, eventData->rcvd_evt.evt_len);
+  DLOG_IF(INFO, nfc_debug_enabled)
+      << StringPrintf("event=%d code=%d pipe=%d len=%d ", event,
+                      eventData->rcvd_evt.evt_code, eventData->rcvd_evt.pipe,
+                      eventData->rcvd_evt.evt_len);
 
   std::string evtSrc;
   if (eventData->rcvd_evt.pipe == sEsePipe) {
     evtSrc = "eSE1";
-  } else if (eventData->rcvd_evt.pipe == sSimPipe) {
+  } else if (eventData->rcvd_evt.pipe == sSim1Pipe) {
     evtSrc = "SIM1";
-  } else {
+  } else if (eventData->rcvd_evt.pipe == sSim2Pipe) {
+    evtSrc = "SIM2";
+  }else {
     LOG(ERROR) << "Incorrect Pipe Id";
     return;
   }

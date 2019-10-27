@@ -73,6 +73,7 @@ public class SystemVersionTest extends TestItemBase{
         mItemInfos.clear();
         int[] titleIds = {R.string.model, R.string.soft_version,
                 R.string.internal_version,R.string.baseband_version,
+                R.string.hardware_version,
                 R.string.sn,
                 R.string.tp_info,R.string.tp_version};
         int length = titleIds.length;
@@ -105,6 +106,9 @@ public class SystemVersionTest extends TestItemBase{
                     break;
                 case R.string.sn:
                     info = getSnVersion();
+                    break;
+                case R.string.hardware_version:
+                    info = getHardwareVersion();
                     break;
                 default:
                     info =UNKNOWN;
@@ -141,5 +145,10 @@ public class SystemVersionTest extends TestItemBase{
             strSN = strSN.substring(0,15);
         }
         return strSN;
+    }
+    
+    
+    private String getHardwareVersion() {
+    	return getSystemproString("persist.sys.broad.config");
     }
 }

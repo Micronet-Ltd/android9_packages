@@ -104,10 +104,8 @@ public class ImeiInfoDialogController {
 
         if (mSubscriptionInfo != null && isCdmaLteEnabled()) {
             // Show IMEI for LTE device
-            mDialog.setText(ID_IMEI_VALUE,
-                    getTextAsDigits(mTelephonyManager.getImei(mSlotId)));
-            mDialog.setText(ID_IMEI_SV_VALUE,
-                    getTextAsDigits(mTelephonyManager.getDeviceSoftwareVersion(mSlotId)));
+               mDialog.setText(ID_IMEI_VALUE,mTelephonyManager.getIMEI());
+               mDialog.setText(ID_IMEI_SV_VALUE,getTextAsDigits(mTelephonyManager.getDeviceSoftwareVersion(mSlotId)));
         } else {
             // device is not GSM/UMTS, do not display GSM/UMTS features
             mDialog.removeViewFromScreen(ID_GSM_SETTINGS);
@@ -115,13 +113,9 @@ public class ImeiInfoDialogController {
     }
 
     private void updateDialogForGsmPhone() {
-        mDialog.setText(ID_IMEI_VALUE,
-                mSubscriptionInfo != null ?
-                getTextAsDigits(mTelephonyManager.getImei(mSlotId)) : "");
-        mDialog.setText(ID_IMEI_SV_VALUE,
-                mSubscriptionInfo != null ?
-                getTextAsDigits(mTelephonyManager.
-                        getDeviceSoftwareVersion(mSlotId)) : "");
+	//mTelephonyManager.getIMEI();
+        mDialog.setText(ID_IMEI_VALUE,mTelephonyManager.getIMEI());
+        mDialog.setText(ID_IMEI_SV_VALUE,getTextAsDigits(mTelephonyManager.getDeviceSoftwareVersion(mSlotId)));
         // device is not CDMA, do not display CDMA features
         mDialog.removeViewFromScreen(ID_CDMA_SETTINGS);
     }

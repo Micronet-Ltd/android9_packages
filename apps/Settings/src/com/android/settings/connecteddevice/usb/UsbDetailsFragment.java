@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.provider.SearchIndexableResource;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.settings.R;
@@ -91,7 +92,7 @@ public class UsbDetailsFragment extends DashboardFragment {
             UsbBackend usbBackend, UsbDetailsFragment fragment) {
         List<UsbDetailsController> ret = new ArrayList<>();
         ret.add(new UsbDetailsHeaderController(context, fragment, usbBackend));
-        ret.add(new UsbDetailsDataRoleController(context, fragment, usbBackend));
+       // ret.add(new UsbDetailsDataRoleController(context, fragment, usbBackend));
         ret.add(new UsbDetailsFunctionsController(context, fragment, usbBackend));
         ret.add(new UsbDetailsPowerRoleController(context, fragment, usbBackend));
         return ret;
