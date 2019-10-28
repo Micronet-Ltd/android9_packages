@@ -16,6 +16,7 @@ import android.app.StatusBarManager;
 import android.app.ActivityManager;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.os.Build;
 import android.os.SystemProperties;
 
 import com.lovdream.factorykit.Utils;
@@ -115,10 +116,17 @@ public class Main extends PreferenceActivity {
 		if("single".equals(type)){
 			fragment = Fragment.instantiate(this,SingleTest.class.getName());
 		}else if("auto".equals(type)){
-			if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
-				showWarningDialog();
-				return;
-			}
+            if(Build.MODEL.contains("MSCAM")){
+                 if(!Utils.isSdMounted(this)){
+                        showWarningDialog();
+                        return;
+                }
+            } else {
+                if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
+                        showWarningDialog();
+                        return;
+                }
+            }
 			fragment = Fragment.instantiate(this,AutoTest.class.getName());
 		}else if("pcba".equals(type)){
 			fragment = Fragment.instantiate(this,PCBATest.class.getName());
