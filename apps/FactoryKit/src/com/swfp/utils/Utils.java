@@ -1,15 +1,28 @@
 
 package com.swfp.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Environment;
+import android.os.StatFs;
+import android.os.storage.StorageManager;
+import android.os.storage.VolumeInfo;
+import android.text.format.Formatter;
+import android.util.Log;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Utils {
-    public Utils() {
+    private static final String TAG = "Utils";
+
+	public Utils() {
         super();
     }
 
@@ -266,6 +279,117 @@ public class Utils {
         System.arraycopy(v0, 0, v3, 0, v0.length);
         System.arraycopy(imput, 0, v3, 1078, col * row);
         return v3;
+    }
+    
+    
+    
+    public static String getRamTotalSize(Context context){//GB
+        String path = "/proc/meminfo";
+        String firstLine = null;
+        int totalRam = 0 ;
+        try{
+            FileReader fileReader = new FileReader(path);
+            BufferedReader br = new BufferedReader(fileReader,8192);
+            firstLine = br.readLine().split("\\s+")[1];
+            br.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if(firstLine != null){
+            totalRam = (int)Math.ceil((new Float(Float.valueOf(firstLine) / (1024 * 1024)).doubleValue()));
+        }
+
+        return totalRam + "GB";//返回1GB/2GB/3GB/4GB
+    }
+    
+    
+    /** 
+    * 获得SD卡总大小 
+    * 
+    * @return 
+    */
+    public String getSDTotalSize(Context context) { 
+      File path = Environment.getExternalStorageDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long totalBlocks = stat.getBlockCount(); 
+      return Formatter.formatFileSize(context, blockSize * totalBlocks); 
+    } 
+    /** 
+    * 获得sd卡剩余容量，即可用大小 
+    * 
+    * @return 
+    */
+    public String getSDAvailableSize(Context context) { 
+      File path = Environment.getExternalStorageDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long availableBlocks = stat.getAvailableBlocks(); 
+      return Formatter.formatFileSize(context, blockSize * availableBlocks); 
+    } 
+    /** 
+    * 获得机身存储内存总大小 
+    * 
+    * @return 
+    */
+    public static  String getRomTotalSize(Context context) { 
+      /*File path = Environment.getDataDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long totalBlocks = stat.getBlockCount(); */
+      return getPrivateStorageInfo(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
+    } 
+    
+    
+    public static String getPrivateStorageInfo(Context mContext) {
+    	StorageManager sm = mContext.getSystemService(StorageManager.class);
+        long totalInternalStorage = sm.getPrimaryStorageSize();
+        long privateFreeBytes = 0;
+        long privateTotalBytes = 0;
+        for (VolumeInfo info : sm.getVolumes()) {
+            final File path = info.getPath();
+            if (info.getType() != VolumeInfo.TYPE_PRIVATE || path == null) {
+                continue;
+            }
+            privateTotalBytes += getTotalSize(info, totalInternalStorage);
+            privateFreeBytes += path.getFreeSpace();
+        }
+        return   Formatter.formatFileSize(mContext, privateTotalBytes);
+        
+    }
+    
+    public static long getTotalSize(VolumeInfo info, long totalInternalStorage) {
+        // Device could have more than one primary storage, which could be located in the
+        // internal flash (UUID_PRIVATE_INTERNAL) or in an external disk.
+        // If it's internal, try to get its total size from StorageManager first
+        // (totalInternalStorage), because that size is more precise because it accounts for
+        // the system partition.
+        if (info.getType() == VolumeInfo.TYPE_PRIVATE
+                && Objects.equals(info.getFsUuid(), StorageManager.UUID_PRIVATE_INTERNAL)
+                && totalInternalStorage > 0) {
+            return totalInternalStorage;
+        } else {
+            final File path = info.getPath();
+            if (path == null) {
+                // Should not happen, caller should have checked.
+                Log.e(TAG, "info's path is null on getTotalSize(): " + info);
+                return 0;
+            }
+            return path.getTotalSpace();
+        }
+    }
+    
+    /** 
+    * 获得机身可用存储内存 
+    * 
+    * @return 
+    */
+    public static String getRomAvailableSize(Context context) { 
+      File path = Environment.getDataDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long availableBlocks = stat.getAvailableBlocks(); 
+      return Formatter.formatFileSize(context, blockSize * availableBlocks); 
     }
 }
 

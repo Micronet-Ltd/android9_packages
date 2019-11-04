@@ -71,7 +71,7 @@ public class TestItemFactory{
 		TestItemBase item = mClasses.get(testItem.key);
 
 		if(item != null){
-			item.init(context,testItem.parameter,testItem.isAutoJudge,testItem.flagIndex);
+			item.init(context,testItem.parameter,testItem.isAutoJudge,testItem.flagIndex,testItem.fm);
 		}
 
 		return item;

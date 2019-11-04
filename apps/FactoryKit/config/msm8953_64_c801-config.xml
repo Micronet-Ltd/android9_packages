@@ -17,6 +17,7 @@
     -->
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="后置摄像头"
         inAutoTest="true"
         inPCBATest="true"
@@ -24,6 +25,7 @@
         key="camera_test_back" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="前置摄像头"
         inAutoTest="true"
         inPCBATest="true"
@@ -39,6 +41,7 @@
         key="flash_light" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="光感应"
         inAutoTest="true"
         inPCBATest="true"
@@ -56,11 +59,20 @@
     -->
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="重力感应"
         inAutoTest="true"
         inPCBATest="true"
         isAutoJudge="true"
         key="gsensor_test" />
+    
+    
+     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
+        displayName="内存测试"
+        inPCBATest="true"
+        isAutoJudge="true"
+        key="memory_test" />
 
     <!--
     	<com.lovdream.factorykit.Config.TestItem
@@ -80,11 +92,12 @@
         key="distance_sensor" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="话筒回路测试"
         inAutoTest="true"
         inPCBATest="true"
         isAutoJudge="false"
-        key="handset_loopback"
+        key="mic_loop"
         parameter="volume:2800;useSpeaker:true" />
 
     <com.lovdream.factorykit.Config.TestItem
@@ -96,6 +109,7 @@
         parameter="tc:18" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="扬声器和存储卡"
         inAutoTest="true"
         inPCBATest="true"
@@ -127,8 +141,15 @@
         inPCBATest="true"
         isAutoJudge="false"
         key="button_light" />
+    
+     <com.lovdream.factorykit.Config.TestItem
+       displayName="背夹灯测试"
+       inPCBATest="true"
+       isAutoJudge="false"
+       key="back_led" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="NFC测试"
         inAutoTest="true"
         inPCBATest="true"
@@ -146,6 +167,7 @@
         parameter="volume:2800" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="OTG测试"
         inAutoTest="true"
         inPCBATest="true"
@@ -168,12 +190,6 @@
 		inBackTest="true"
 	    />
     -->
-
-    <com.lovdream.factorykit.Config.TestItem
-        displayName="背夹灯测试"
-        inBackTest="true"
-        isAutoJudge="false"
-        key="back_led" />
     <!--
      	   	<com.lovdream.factorykit.Config.TestItem
 		key="back_headset"
@@ -239,6 +255,7 @@
     -->
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="检测SIM/UIM"
         inAutoTest="true"
         inPCBATest="true"
@@ -262,6 +279,7 @@
     -->
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="Wifi测试"
         inAutoTest="true"
         inPCBATest="true"
@@ -269,6 +287,7 @@
         key="wifi_test" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="5G Wifi测试"
         inAutoTest="true"
         inPCBATest="true"
@@ -276,6 +295,7 @@
         key="wifi_5g_test" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="蓝牙测试"
         inAutoTest="true"
         inPCBATest="true"
@@ -283,6 +303,7 @@
         key="bt_test" />
 
     <com.lovdream.factorykit.Config.TestItem
+        inSPCBATest="true"
         displayName="GPS测试"
         inAutoTest="true"
         inPCBATest="true"

@@ -185,7 +185,7 @@ public class WiFiTest extends TestItemBase{
 
 		public void handleMessage(Message msg) {
 
-			String s = getString(R.string.wifi_test_mesg) + "\n\n" + "AP List:\n";
+			String s = mContext.getString(R.string.wifi_test_mesg) + "\n\n" + "AP List:\n";
 			wifiInfos = "";
 			if (wifiScanResult != null && wifiScanResult.size() > 0) {
 				for (int i = 0; i < wifiScanResult.size(); i++) {

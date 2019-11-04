@@ -16,15 +16,17 @@ import android.app.StatusBarManager;
 import android.app.ActivityManager;
 import android.preference.PreferenceActivity;
 import android.util.Log;
-import android.os.Build;
 import android.os.SystemProperties;
 
 import com.lovdream.factorykit.Utils;
 import com.swfp.utils.ProjectControlUtil;
+import com.swfp.utils.SaveDataModel;
+import com.swfp.utils.TestDataUtil;
 
 import java.util.List;
 
 import com.lovdream.factorykit.items.SystemVersionTest;
+
 import android.preference.PreferenceScreen;
 
 public class Main extends PreferenceActivity {
@@ -41,7 +43,7 @@ public class Main extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle bundle){
 		super.onCreate(bundle);
-
+		
 		if (ActivityManager.isUserAMonkey()) {
 			Log.e(TAG, "user is a monkey");
 			finish();
@@ -114,29 +116,34 @@ public class Main extends PreferenceActivity {
 		String type = intent.getStringExtra("test_type");
 		Fragment fragment = null;
 		if("single".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SINGLE;
 			fragment = Fragment.instantiate(this,SingleTest.class.getName());
 		}else if("auto".equals(type)){
-            if(Build.MODEL.contains("MSCAM")){
-                 if(!Utils.isSdMounted(this)){
-                        showWarningDialog();
-                        return;
-                }
-            } else {
-                if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
-                        showWarningDialog();
-                        return;
-                }
-            }
+			if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
+				showWarningDialog();
+				return;
+			}
 			fragment = Fragment.instantiate(this,AutoTest.class.getName());
 		}else if("pcba".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.PCBA_1;
 			fragment = Fragment.instantiate(this,PCBATest.class.getName());
+			//((PCBATest)fragment).setPcba_1(true);
+		}else if("spcba".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SPCBA;
+			fragment = Fragment.instantiate(this,PCBATest.class.getName());
+			//((PCBATest)fragment).setPcba_1(true);
 		}else if("pcba2".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.PCBA_2;
 			fragment = Fragment.instantiate(this,BackTest.class.getName());
+			//((PCBATest)fragment).setPcba_1(false);
 		}else if("small".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SMALLPCB;
 			fragment = Fragment.instantiate(this,SmallPCB.class.getName());
 		}else if("result".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.RESULT;
 			fragment = Fragment.instantiate(this,TestResult.class.getName());
 		}else if("usb".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.STRESS;
 			fragment = Fragment.instantiate(this,UsbTest.class.getName());
 		}else if("version".equals(type)){
 			fragment = Fragment.instantiate(this,SystemVersionTest.class.getName());
