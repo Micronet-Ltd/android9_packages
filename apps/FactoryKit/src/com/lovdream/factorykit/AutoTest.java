@@ -18,6 +18,7 @@ import android.widget.Toast;
 import android.widget.TextView;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -33,9 +34,18 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
 	private int mCurrentIndex;
 	
 	private final int AUTO_TEST_TIME_INTERVAL = 300;
+	private final int SMART_TAB_LTE = 0;
+	private final int SMART_TAB_LOW_COST = 1;
+	private final int SMART_CAM_BASIC = 2;
+	private final int SMART_CAM_FULL = 3;
 	private Handler mHandler = new Handler();
 	private boolean quitTest;
-
+    
+    private String[] notRunOnDevType0 = {};
+    private String[] notRunOnDevType1 = {};
+    private String[] notRunOnDevType2 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "back_led", "headset_test_nuno", "led_test", "charging_test", "sim_test", "compass", "lcd_test", "tp_test"};
+    private String[] notRunOnDevType3 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "back_led", "headset_test_nuno", "led_test", "charging_test", "compass", "lcd_test", "tp_test"};
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
@@ -113,7 +123,7 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
 				
 				Log.d(TAG,"mAutoTestRunnale,mCurrentIndex:" + mCurrentIndex);
 				TestItem item = (TestItem)mItems.get(mCurrentIndex++);
-				if(!item.inAutoTest){
+				if(!item.inAutoTest || !isNeededThisTest(item.key)){
 					onTestFinish(null);
 					return;
 				}
@@ -157,5 +167,53 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
 		ft.add(android.R.id.content,fragment);
 		ft.addToBackStack("result");
 		ft.commit();
+	}
+	
+	private int getDeviceType(){
+        int boardType = SystemProperties.getInt("hw.board.id", -1);
+        
+        if(boardType == -1){
+            return -1;
+        }
+        switch (boardType){
+            case 0:
+                return SMART_TAB_LTE;
+            case 1:
+                return SMART_TAB_LOW_COST;
+            case 2:
+                return SMART_CAM_BASIC;
+            case 3: 
+                return SMART_CAM_FULL;
+            default: 
+                return -1;
+        
+        }
+	}
+	
+	private String[] getNotNeededTests(int devType){
+        switch (devType){
+        case 0:
+            return notRunOnDevType0;
+        case 1:
+            return notRunOnDevType1;
+        case 2:
+            return notRunOnDevType2;
+        case 3: 
+            return notRunOnDevType3;    
+        }
+        return null;
+	
+	}
+	
+	private boolean isNeededThisTest (String key){
+        int devType = getDeviceType();
+        boolean needThisTest = true;
+        String[] notNeededTests = getNotNeededTests(devType);
+        for(int i = 0; i < notNeededTests.length; i++){
+            if (key.equals(notNeededTests[i])){
+                needThisTest = false;
+            }
+        }
+        return needThisTest;
 	}
 }

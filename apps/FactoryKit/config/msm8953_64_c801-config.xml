@@ -171,6 +171,7 @@
 
     <com.lovdream.factorykit.Config.TestItem
         displayName="背夹灯测试"
+        inAutoTest="true"
         inBackTest="true"
         isAutoJudge="false"
         key="back_led" />
@@ -305,6 +306,12 @@
         displayName="温度"
         isAutoJudge="false"
         key="temperature_test" />
+    
+     <com.lovdream.factorykit.Config.TestItem
+        displayName="内存测试"
+        inAutoTest="true"
+        isAutoJudge="true"
+        key="memory_test" />
 
     <com.lovdream.factorykit.Config.TestItem
         displayName="宫格测试"

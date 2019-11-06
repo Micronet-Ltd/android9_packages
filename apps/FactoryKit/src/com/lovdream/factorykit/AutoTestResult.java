@@ -38,7 +38,7 @@ public class AutoTestResult extends Fragment{
     StringBuilder data;
     public static final String PASS = "Pass,";
     public static final String FAIL = "Fail,";
-    public static final String NULL = "Not Tested,";
+    public static final String NULL = "NA,";
     FactoryKitApplication app;
     Config config;
     ArrayList<TestItem> mItems;

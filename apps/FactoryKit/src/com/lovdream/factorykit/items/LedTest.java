@@ -12,16 +12,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import android.content.Context;
+import com.android.server.lights.Light;
+import com.android.server.lights.LightsManager;
 
 public class LedTest extends TestItemBase {
-
-	private static final String CONFIG_GREEN_PATH = "/sys/class/leds/green/brightness";
-	private static final String CONFIG_RED_PATH = "/sys/class/leds/red/brightness";
-	private static final String CONFIG_BLUE_PATH = "/sys/class/leds/blue/brightness";
 
 	private Handler mHandler = new Handler();
 	private boolean mIsInTest;
 	private Context mContext;
+	Thread t;
 
 	private int[] colors = { 0xffff0000, 0xff00ff00, 0xff0000ff };
 
@@ -42,25 +41,17 @@ public class LedTest extends TestItemBase {
 	@Override
 	public void onStartTest() {
 		mContext = getActivity();
-		String[] args = getParameter("colors");
-		if (args != null) {
-			try {
-				int[] newColors = new int[args.length];
-				for (int i = 0; i < newColors.length; i++) {
-					newColors[i] = Color.parseColor(args[i]);
-				}
-				colors = newColors;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		mIsInTest = true;
-		new Thread(mRunnable, "t1").start();
+		t = new Thread(mRunnable, "t1");
+		t.start();
 	}
 
 	@Override
 	public void onStopTest() {
+        t.interrupt();
 		mIsInTest = false;
+		setColor(Color.BLACK);
+		
 	}
 
 	private Runnable mRunnable = new Runnable() {
@@ -68,23 +59,31 @@ public class LedTest extends TestItemBase {
 		public void run() {
 			while (mIsInTest) {
 				for (int color : colors) {
-					setColor(color);
-					try {
-						Thread.sleep(1000);
-					} catch (Exception e) {
-					}
+				
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setColor(color);
+                        }
+                    });
+                    try {
+                        Thread.sleep(1000);
+                        } catch (Exception e) {
+                        }
 				}
 			}
-			setColor(-1);
 		}
 	};
 
 	private void setColor(int color) {
-		try {
-			ServiceUtil.getInstance().setThreeLightColor(color, mContext);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        LightsManager lm = new LightsManager(mContext);
+        Light greenRedLight = lm.getLight(LightsManager.LIGHT_ID_NOTIFICATIONS);
+        Light redLight = lm.getLight(LightsManager.LIGHT_ID_BATTERY);
+        if (color == Color.RED){
+            redLight.setColor(color);
+        } else {
+            greenRedLight.setColor(color);
+        }
 
 	}
 
