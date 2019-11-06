@@ -49,6 +49,7 @@ public final class FlagIndex{
 		"noise_mic",                                                      //副MIC回路测试
 		"led_test",                                                      //三色灯
 		"wifi_5g_test",                                                      //5gwifi
+		"memory_test",
 		"back_clip_otg",                                                      //背夹otg测试
 		"noise_mic_front",                                                      //正面副MIC测试
 		"wake_up_test",                                                      //睡眠唤醒
@@ -69,7 +70,8 @@ public final class FlagIndex{
 		"fingerprint_test",                                                      //指纹传感器测试
 		"fm_test",                                                      //收音机
 		"sarsensor_test",                                                      //sar感应
-		"sub_pin_test"                                                      //14PIN 测试
+		"sub_pin_test",                                                      //14PIN 测试
+		"tp_grid_test"
 	};
 
 	private static void load(){

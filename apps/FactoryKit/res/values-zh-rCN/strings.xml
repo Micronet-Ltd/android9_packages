@@ -14,6 +14,9 @@
     <string name="auto_test_msg">正在进行自动测试...</string>
     <string name="auto_test_error">自动测试异常中断</string>
     <string name="no_card">必要的测试设备不全</string>
+    <string name="no_sd_card">No SD card</string>
+    <string name="no_sim_card">No SIM card</string>
+    <string name="no_sd_and_sim_card">No SD and SIM card</string>
     <string name="loading">正在加载</string>
     <string name="get_flag_error_mesg">无法获取TestFlag数据，请与开发人员联系</string>
 	<string name="quit_auto_test">退出自动测试</string>
@@ -312,4 +315,9 @@
     <string name="sarsensor_test">Sar感应</string>
     <string name="side_charging_test">侧面充电测试</string>
 <string name="test_usb">USB板测试</string>
+    <string name="memory_test_mesg">Test storage memory and run memory</string>
+    <string name="memory_test_ram">The native running memory is: </string>
+    <string name="memory_test_rom">The native storage memory is:</string>
+    <string name="memory_test">Memory Test</string>
+
 </resources>
