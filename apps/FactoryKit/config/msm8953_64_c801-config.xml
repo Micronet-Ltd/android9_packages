@@ -65,15 +65,13 @@
         inPCBATest="true"
         isAutoJudge="true"
         key="gsensor_test" />
-    
+
     
      <com.lovdream.factorykit.Config.TestItem
-        inSPCBATest="true"
         displayName="内存测试"
-        inPCBATest="true"
+        inAutoTest="true"
         isAutoJudge="true"
         key="memory_test" />
-
     <!--
     	<com.lovdream.factorykit.Config.TestItem
 		key="gyro_sensor"
@@ -141,12 +139,13 @@
         inPCBATest="true"
         isAutoJudge="false"
         key="button_light" />
-    
-     <com.lovdream.factorykit.Config.TestItem
-       displayName="背夹灯测试"
-       inPCBATest="true"
-       isAutoJudge="false"
-       key="back_led" />
+
+    <com.lovdream.factorykit.Config.TestItem
+        displayName="背夹灯测试"
+        inAutoTest="true"
+        inBackTest="true"
+        isAutoJudge="false"
+        key="back_led" />
 
     <com.lovdream.factorykit.Config.TestItem
         inSPCBATest="true"

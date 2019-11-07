@@ -123,5 +123,5 @@ public final class FlagIndex{
 		}
 		return flagmodels.get(index);
 	}
-	
+
 }

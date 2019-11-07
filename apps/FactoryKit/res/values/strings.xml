@@ -15,6 +15,9 @@
     <string name="auto_test_msg">Auto testing...</string>
     <string name="auto_test_error">Auto test abort</string>
     <string name="no_card">No card</string>
+    <string name="no_sd_card">No SD card</string>
+    <string name="no_sim_card">No SIM card</string>
+    <string name="no_sd_and_sim_card">No SD and SIM card</string>
     <string name="loading">Loading</string>
     <string name="get_flag_error_mesg">Get TestFlag fail</string>
 	<string name="quit_auto_test">Quit</string>
@@ -316,7 +319,7 @@
     <string name="sarsensor_test">Sar Test</string>
     <string name="side_charging_test">Side charge test</string>
     <string name="test_usb">"USB Test"</string>
-    
+   
     
     
     

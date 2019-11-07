@@ -14,12 +14,14 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Utils {
+
     private static final String TAG = "Utils";
 
 	public Utils() {
@@ -281,8 +283,6 @@ public class Utils {
         return v3;
     }
     
-    
-    
     public static String getRamTotalSize(Context context){//GB
         String path = "/proc/meminfo";
         String firstLine = null;
@@ -301,7 +301,6 @@ public class Utils {
 
         return totalRam + "GB";//返回1GB/2GB/3GB/4GB
     }
-    
     
     /** 
     * 获得SD卡总大小 
@@ -340,8 +339,7 @@ public class Utils {
       return getPrivateStorageInfo(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
     } 
     
-    
-    public static String getPrivateStorageInfo(Context mContext) {
+     public static String getPrivateStorageInfo(Context mContext) {
     	StorageManager sm = mContext.getSystemService(StorageManager.class);
         long totalInternalStorage = sm.getPrimaryStorageSize();
         long privateFreeBytes = 0;
@@ -355,7 +353,7 @@ public class Utils {
             privateFreeBytes += path.getFreeSpace();
         }
         return   Formatter.formatFileSize(mContext, privateTotalBytes);
-        
+
     }
     
     public static long getTotalSize(VolumeInfo info, long totalInternalStorage) {
