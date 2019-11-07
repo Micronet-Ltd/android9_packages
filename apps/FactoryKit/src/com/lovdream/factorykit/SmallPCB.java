@@ -21,8 +21,8 @@ public class SmallPCB extends SingleTest{
 	}
 
 	@Override
-	protected int getFlag(int index){
-		return mConfig.getSmallPCBFlag(index);
+	protected int getFlag(FlagModel fm){
+		return mConfig.getSmallPCBFlag(fm.smallPcbFlag);
 	}
 
 	@Override

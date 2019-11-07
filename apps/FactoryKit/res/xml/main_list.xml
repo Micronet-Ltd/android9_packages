@@ -18,7 +18,20 @@ android:key="main"
 	</PreferenceScreen>
 	
 	
-		<PreferenceScreen
+	<!-- 		<PreferenceScreen
+		android:title="@string/spcba_test"
+		>
+		<intent
+			android:action="lovdream.intent.action.FACTORY_KIT"
+			>
+			<extra
+				android:name="test_type"
+				android:value="spcba"
+				/>
+		</intent>
+	</PreferenceScreen> -->
+	
+<!-- 		<PreferenceScreen
 		android:title="@string/pcba_test2"
 		>
 		<intent
@@ -29,8 +42,7 @@ android:key="main"
 				android:value="pcba2"
 				/>
 		</intent>
-	</PreferenceScreen>
-	
+	</PreferenceScreen> -->
 
 	<PreferenceScreen
 		android:title="@string/auto_test"

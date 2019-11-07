@@ -129,7 +129,7 @@ public class UsbTest extends GridFragment implements TestItemBase.TestCallback,V
 		Config config = Config.getInstance(getActivity());
 
 		for(TestItem item : UsbItems){
-			if(config.getUSBFlag(item.flagIndex) != Config.TEST_FLAG_PASS){
+			if(config.getUSBFlag(item.fm.usbIndex) != Config.TEST_FLAG_PASS){
 				config.setUSBFt(false);
 				//mFooter.setVisibility(View.GONE);
 				return;
@@ -204,7 +204,7 @@ public class UsbTest extends GridFragment implements TestItemBase.TestCallback,V
 			if("4gft".equals(item.key)){
 				flag = mConfig.get4GftStatus();
 			}else{
-				flag = mConfig.getUSBFlag(item.flagIndex);
+				flag = mConfig.getUSBFlag(item.fm.usbIndex);
 			}
                         
 			if(flag == Config.TEST_FLAG_PASS){

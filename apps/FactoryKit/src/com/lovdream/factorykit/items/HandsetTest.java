@@ -95,10 +95,6 @@ public class HandsetTest extends TestItemBase implements VUMeter.Controller{
 
 		Log.d(TAG,"in handset test,judgeVolume:" + judgeVolume + " useSpeaker:" + useSpeaker);
 
-		if((new File(getMicSwitchFile())).exists()){
-			Utils.writeFile(getMicSwitchFile(),"1");
-		}
-
 		mContext = getActivity();
 
 		mAudio = AudioLoopback.getInstance(mContext);
@@ -187,20 +183,26 @@ public class HandsetTest extends TestItemBase implements VUMeter.Controller{
 		AudioSystem.setForceUse(AudioSystem.FOR_COMMUNICATION,
 				AudioSystem.FORCE_HEADPHONES);
 
-		float ratio = 1f;
+		float ratio = 0.2f;
 
 		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
 				(int) (ratio * mAudioManager
 						.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
+		
+		
 		mAudioManager
 				.setStreamVolume(
 						AudioManager.STREAM_VOICE_CALL,
 						(int) (ratio * mAudioManager
 								.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL)),
 						0);
+		
+		
 		mAudioManager.setStreamVolume(AudioManager.STREAM_RING,
 				(int) (ratio * mAudioManager
 						.getStreamMaxVolume(AudioManager.STREAM_RING)), 0);
+		
+		
 		mAudioManager.setStreamVolume(AudioManager.STREAM_SYSTEM,
 				(int) (ratio * mAudioManager
 						.getStreamMaxVolume(AudioManager.STREAM_SYSTEM)), 0);

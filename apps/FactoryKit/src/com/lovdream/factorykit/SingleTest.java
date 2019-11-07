@@ -57,7 +57,7 @@ public class SingleTest extends ListFragment implements TestItemBase.TestCallbac
 				visibleItems.add(item);
 			}
 		}
-                    String pinText=getResources().getString(R.string.test_fourteenpin_text);
+      String pinText=getResources().getString(R.string.test_fourteenpin_text);
 		//TestItem pin14 = new TestItem("sub_pin_test",pinText);
 		//visibleItems.add(pin14);
 
@@ -146,8 +146,8 @@ public class SingleTest extends ListFragment implements TestItemBase.TestCallbac
 		((BaseAdapter)getListAdapter()).notifyDataSetChanged();
 	}
 
-	protected int getFlag(int index){
-		return mConfig.getTestFlag(index);
+	protected int getFlag(FlagModel fm){
+		return mConfig.getTestFlag(fm.testFlag);
 	}
 
 	public class MyAdapter extends BaseAdapter{
@@ -188,7 +188,7 @@ public class SingleTest extends ListFragment implements TestItemBase.TestCallbac
 			TestItem item = mItems.get(positon);
 			((TextView)convertView.findViewById(R.id.item_text)).setText(item.displayName);
 
-			int flag = getFlag(item.flagIndex);
+			int flag = getFlag(item.fm);
 
 			if(flag == Config.TEST_FLAG_PASS){
 				((ImageView)convertView.findViewById(R.id.item_icon)).setImageResource(R.drawable.test_pass);

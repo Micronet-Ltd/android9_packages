@@ -56,7 +56,7 @@ import android.hardware.SensorManager;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
+import com.swfp.utils.SimUtil;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -77,38 +77,50 @@ import com.swfp.utils.ProjectControlUtil;
 public class PCBATest extends GridFragment implements
         TestItemBase.TestCallback, View.OnClickListener {
 
-    private static final String TAG = "fy";//Main.TAG;
+    private static final String TAG = Main.TAG;
 
     private TestItemFactory mFactory;
     private ArrayList<TestItem> pcbaItems;
     private View mFooter;
-    private Config mConfig;// = Config.getInstance(getActivity());
+    private Config mConfig;// = Config.getInstance(mActivity);
+    private Activity mActivity;
+    private boolean isInSPCBA =false;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        FactoryKitApplication app = (FactoryKitApplication) getActivity()
+        isInSPCBA = Utils2.getInstance().currentTestMode==Utils2.SPCBA;
+        
+        mActivity =getActivity();
+        FactoryKitApplication app = (FactoryKitApplication) mActivity
                 .getApplication();
         Config config = app.getTestConfig();
 
         pcbaItems = new ArrayList<TestItem>();
         ArrayList<TestItem> allItems = config.getTestItems();
         for (TestItem item : allItems) {
-            if (item.inPCBATest) {
-                pcbaItems.add(item);
-            }
+        	if(isInSPCBA){
+        		if (item.inPCBATest && item.inSPCBATest) {
+                    pcbaItems.add(item);
+                }
+        	}else{
+        		if (item.inPCBATest) {
+                    pcbaItems.add(item);
+                }
+        	}
+            
         }
-        mConfig = Config.getInstance(getActivity());
-        TestItem _4gft = new TestItem("4gft", "4G FT");
+        mConfig = Config.getInstance(mActivity);
+        TestItem _4gft = new TestItem("4gft", "4G FT",true);
         pcbaItems.add(_4gft);
 
         updateFooter(config);
 
-        setGridAdapter(new MyAdapter(getActivity(), pcbaItems));
-        Log.i(TAG, "single test launched");
+        setGridAdapter(new MyAdapter(mActivity, pcbaItems));
+        Log.i(TAG, "pcba test launched");
         mHandler = new MyHandler();
-        mFactory = TestItemFactory.getInstance(getActivity());
+        mFactory = TestItemFactory.getInstance(mActivity);
 
     }
 
@@ -121,7 +133,7 @@ public class PCBATest extends GridFragment implements
             AutoTest();
             initGps();
             initWifi();
-            mConfig=Config.getInstance(getActivity());
+            mConfig=Config.getInstance(mActivity);
             if (mConfig.getPCBAFlag(findIndex("wifi_test")) == Config.TEST_FLAG_NO_TEST) {
                 startWifi();
             } else if(mConfig.getPCBAFlag(findIndex("wifi_5g_test")) == Config.TEST_FLAG_NO_TEST){
@@ -140,7 +152,7 @@ public class PCBATest extends GridFragment implements
                     initSIMTest();
                 }
                 initBt();
-                initSARsensor();
+                //initSARsensor();
                 init4GFT();
             }
         }).start();
@@ -162,7 +174,7 @@ public class PCBATest extends GridFragment implements
         public void handleMessage(Message msg) {
             final int what = msg.what;
             boolean isPass = msg.getData().getBoolean(isTestPass, false);
-            mConfig = Config.getInstance(getActivity());
+            mConfig = Config.getInstance(mActivity);
             switch (what) {
             case MSG_COMPASS_TEST:
                 mConfig.savePCBAFlag(findIndex("compass"), isPass);
@@ -206,7 +218,7 @@ public class PCBATest extends GridFragment implements
     private int findIndex(String key) {
         for (TestItem item : pcbaItems) {
             if (item.key.equals(key)) {
-                return item.flagIndex;
+                return item.fm.pcbaFlag;
             }
         }
         return -1;
@@ -222,11 +234,16 @@ public class PCBATest extends GridFragment implements
         }
 
         for (TestItem item : pcbaItems) {
-            if (config.getPCBAFlag(item.flagIndex) != Config.TEST_FLAG_PASS) {
-                mFooter.setVisibility(View.GONE);
-                return;
-            }
+        	if(item.fm.key!=null && (!item.fm.key.equals("4gft"))){
+        		 if (config.getPCBAFlag(item.fm.pcbaFlag) != Config.TEST_FLAG_PASS) {
+        			 config.setPCBAFt(false);
+                     mFooter.setVisibility(View.GONE);
+                     return;
+                 }
+        	}
+           
         }
+        config.setPCBAFt(true);
         mFooter.setVisibility(View.VISIBLE);
     }
 
@@ -269,7 +286,7 @@ public class PCBATest extends GridFragment implements
 
     @Override
     public void onClick(View v) {
-        PowerManager pm = (PowerManager) getActivity().getSystemService(
+        PowerManager pm = (PowerManager) mActivity.getSystemService(
                 Context.POWER_SERVICE);
         pm.shutdown(false, null, false);
     }
@@ -293,10 +310,10 @@ public class PCBATest extends GridFragment implements
             return;
         }
 
-        TestItemBase fragment = mFactory.createTestItem(getActivity(), item);
+        TestItemBase fragment = mFactory.createTestItem(mActivity, item);
 
         if (fragment == null) {
-            Toast.makeText(getActivity(), R.string.no_item, Toast.LENGTH_SHORT)
+            Toast.makeText(mActivity, R.string.no_item, Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -314,7 +331,7 @@ public class PCBATest extends GridFragment implements
         ft.add(android.R.id.content, fragment, item.key);
         ft.addToBackStack(item.key);
         ft.commit();
-        getActivity().setTitle(item.displayName);
+        mActivity.setTitle(item.displayName);
     }
 
     @Override
@@ -327,7 +344,7 @@ public class PCBATest extends GridFragment implements
     @Override
     public void onDetach() {
         super.onDetach();
-        getActivity().setTitle(R.string.app_name);
+        mActivity.setTitle(R.string.app_name);
         ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
     }
 
@@ -335,18 +352,20 @@ public class PCBATest extends GridFragment implements
         if ((pcbaItems == null) || (pcbaItems.size() == 0)) {
             return;
         }
-        Config config = Config.getInstance(getActivity());
+        Config config = Config.getInstance(mActivity);
 
         if (config.get4GftStatus() != Config.TEST_FLAG_PASS) {
             return;
         }
 
         for (TestItem item : pcbaItems) {
-            if (config.getPCBAFlag(item.flagIndex) != Config.TEST_FLAG_PASS) {
-                config.setPCBAFt(false);
-                mFooter.setVisibility(View.GONE);
-                return;
-            }
+        	if(item.fm.key!=null && (!item.fm.key.equals("4gft"))){
+        		  if (config.getPCBAFlag(item.fm.pcbaFlag) != Config.TEST_FLAG_PASS) {
+                      config.setPCBAFt(false);
+                      mFooter.setVisibility(View.GONE);
+                      return;
+                  }
+        	}
         }
 
         config.setPCBAFt(true);
@@ -360,16 +379,17 @@ public class PCBATest extends GridFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Config.getInstance(getActivity()).clearPCBAFlag();
+        Config.getInstance(mActivity).clearPCBAFlag();
         ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-        updateFooter(Config.getInstance(getActivity()));
+        updateFooter(Config.getInstance(mActivity));
         return true;
     }
 
     @Override
     public void onTestFinish(TestItemBase item) {
         item.setPCBATest(false);
-        getActivity().setTitle(R.string.pcba_test);
+        if(mActivity!=null)
+        mActivity.setTitle(R.string.pcba_test);
         setHasOptionsMenu(true);
         ((BaseAdapter) getGridAdapter()).notifyDataSetChanged();
         savePCBAFtIfNeed();
@@ -418,7 +438,7 @@ public class PCBATest extends GridFragment implements
             if ("4gft".equals(item.key)) {
                 flag = mConfig.get4GftStatus();
             } else {
-                flag = mConfig.getPCBAFlag(item.flagIndex);
+                flag = mConfig.getPCBAFlag(item.fm.pcbaFlag);
             }
 
             if (flag == Config.TEST_FLAG_PASS) {
@@ -474,58 +494,10 @@ public class PCBATest extends GridFragment implements
 
     private void initSIMTest() {
         Log.w(TAG, "initSIMTest");
-        TelephonyManager tm = TelephonyManager.getDefault();
-        int count = tm.isMultiSimEnabled() ? 2 : 1;
-
-        boolean result = true;
-        for (int i = 0; i < count; i++) {
-
-            int type = tm.getNetworkType(i);
-            int state = tm.getSimState(i);
-            String mSimInfo = "";
-            mSimInfo += getActivity().getString(R.string.sim_status_label,
-                    cardTypeToString(type), cardStateToString(state));
-
-            result &= (state != TelephonyManager.SIM_STATE_ABSENT)
-                    && (state != TelephonyManager.SIM_STATE_UNKNOWN);
-        }
-        
         Message m = mHandler.obtainMessage(MSG_SIM_TEST, 0, 0, null);
-        m.getData().putBoolean(isTestPass, result);
+        m.getData().putBoolean(isTestPass, SimUtil.getInstance(mContext).searchSim().isSimReady);
         m.sendToTarget();
     }
-
-    private String cardTypeToString(int type) {
-        switch (type) {
-        case TelephonyManager.NETWORK_TYPE_UMTS:
-            return "USIM";
-        case TelephonyManager.NETWORK_TYPE_CDMA:
-        case TelephonyManager.NETWORK_TYPE_EVDO_0:
-        case TelephonyManager.NETWORK_TYPE_EVDO_A:
-        case TelephonyManager.NETWORK_TYPE_EVDO_B:
-        case TelephonyManager.NETWORK_TYPE_1xRTT:
-        case TelephonyManager.NETWORK_TYPE_LTE:
-            return "UIM";
-        }
-        return "SIM";
-    }
-
-    private String cardStateToString(int state) {
-        switch (state) {
-        case TelephonyManager.SIM_STATE_ABSENT:
-            return getActivity().getString(R.string.sim_status_no_card);
-        case TelephonyManager.SIM_STATE_PIN_REQUIRED:
-            return getActivity().getString(R.string.sim_status_pin_req);
-        case TelephonyManager.SIM_STATE_PUK_REQUIRED:
-            return getActivity().getString(R.string.sim_status_puk_req);
-        case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
-            return getActivity().getString(R.string.sim_status_locked);
-        case TelephonyManager.SIM_STATE_READY:
-            return getActivity().getString(R.string.sim_status_ready);
-        }
-        return getActivity().getString(R.string.sim_status_unknown);
-    }
-
     private Sensor mOrieSensor;
     private SensorEventListener mOrieSensorListener = new OrieSensorListener();
     private SensorManager mSensorManager;
@@ -533,7 +505,7 @@ public class PCBATest extends GridFragment implements
     private void initCompass() {
         Log.w(TAG, "initCompass");
         if (mSensorManager == null) {
-            mSensorManager = (SensorManager) getActivity().getSystemService(
+            mSensorManager = (SensorManager) mActivity.getSystemService(
                     "sensor");
         }
         mOrieSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
@@ -571,7 +543,7 @@ public class PCBATest extends GridFragment implements
     private void initSARsensor() {
         Log.w(TAG, "initSARsensor");
         bSuccess = false;
-        mSensorManager = (SensorManager) getActivity().getSystemService(
+        mSensorManager = (SensorManager) mActivity.getSystemService(
                 Context.SENSOR_SERVICE);
         if (mSensorManager != null) {
             Sensor sensor = mSensorManager.getDefaultSensor(33171015);
@@ -618,7 +590,7 @@ public class PCBATest extends GridFragment implements
 
     private void initBt() {
         Log.w(TAG, "initBt");
-        BluetoothManager mBluetoothManager = (BluetoothManager) getActivity()
+        BluetoothManager mBluetoothManager = (BluetoothManager) mActivity
                 .getSystemService(Context.BLUETOOTH_SERVICE);
         if (mBluetoothManager == null) {
             return;
@@ -640,7 +612,7 @@ public class PCBATest extends GridFragment implements
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        getActivity().registerReceiver(mReceiver, filter);
+        mActivity.registerReceiver(mReceiver, filter);
     }
 
     private void startScanAndUpdateAdapter() {
@@ -674,7 +646,7 @@ public class PCBATest extends GridFragment implements
                     m.getData().putBoolean(isTestPass, true);
                     m.sendToTarget();
                     /*if (mReceiver != null) {
-                        getActivity().unregisterReceiver(mReceiver);
+                        mActivity.unregisterReceiver(mReceiver);
                     }*/
                     if (mBluetoothAdapter != null) {
                         mBluetoothAdapter.disable();
@@ -687,7 +659,7 @@ public class PCBATest extends GridFragment implements
                     m.getData().putBoolean(isTestPass, true);
                     m.sendToTarget();
                     /*if (mReceiver != null) {
-                        getActivity().unregisterReceiver(mReceiver);
+                        mActivity.unregisterReceiver(mReceiver);
                     }*/
                     if (mBluetoothAdapter != null) {
                         mBluetoothAdapter.disable();
@@ -741,7 +713,7 @@ public class PCBATest extends GridFragment implements
 
     private void initGps() {
         Log.w(TAG, "initGps");
-        mLocationManager = (LocationManager) getActivity().getSystemService(
+        mLocationManager = (LocationManager) mActivity.getSystemService(
                 Context.LOCATION_SERVICE);
         if (!mLocationManager
                 .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
@@ -790,7 +762,7 @@ public class PCBATest extends GridFragment implements
         public void onGpsStatusChanged(int status) {
             // TODO Auto-generated method stub
             gpsStatus = mLocationManager.getGpsStatus(gpsStatus);
-            mConfig = Config.getInstance(getActivity());
+            mConfig = Config.getInstance(mActivity);
             switch (status) {
             case GpsStatus.GPS_EVENT_FIRST_FIX:
                 mConfig.savePCBAFlag(findIndex("gps_test"), true);
@@ -842,8 +814,8 @@ public class PCBATest extends GridFragment implements
     private int connectedId = -1;
 
     void getService() {
-        if(getActivity()!=null){
-        mWifiManager = (WifiManager) getActivity().getSystemService(
+        if(mActivity!=null){
+        mWifiManager = (WifiManager) mActivity.getSystemService(
                 Context.WIFI_SERVICE);
         }
     }
@@ -973,7 +945,7 @@ public class PCBATest extends GridFragment implements
     private BroadcastReceiver mWifiReceiver = new BroadcastReceiver() {
 
         public void onReceive(Context c, Intent intent) {
-            Log.w("fy","mWifiReceiver");
+            Log.w("fy","mWifiReceiver"+intent.getAction());
             switch (mWifiManager.getWifiState()) {
             case WifiManager.WIFI_STATE_DISABLED:
                 if (mWifiManager != null)
@@ -1004,6 +976,10 @@ public class PCBATest extends GridFragment implements
                 }
                 WifiInfo info = (WifiInfo) intent
                         .getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
+                
+               if(info==null){
+            	   info = mWifiManager.getConnectionInfo();
+               }
 
                 if ((info != null)
                         && getTestSSID().equals(formatSSID(info.getSSID()))) {
@@ -1054,6 +1030,9 @@ public class PCBATest extends GridFragment implements
                 }
                 WifiInfo info = (WifiInfo) intent
                         .getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
+                if((info == null)){
+					 info = mWifiManager.getConnectionInfo();
+				}
                 if ((info != null)
                         && getTest5GSSID().equals(formatSSID(info.getSSID()))) {
                     mConfig.savePCBAFlag(findIndex("wifi_5g_test"), true);
