@@ -44,9 +44,7 @@ public class ProjectControlUtil {
 
 	// 该返回值控制,进入pcba测试之后,wifi,蓝牙等,是否自己进行测试;
 	public static boolean isPcbaHasAutoTest() {
-		Log.d("xxfkkk", "lalla---->"+(SystemProperties.get("ro.build.product")));
-		boolean isTest =isC802 || isC600h || isC600u ||isC600 ||isC601;
-		return isTest;
+		return true;
 	}
 	
 	//重力是否两个方向;

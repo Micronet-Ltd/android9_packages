@@ -53,7 +53,12 @@ public class AutoTestResult extends Fragment{
 		
 		String failItems = "";
 		for(TestItem item : mItems){
-			if(item.inAutoTest && (config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_FAIL)){
+			//xxf
+			Log.d("xxfjjj", "=============================");
+			Log.d("xxfjjj", "item---->"+item.key);
+			Log.d("xxfjjj", "item.fm.testFlag---->"+(item.fm.testFlag));
+			Log.d("xxfjjj", "=============================");
+			if(item.inAutoTest && (config.getTestFlag(item.fm.testFlag) == Config.TEST_FLAG_FAIL)){
 				failItems += item.displayName + "\n";
 			}
 		}
@@ -164,7 +169,7 @@ public class AutoTestResult extends Fragment{
 			mCurrent =0;
 			e.printStackTrace();
 		}
-		
+	
 		return  mCurrent;
 	}
     

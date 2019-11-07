@@ -2,6 +2,7 @@
 package com.lovdream.factorykit;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.app.Dialog;
 import android.app.Activity;
 import android.app.Fragment;
@@ -21,7 +22,12 @@ import android.util.Log;
 import android.os.SystemProperties;
 import android.content.DialogInterface;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+
+import com.swfp.utils.SaveDataModel;
+import com.swfp.utils.TestDataUtil;
 
 public abstract class TestItemBase extends Fragment implements Button.OnClickListener,FragmentKeyHandler,FragmentNewIntentHandler,View.OnTouchListener,DialogInterface.OnDismissListener{
 
@@ -36,10 +42,12 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 	public abstract String getTestMessage();
 	public abstract void onStartTest();
 	public abstract void onStopTest();
+	
 
 	private HashMap<String,String[]> mParameterMap;
 	private Button mSuccessBt;
 	private Button mFailBt;
+	private TextView msgTv ;
 	private Dialog mDialog;
 
 	private String mParameter;
@@ -47,15 +55,20 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 	private boolean mIsAutoTest;
 	private boolean mIsPCBATest;
 	private boolean mIsBackTest; 
-          private boolean mIsUSBTest;
+    private boolean mIsUSBTest;
 	private boolean mIsSmallPCB;
 	private TestCallback mCallback;
 	private int mFlagIndex;
+	
+	//add by xxf
+	private FlagModel fm;
+	//add by xxf
 
-	public void init(Context context,String parameter,boolean isAutoJuge,int flagIndex){
+	public void init(Context context,String parameter,boolean isAutoJuge,int flagIndex,FlagModel fm){
 		mParameter = parameter;
 		mIsAutoJuge = isAutoJuge;
 		mFlagIndex = flagIndex;
+		this.fm =fm;
 	}
 
 	public View getTestView(LayoutInflater inflater){
@@ -64,11 +77,11 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 	}
 
 	protected boolean isPCBATest(){
-		return mIsBackTest;
+		return mIsPCBATest;
 	}
 	
 	protected boolean isBackTest(){
-		return mIsPCBATest;
+		return mIsBackTest;
 	}
 
 	public void setPCBATest(boolean isPCBATest){
@@ -97,6 +110,14 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
+		if(fm!=null){
+			StringBuilder sb = new StringBuilder();
+			sb.append("index=" + fm.index+"  ");
+			sb.append("pcbaFlag=" + fm.pcbaFlag+"  ");
+			sb.append("smallPcbFlag=" + fm.smallPcbFlag+"  ");
+			sb.append("testFlag=" + fm.testFlag+"  ");
+			Log.d(TAG,sb.toString());
+		}
 		Log.d(TAG,getKey() + " startTest");
 		onStartTest();
 		isFinished = false;
@@ -124,8 +145,8 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 			mSuccessBt.setEnabled(true);
 		}
 
-		TextView msg = (TextView)v.findViewById(R.id.test_message);
-		msg.setText(getTestMessage());
+		msgTv = (TextView)v.findViewById(R.id.test_message);
+		msgTv.setText(getTestMessage());
 
 		View testView = getTestView(inflater);
 		if(testView != null){
@@ -137,6 +158,13 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 		return v;
 	}
 
+	
+	protected void changeShowMsg(String msg,boolean isAppend){
+		if(msgTv!=null){
+			if(isAppend) msgTv.setText(msgTv.getText().toString()+msg);
+			else msgTv.setText(msg);
+		}
+	}
 	@Override
 	public void onClick(View v){
 		switch(v.getId()){
@@ -154,6 +182,7 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 		/* intercept event,avoid nether view to hand it*/
 		return true;
 	}
+
 	public boolean isAutoJuge(){
 		return mIsAutoJuge;
 	}
@@ -233,8 +262,12 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 		if(mSuccessBt != null){
 			mSuccessBt.setEnabled(true);
 		}
-        if(mIsAutoTest||getKey().equals("light_sensor")||getKey().equals("barometer_test")||getKey().equals("camera_test_back")||getKey().equals("camera_test_front"))
-		{
+		if (mIsAutoTest || getKey().equals("light_sensor")
+				|| getKey().equals("barometer_test")
+				|| getKey().equals("camera_test_back")
+				|| getKey().equals("camera_test_front")
+				||getKey().equals("nfc_test")
+				|| getKey().equals("gsensor_test")) {
 			finish();
 		}
 	}
@@ -252,7 +285,11 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 	}
 
 	public void onFailClick(){
-		saveTestResult(false);
+		try {
+			saveTestResult(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		finish();
 	}
 
@@ -270,18 +307,19 @@ public abstract class TestItemBase extends Fragment implements Button.OnClickLis
 
 	private void saveTestResult(boolean result){
 		if(mIsPCBATest){
-			Config.getInstance(getActivity()).savePCBAFlag(mFlagIndex,result);
+			Config.getInstance(getActivity()).savePCBAFlag(fm,result);
+		}else if(mIsSmallPCB){
+			Config.getInstance(getActivity()).saveSmallPCBFlag(fm,result);
 		}else if(mIsBackTest){
-			Config.getInstance(getActivity()).saveBackFlag(mFlagIndex,result);
-		}
-		else if(mIsSmallPCB){
-			Config.getInstance(getActivity()).saveSmallPCBFlag(mFlagIndex,result);
+			Config.getInstance(getActivity()).saveBackFlag(fm, result);
 		}else if(mIsUSBTest){
-		           Config.getInstance(getActivity()).saveUSBFlag(mFlagIndex,result);
+			Config.getInstance(getActivity()).saveUSBFlag(fm, result);
 		}else{
-			Config.getInstance(getActivity()).saveTestFlag(mFlagIndex,result);
-		}
+			Config.getInstance(getActivity()).saveTestFlag(fm,result);
+		}		
+		TestDataUtil.getTestDataUtil().backDataForUser(getActivity(),fm,result,true);
 	}
+	
 
 	@Override
 	public boolean onKeyDown(int keyCode,KeyEvent event){

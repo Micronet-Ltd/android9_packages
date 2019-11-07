@@ -141,7 +141,7 @@ public class BackTest extends GridFragment implements TestItemBase.TestCallback,
             TextView tv = (TextView) convertView.findViewById(R.id.item_text);
             tv.setText(item.displayName);
 
-            int flag = mConfig.getBackFlag(item.flagIndex);
+            int flag = mConfig.getBackFlag(item.fm.backFlag);
 
             if (flag == Config.TEST_FLAG_PASS) {
                 tv.setTextColor(Color.rgb(0, 100, 0));

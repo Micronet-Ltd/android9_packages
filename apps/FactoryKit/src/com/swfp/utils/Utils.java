@@ -4,6 +4,8 @@ package com.swfp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Environment;
+import android.os.StatFs;
 import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.text.format.Formatter;
@@ -14,15 +16,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
-
 
 public class Utils {
 
     private static final String TAG = "Utils";
-     
-    public Utils() {
+
+	public Utils() {
         super();
     }
 
@@ -300,6 +302,35 @@ public class Utils {
         return totalRam + "GB";//返回1GB/2GB/3GB/4GB
     }
     
+    /** 
+    * 获得SD卡总大小 
+    * 
+    * @return 
+    */
+    public String getSDTotalSize(Context context) { 
+      File path = Environment.getExternalStorageDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long totalBlocks = stat.getBlockCount(); 
+      return Formatter.formatFileSize(context, blockSize * totalBlocks); 
+    } 
+    /** 
+    * 获得sd卡剩余容量，即可用大小 
+    * 
+    * @return 
+    */
+    public String getSDAvailableSize(Context context) { 
+      File path = Environment.getExternalStorageDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long availableBlocks = stat.getAvailableBlocks(); 
+      return Formatter.formatFileSize(context, blockSize * availableBlocks); 
+    } 
+    /** 
+    * 获得机身存储内存总大小 
+    * 
+    * @return 
+    */
     public static  String getRomTotalSize(Context context) { 
       /*File path = Environment.getDataDirectory(); 
       StatFs stat = new StatFs(path.getPath()); 
@@ -345,6 +376,18 @@ public class Utils {
             return path.getTotalSpace();
         }
     }
-
+    
+    /** 
+    * 获得机身可用存储内存 
+    * 
+    * @return 
+    */
+    public static String getRomAvailableSize(Context context) { 
+      File path = Environment.getDataDirectory(); 
+      StatFs stat = new StatFs(path.getPath()); 
+      long blockSize = stat.getBlockSize(); 
+      long availableBlocks = stat.getAvailableBlocks(); 
+      return Formatter.formatFileSize(context, blockSize * availableBlocks); 
+    }
 }
 

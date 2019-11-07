@@ -1,94 +1,127 @@
 
 package com.lovdream.factorykit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import com.lovdream.factorykit.Config.TestItem;
 
 public final class FlagIndex{
 
-	private static HashMap<String,Integer>indexMap;
 
+	public static final int  DEFAULT_INDEX = -1;	
 	private static final String[] ALL_KEYS = {
-		//usb测试18-19(只能控制在0-1);
-		//背夹 70-75;(所有背夹的flag要控制在0-5以内)
-		//副板测试 11-17(所有副板的flag要控制在0-6内)
-		//pcba 20-69; (所有pcba的flag要控制在6-49以内)
-		//单项 76-128; (所有单项的flag要控制在6-52内)
-		"back_charge",                                                        //背夹充电
-		"back_led",                                                       //背夹灯
-		"back_headset",                                                      //背夹耳机
-		"back_mic",                                                      //背夹MIC
-		"handset_loopback",                                                      //话筒回路测试
-		"button_light",                                                      //按键灯
-		"test_flag",                                                      //Test Flag
-        "charging_test",                                                      //充电测试
-        "headset_test_nuno",                                                      //耳机测试
-		"key_test",                                                      //按键测试
-		"system_version",                                                      //版本
-        "speaker_test",                                                      //扬声器
-		"camera_test_back",                                                      //后置摄像头
-		"camera_test_front",                                                      //前置摄像头
-		"sim_test",                                                      //sim卡
-		"speaker_storage_test",                                                      //扬声器和存储卡
-		"vibrator_test",                                                      //震动测试
-		"headset_test",                                                      //耳机测试
-		"gsensor_test",                                                      //重力感应
-		"wifi_test",                                                      //wifi
-		"bt_test",                                                      //蓝牙
-		"light_sensor",                                                      //光感应
-		"distance_sensor",                                                      //距离感应
-		"side_charging_test",                                                      //侧面充电测试
-		"flash_light",                                                      //闪光灯
-		"gps_test",                                                      //gps
-		"lcd_test",                                                      //lcd
-		"tp_test",                                                      //tp
-		"temperature_test",                                                      //温度
-		"nfc_test",                                                      //nfc
-		"gyro_sensor",                                                      //陀螺仪
-		"compass",                                                      //指南针
-		"otg_test",                                                      //otg
-		"noise_mic",                                                      //副MIC回路测试
-		"led_test",                                                      //三色灯
-		"wifi_5g_test",                                                      //5gwifi
+		/*if some item is in small pcb test,index do not big than 10*/
+        "charging_test",
+        "headset_test_nuno",
+        "handset_loopback",
+		"key_test",
+		"system_version",
+                "speaker_test",
+		"button_light",
+		"camera_test_back",
+		"camera_test_front",
+		"sim_test",
+		"speaker_storage_test",
+		"vibrator_test",
+		"mic_loop",
+		"gsensor_test",
+		"sarsensor_test",
+		"wifi_test",
+		"bt_test",
+		"light_sensor",
+		"distance_sensor",
+		"side_charging_test",
+		"flash_light",
+		"front_flash_light",
+		"gps_test",
+		"lcd_test",
+		"tp_test",
+		"temperature_test",
+		"nfc_test",
+		"gyro_sensor",
+		"compass",
+		"otg_test",
+		"noise_mic",
+		"led_test",
+		"wifi_5g_test",
+		"back_clip_otg",
+		"fingerprint_test",
+		"hoare_test",
+		"back_charge",
+		"back_led",
 		"memory_test",
-		"back_clip_otg",                                                      //背夹otg测试
-		"noise_mic_front",                                                      //正面副MIC测试
-		"wake_up_test",                                                      //睡眠唤醒
-		"hardware_info",                                                      //器件信息
-		"master_clear",                                                      //恢复出厂设置
-		"nmea_test",                                                      //明码测试
-		"virtual_key_test",                                                      //TP虚拟按键测试
-		"headset_key_test",                                                      //耳机按键测试
-		"laser_test",                                                      //激光灯
-		"ircut_test",                                                      //IR-CUT测试
-		"infrared_test",                                                      //红外灯
-		"media_mic",                                                      //Media MIC测试
-		"sub_mic",                                                      //SUB MIC测试
-		"tf_hot_plug",                                                      //T卡热插拔
-		"hoare_test",                                                      //霍尔测试
-		"barometer_test",                                                      //气压计
-		"front_flash_light",                                                      //前置闪光灯测试
-		"fingerprint_test",                                                      //指纹传感器测试
-		"fm_test",                                                      //收音机
-		"sarsensor_test",                                                      //sar感应
-		"sub_pin_test",                                                      //14PIN 测试
-		"tp_grid_test"
+		"noise_mic_front",
+		"barometer_test",
+		"wake_up_test",
+		"nmea_test",
+		"fm_test",
+		"tp_grid_test",
+		"tf_hot_plug",
+		"virtual_key_test",
+		"headset_key_test",
+		"laser_test",
+		"ircut_test",
+		"infrared_test",
+		"media_mic",
+		"sub_mic",
+		"hardware_info",
+		"test_flag",
+		"master_clear",
+		"sub_pin_test"
 	};
 
+	public static List<FlagModel> flagmodels;
+	
 	private static void load(){
-		indexMap = new HashMap<String,Integer>();
+		flagmodels = new ArrayList<FlagModel>();
 		for(int i = 0;i < ALL_KEYS.length;i++){
-			indexMap.put(ALL_KEYS[i],i);
+			FlagModel fm =  new FlagModel(ALL_KEYS[i],i,DEFAULT_INDEX,DEFAULT_INDEX,DEFAULT_INDEX);
+			flagmodels.add(fm);
 		}
 	}
 
 	public static int getIndex(String key){
-		if(indexMap == null){
+		if (flagmodels == null) {
 			load();
 		}
-		if(indexMap.get(key) == null){
-			throw new RuntimeException("Invalid key,you should add the key in FlagIndex.ALL_KEYS if you implement any test items");
+		boolean isFind = false;
+		String searchKey = "";
+		int index = 0;
+		for (int i = 0; i < flagmodels.size(); i++) {
+			searchKey = flagmodels.get(i).key;
+			if (searchKey != null && searchKey.equals(key)) {
+				isFind = true;
+				index = i;
+			}
 		}
-		return indexMap.get(key);
+		if (!isFind) {
+			throw new RuntimeException(
+					"Invalid key,you should add the key in FlagIndex.ALL_KEYS if you implement any test items");
+		}
+		return index;
+	}
+	
+	public static FlagModel getFlagModel(String key){
+		if (flagmodels == null) {
+			load();
+		}
+		boolean isFind = false;
+		String searchKey = "";
+		int index = 0;
+		for (int i = 0; i < flagmodels.size(); i++) {
+			searchKey = flagmodels.get(i).key;
+			if (searchKey != null && searchKey.equals(key)) {
+				isFind = true;
+				index = i;
+			}
+		}
+		if (!isFind) {
+			throw new RuntimeException(
+					"Invalid key,you should add the key in FlagIndex.ALL_KEYS if you implement any test items");
+		}
+		return flagmodels.get(index);
 	}
 
 }

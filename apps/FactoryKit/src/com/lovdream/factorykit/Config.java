@@ -8,6 +8,7 @@ import android.util.Xml;
 import android.util.Log;
 
 import com.lovdream.util.SystemUtil;
+import com.swfp.utils.TestDataUtil;
 
 import java.util.ArrayList;
 import java.io.File;
@@ -20,22 +21,34 @@ public class Config{
 
 	private static final String TAG = Main.TAG;
 	private static final String CONFIG_PATH = "/system/etc/cit.xml";
-
-	private static final int PCBA_FLAG_START = 20;
-	private static final int PCBA_FLAG_END = 69;
-
-	private static final int USB_FLAG_START = 18;
-	private static final int USB_FLAG_END = 19;
-
-	private static final int SMALL_PCB_FLAG_START = 11;//20;
-	private static final int SMALL_PCB_FLAG_END = 17;//29;
 	
+	
+	public static final int DATA_PCBA = 0;
+	public static final int DATA_SIGNLE = 1;
+	public static final int DATA_SMALL = 2;
+	public static final int DATA_BACK = 3;
+
+	
+	
+	public static final int SMALL_PCB_FLAG_START = 10;
+	public static final int SMALL_PCB_FLAG_END = 19;
+	private static int smallPcbaIndex = SMALL_PCB_FLAG_START;
+	
+	private static final int USB_FLAG_START = 20;
+	private static final int USB_FLAG_END = 23;
+	private static int usbIndex = USB_FLAG_START;
+	
+	private static final int PCBA_FLAG_START = 24;
+	private static final int PCBA_FLAG_END = 69;
+	private static int pcbaIndex = PCBA_FLAG_START;
 	
 	private static final int SMALL_BACK_FLAG_START = 70;
 	private static final int SMALL_BACK_FLAG_END = 75;
+	private static int backIndex = SMALL_BACK_FLAG_START;
 
-	private static final int TEST_FLAG_START = 76;
+	public static final int TEST_FLAG_START = 76;
 	public static final int TEST_FLAG_MAX = 128;
+	private static int testFlagIndex = TEST_FLAG_START;
 
 	public static final int TEST_FLAG_PASS = 1;
 	public static final int TEST_FLAG_FAIL = 0;
@@ -51,12 +64,14 @@ public class Config{
 		public String displayName;
 		public String parameter;
 		public int flagIndex;
+		public FlagModel fm;
 		public boolean inAutoTest;
 		public boolean inPCBATest;
+		public boolean inSPCBATest;
 		public boolean inBackTest;
 		public boolean inSmallPCB;
         public boolean inUSBTest;
-        public boolean visibility= false; 
+        public boolean visibility= false;
 
 		public TestItem(Context context,AttributeSet attr){
 
@@ -66,9 +81,10 @@ public class Config{
 			parameter = attr.getAttributeValue(null,"parameter");
 			inAutoTest = attr.getAttributeBooleanValue(null,"inAutoTest",false);
 			inPCBATest = attr.getAttributeBooleanValue(null,"inPCBATest",false);
+			inSPCBATest = attr.getAttributeBooleanValue(null,"inSPCBATest",false);
 			inBackTest = attr.getAttributeBooleanValue(null,"inBackTest",false);
 			inSmallPCB = attr.getAttributeBooleanValue(null,"inSmallPCB",false);
-            inUSBTest = attr.getAttributeBooleanValue(null,"inBackTest",false);
+            inUSBTest = attr.getAttributeBooleanValue(null,"inUSBTest",false);
 			flagIndex = FlagIndex.getIndex(key);
 			visibility = attr.getAttributeBooleanValue(null,"visibility",true);
 			//add by xxf;涉及到名字需要改变的都在这里做
@@ -86,9 +102,46 @@ public class Config{
 			}
 			//add by xxf;涉及到名字需要改变的都在这里做
 			
+			//add by xxf
+			fm = FlagIndex.getFlagModel(key);
+			fm.displayName = key;
+			if(fm==null){
+				fm =  new FlagModel(key,flagIndex,FlagIndex.DEFAULT_INDEX,FlagIndex.DEFAULT_INDEX,FlagIndex.DEFAULT_INDEX);
+				fm.usbIndex = FlagIndex.DEFAULT_INDEX;
+				fm.backFlag=FlagIndex.DEFAULT_INDEX;
+			}
+			if(inSmallPCB){
+				fm.smallPcbFlag = smallPcbaIndex++;
+			}
+			if(inPCBATest){
+				fm.pcbaFlag = pcbaIndex++;
+			}
+			if(inBackTest){
+				fm.backFlag = backIndex++;
+			}
+			if(inUSBTest){
+				fm.usbIndex = usbIndex++;
+			}
+			fm.testFlag = testFlagIndex++;
+			//add by xxf
+			StringBuilder sb = new StringBuilder();
+			sb.append("key="+fm.key+"  ");
+			sb.append("index=" + fm.index+"  ");
+			sb.append("pcbaFlag=" + fm.pcbaFlag+"  ");
+			sb.append("smallPcbFlag=" + fm.smallPcbFlag+"  ");
+			sb.append("testFlag=" + fm.testFlag+"  ");
+			sb.append("inUSBTest=" + fm.usbIndex+"  ");
+			Log.d(Main.TAG, sb.toString());
+			
+			
 		}
 
-		public TestItem(String key,String displayName){
+		public TestItem(String key,String displayName,boolean isPcba){
+			FlagModel fmTemp = new FlagModel(key, -1, -1, -1, -1);
+			if(isPcba){
+				fmTemp.pcbaFlag=pcbaIndex++;
+			}
+			fm = fmTemp;
 			this.key = key;
 			this.displayName = displayName;
 		}
@@ -133,7 +186,7 @@ public class Config{
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
 	}
 	public void setUSBFt(boolean state){
-		mTestFlag[Utils.FLAG_INDEX_PCBA] = (byte)(state ? 'P' : 'F');
+		mTestFlag[Utils.FLAG_INDEX_USB] = (byte)(state ? 'P' : 'F');
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
 	}
 
@@ -155,28 +208,39 @@ public class Config{
 			mTestFlag[i] = 0;
 		}
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
+		TestDataUtil.getTestDataUtil().readSingleFromNv(allItems, mContext,true);
 	}
-
 	public void clearSmallPCBFlag(){
 		for(int i = SMALL_PCB_FLAG_START;i < SMALL_PCB_FLAG_END;i++){
 			mTestFlag[i] = 0;
 		}
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
+		TestDataUtil.getTestDataUtil().readSmallFromNv(allItems, mContext,true);
 	}
-
 	public void clearPCBAFlag(){
 		for(int i = PCBA_FLAG_START;i < PCBA_FLAG_END;i++){
 			mTestFlag[i] = 0;
 		}
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
+		TestDataUtil.getTestDataUtil().readPcbaFromNv(allItems, mContext,true);
 	}
-	
-	
-	public void clearBackFlag(ArrayList<TestItem> backItems){
-		for(int i = 0;i < backItems.size();i++){
-			mTestFlag[SMALL_BACK_FLAG_START+backItems.get(i).flagIndex] = 0;
+	public void clearPCBAFlag(ArrayList<TestItem> allItems){
+		for (int i = 0; i < allItems.size(); i++) {
+			TestItem item = allItems.get(i);
+			if(item==null) continue;
+			mTestFlag[item.fm.pcbaFlag]=0;
 		}
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
+		TestDataUtil.getTestDataUtil().readPcbaFromNv(allItems, mContext,true);
+	}
+	
+	public void clearBackFlag(ArrayList<TestItem> backItems){
+	for (int i = 0; i < allItems.size(); i++) {
+			TestItem item = allItems.get(i);
+			if(item==null) continue;
+			if(item.fm.backFlag!=-1)mTestFlag[item.fm.backFlag]=0;
+		}
+	TestDataUtil.getTestDataUtil().readBacklFromNv(allItems, mContext,true);
 	}
 	
 	public void clearUSBFlag(){
@@ -185,100 +249,118 @@ public class Config{
 		}
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
 	}
-	public void saveUSBFlag(int index,boolean state){
-		int realIndex = USB_FLAG_START + index;
+
+	
+	public void saveUSBFlag(FlagModel fm,boolean state){
+		int realIndex = fm.usbIndex;
 		if((realIndex < USB_FLAG_START) || (realIndex > USB_FLAG_END)){
-			Log.e(TAG,"saveSmallPCBFlag,invalid index:" + index,new RuntimeException());
+			Log.e(TAG,"saveUSBFlag,invalid index:" + fm.index,new RuntimeException());
 			return;
 		}
-		saveTestFlagInner(realIndex,state);
-	}
-
-	public void saveSmallPCBFlag(int index,boolean state){
-		int realIndex = SMALL_PCB_FLAG_START + index;
-		if((realIndex < SMALL_PCB_FLAG_START) || (realIndex > SMALL_PCB_FLAG_END)){
-			Log.e(TAG,"saveSmallPCBFlag,invalid index:" + index,new RuntimeException());
-			return;
-		}
-		saveTestFlagInner(realIndex,state);
-	}
-
-	public void savePCBAFlag(int index,boolean state){
-		int realIndex = PCBA_FLAG_START + index;
-		if((realIndex < PCBA_FLAG_START) || (realIndex > PCBA_FLAG_END)){
-			Log.e(TAG,"savePCBAFlag,invalid index:" + index,new RuntimeException());
-			return;
-		}
-		Log.e(TAG,"savePCBAFlag,index:" + realIndex);
 		saveTestFlagInner(realIndex,state);
 	}
 	
+	public void saveSmallPCBFlag(FlagModel fm,boolean state){
+		int realIndex = fm.smallPcbFlag;
+		if((realIndex < SMALL_PCB_FLAG_START) || (realIndex > SMALL_PCB_FLAG_END)){
+			Log.e(TAG,"saveSmallPCBFlag,invalid index:" + fm.index,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+	}
+
+	public void savePCBAFlag(int realIndex,boolean state){
+		if((realIndex < PCBA_FLAG_START) || (realIndex > PCBA_FLAG_END)){
+			Log.e(TAG,"savePCBAFlag,invalid index:" + realIndex,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+		FlagModel fm = null;
+		for (TestItem item : allItems) {
+            if (item.fm.pcbaFlag==realIndex) {
+            	fm = item.fm;
+            }
+        }
+		TestDataUtil.getTestDataUtil().backDataForUser(mContext,fm,state,true);
+	}
+	
+	public void savePCBAFlag(FlagModel fm,boolean state){
+		int realIndex = fm.pcbaFlag;
+		if((realIndex < PCBA_FLAG_START) || (realIndex > PCBA_FLAG_END)){
+			Log.e(TAG,"savePCBAFlag,invalid index:" + fm.index,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+	}
+
+	
+	public void saveBackFlag(int realIndex,boolean state){
+		if((realIndex < SMALL_BACK_FLAG_START) || (realIndex > SMALL_BACK_FLAG_END)){
+			Log.e(TAG,"savePCBAFlag,invalid index:" + realIndex,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+	}
+	
+	public void saveBackFlag(FlagModel fm,boolean state){
+		int realIndex = fm.backFlag;
+		if((realIndex < SMALL_BACK_FLAG_START) || (realIndex > SMALL_BACK_FLAG_END)){
+			Log.e(TAG,"savePCBAFlag,invalid index:" + fm.index,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+	}
+	
+	public int getBackFlag(int realIndex){
+		if((realIndex < SMALL_BACK_FLAG_START) || (realIndex > SMALL_BACK_FLAG_END)){
+			Log.e(TAG,"getPCBAFlag,invalid index:" + realIndex,new RuntimeException());
+			return -1;
+		}
+		return getTestFlagInner(realIndex);
+	}
+
+	public void saveTestFlag(FlagModel fm,boolean state){
+		int realIndex = fm.testFlag;
+		if((realIndex < TEST_FLAG_START) || (realIndex >= TEST_FLAG_MAX)){
+			Log.e(TAG,"saveTestFlag,invalid index:" + fm.index,new RuntimeException());
+			return;
+		}
+		saveTestFlagInner(realIndex,state);
+	}
+
 	public void saveTestFlagInner(int index,boolean state){
 		mTestFlag[index] = (byte)(state ? 'P' : 'F');
 		SystemUtil.setNvFactoryData3IByte(mTestFlag);
 	}
-	
-	
-	public void saveBackFlag(int index,boolean state){
-		int realIndex = SMALL_BACK_FLAG_START + index;
-		if((realIndex < SMALL_BACK_FLAG_START) || (realIndex > SMALL_BACK_FLAG_END)){
-			Log.e(TAG,"savePCBAFlag,invalid index:" + index,new RuntimeException());
-			return;
-		}
-		saveTestFlagInner(realIndex,state);
-	}
 
 	
-	public int getBackFlag(int index){
-		int realIndex = SMALL_BACK_FLAG_START + index;
-		if((realIndex < SMALL_BACK_FLAG_START) || (realIndex > SMALL_BACK_FLAG_END)){
-			Log.e(TAG,"getPCBAFlag,invalid index:" + index,new RuntimeException());
-			return -1;
-		}
-		return getTestFlagInner(realIndex);
-	}
-
-	public void saveTestFlag(int index,boolean state){
-		int realIndex = TEST_FLAG_START + index;
-		if((realIndex < TEST_FLAG_START) || (realIndex >= TEST_FLAG_MAX)){
-			Log.e(TAG,"saveTestFlag,invalid index:" + index,new RuntimeException());
-			return;
-		}
-		saveTestFlagInner(realIndex,state);
-	}
-
-
-
-	public int getSmallPCBFlag(int index){
-                   
-		int realIndex = SMALL_PCB_FLAG_START + index;
+	
+	public int getSmallPCBFlag(int realIndex){
 		if((realIndex < SMALL_PCB_FLAG_START) || (realIndex > SMALL_PCB_FLAG_END)){
-			Log.e(TAG,"getSmallPCBFlag,invalid index:" + index,new RuntimeException());
+			Log.e(TAG,"getSmallPCBFlag,invalid index:" + realIndex,new RuntimeException());
 			return -1;
 		}
 		return getTestFlagInner(realIndex);
 	}
 
-	public int getPCBAFlag(int index){
-		int realIndex = PCBA_FLAG_START + index;
+	public int getPCBAFlag(int realIndex){
 		if((realIndex < PCBA_FLAG_START) || (realIndex > PCBA_FLAG_END)){
-			Log.e(TAG,"getPCBAFlag,invalid index:" + index,new RuntimeException());
+			Log.e(TAG,"getPCBAFlag,invalid index:" + realIndex,new RuntimeException());
 			return -1;
 		}
 		return getTestFlagInner(realIndex);
 	}
+	
 	public int getUSBFlag(int index){
-		int realIndex = USB_FLAG_START + index;
-		if((realIndex < USB_FLAG_START) || (realIndex > USB_FLAG_END)){
+		if((index < USB_FLAG_START) || (index > USB_FLAG_END)){
 			return -1;
 		}
-		return getTestFlagInner(realIndex);
+		return getTestFlagInner(index);
 	}
 
-	public int getTestFlag(int index){
-		int realIndex = TEST_FLAG_START + index;
+	public int getTestFlag(int realIndex){
 		if((realIndex < TEST_FLAG_START) || (realIndex >= TEST_FLAG_MAX)){
-			Log.e(TAG,"getTestFlag,invalid index:" + index,new RuntimeException());
+			Log.e(TAG,"getTestFlag,invalid index:" + realIndex,new RuntimeException());
 			return -1;
 		}
 		return getTestFlagInner(realIndex);
@@ -358,10 +440,14 @@ public class Config{
 					continue;
 				}
 				final String name = parser.getName();
-				if(TestItem.class.getCanonicalName().equals(name)){
-					TestItem item = new TestItem(mContext,attrs);
-					boolean isAdd = item.visibility;
-					if(isAdd) allItems.add(item);
+				try {
+					if(TestItem.class.getCanonicalName().equals(name)){
+						TestItem item = new TestItem(mContext,attrs);
+						boolean isAdd = item.visibility;
+						if(isAdd) allItems.add(item);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}catch(Exception e){

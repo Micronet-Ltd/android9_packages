@@ -25,9 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.media.AudioRecord;
 import android.media.AudioFormat;
+import android.media.AudioSystem;
 import android.media.AudioTrack;
 import android.media.AudioManager;
 import android.os.Environment;
+
 import java.io.File;
 
 import com.lovdream.factorykit.R;
@@ -36,7 +38,7 @@ import com.lovdream.factorykit.TestItemBase;
 public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListener,OnCompletionListener{
 
 	Context mContext;
-	AudioManager mAm;
+	AudioManager mAudioManager;
 	View mTalkButton;
 
 	private String mPath;
@@ -115,19 +117,19 @@ public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListen
 		@Override
 		public void onReceive(Context context,Intent intent){
 			boolean isEnabled = false;
-			if((mAm != null) && mAm.isWiredHeadsetOn()){
+			if((mAudioManager != null) && mAudioManager.isWiredHeadsetOn()){
 				isEnabled = true;
 			}
 
 			if(mTalkButton != null){
-				mTalkButton.setEnabled(isEnabled);
+				//mTalkButton.setEnabled(isEnabled);
 			}
 		}
 	};
 
 	@Override
 	public String getKey(){
-		return "headset_test";
+		return "mic_loop";
 	}
 
 	@Override
@@ -138,7 +140,7 @@ public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListen
 	@Override
 	public void onStartTest(){
 		mContext = getActivity();
-		mAm = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+		mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
 		mPath = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/test.3gp";
 
 		mRecorder = new MediaRecorder();
@@ -147,6 +149,7 @@ public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListen
 		mPlayer.setOnCompletionListener(this);
 
 		mContext.registerReceiver(headsetReceiver,new IntentFilter(AudioManager.ACTION_HEADSET_PLUG));
+		setMaxVolum();
 	}
 
 	@Override
@@ -165,7 +168,7 @@ public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListen
 	public View getTestView(LayoutInflater inflater){
 		View v = inflater.inflate(R.layout.headset_test_async,null);
 		mTalkButton = v.findViewById(R.id.push_to_talk);
-		mTalkButton.setEnabled(mAm == null ? false : mAm.isWiredHeadsetOn());
+		mTalkButton.setEnabled(true);
 		mTalkButton.setOnTouchListener(this);
 		return v;
 	}
@@ -180,5 +183,25 @@ public class HeadsetTestAsync extends TestItemBase implements View.OnTouchListen
 			startPlay();
 		}
 		return false;
+	}
+	public void setMaxVolum() {
+		float ratio = 1f;
+
+		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+				(int) (ratio * mAudioManager
+						.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
+		mAudioManager
+				.setStreamVolume(
+						AudioManager.STREAM_VOICE_CALL,
+						(int) (ratio * mAudioManager
+								.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL)),
+						0);
+		mAudioManager.setStreamVolume(AudioManager.STREAM_RING,
+				(int) (ratio * mAudioManager
+						.getStreamMaxVolume(AudioManager.STREAM_RING)), 0);
+		mAudioManager.setStreamVolume(AudioManager.STREAM_SYSTEM,
+				(int) (ratio * mAudioManager
+						.getStreamMaxVolume(AudioManager.STREAM_SYSTEM)), 0);
+
 	}
 }
