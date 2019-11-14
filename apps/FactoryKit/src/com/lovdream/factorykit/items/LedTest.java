@@ -60,12 +60,14 @@ public class LedTest extends TestItemBase {
 			while (mIsInTest) {
 				for (int color : colors) {
 				
+                    if(mIsInTest){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             setColor(color);
                         }
                     });
+                    }
                     try {
                         Thread.sleep(1000);
                         } catch (Exception e) {
