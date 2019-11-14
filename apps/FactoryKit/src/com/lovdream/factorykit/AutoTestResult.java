@@ -141,9 +141,9 @@ public class AutoTestResult extends Fragment{
 
         for(TestItem item : mItems){
 			if(item.inAutoTest){                
-                if(config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_FAIL){
+                if(config.getTestFlag(item.fm.testFlag) == Config.TEST_FLAG_FAIL){
                     results.append(FAIL);
-                } else if(config.getTestFlag(item.flagIndex) == Config.TEST_FLAG_PASS) {
+                } else if(config.getTestFlag(item.fm.testFlag) == Config.TEST_FLAG_PASS) {
                     results.append(PASS);
                 } else {
                     results.append(NULL);
