@@ -53,8 +53,8 @@ public class ServiceUtil {
 	
 	public void setThreeLightColor(int color,Context context){
 		try {
-			//getLdm(context).setThreeLightColor(color);
-			getLdm(context).writeToFile(String.valueOf(0),String.valueOf(color));
+			getLdm(context).setThreeLightColor(color);
+			//getLdm(context).writeToFile(String.valueOf(0),String.valueOf(color));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,8 +62,8 @@ public class ServiceUtil {
 	
 	  public void setButtonBackLight(boolean light,Context context){
 		  try {
-				//getLdm(context).setButtonBackLight(light);
-			  getLdm(context).writeToFile(String.valueOf(1),String.valueOf(light));
+				getLdm(context).setButtonBackLight(light);
+			  //getLdm(context).writeToFile(String.valueOf(1),String.valueOf(light));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

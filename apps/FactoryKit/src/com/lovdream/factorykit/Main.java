@@ -20,10 +20,13 @@ import android.os.SystemProperties;
 
 import com.lovdream.factorykit.Utils;
 import com.swfp.utils.ProjectControlUtil;
+import com.swfp.utils.SaveDataModel;
+import com.swfp.utils.TestDataUtil;
 
 import java.util.List;
 
 import com.lovdream.factorykit.items.SystemVersionTest;
+
 import android.preference.PreferenceScreen;
 
 public class Main extends PreferenceActivity {
@@ -112,23 +115,50 @@ public class Main extends PreferenceActivity {
 		}
 		String type = intent.getStringExtra("test_type");
 		Fragment fragment = null;
+		boolean sdMounted = Utils.isSdMounted(this);
+		boolean simReady = Utils.isSimReady();
 		if("single".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SINGLE;
 			fragment = Fragment.instantiate(this,SingleTest.class.getName());
 		}else if("auto".equals(type)){
-			if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
-				showWarningDialog();
-				return;
-			}
+            if(SystemProperties.getInt("hw.board.id", -1) == 2){
+                 if(!sdMounted){
+                        showWarningDialog(0);
+                        return;
+                }
+            } else {
+                if(!sdMounted && !simReady){
+                    showWarningDialog(2);
+                    return;
+                } else if(!sdMounted){
+                    showWarningDialog(0);
+                    return;
+                } else if(!simReady){
+                    showWarningDialog(1);
+                    return;
+                }
+            }
 			fragment = Fragment.instantiate(this,AutoTest.class.getName());
 		}else if("pcba".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.PCBA_1;
 			fragment = Fragment.instantiate(this,PCBATest.class.getName());
+			//((PCBATest)fragment).setPcba_1(true);
+		}else if("spcba".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SPCBA;
+			fragment = Fragment.instantiate(this,PCBATest.class.getName());
+			//((PCBATest)fragment).setPcba_1(true);
 		}else if("pcba2".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.PCBA_2;
 			fragment = Fragment.instantiate(this,BackTest.class.getName());
+			//((PCBATest)fragment).setPcba_1(false);
 		}else if("small".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.SMALLPCB;
 			fragment = Fragment.instantiate(this,SmallPCB.class.getName());
 		}else if("result".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.RESULT;
 			fragment = Fragment.instantiate(this,TestResult.class.getName());
 		}else if("usb".equals(type)){
+			Utils2.getInstance().currentTestMode=Utils2.STRESS;
 			fragment = Fragment.instantiate(this,UsbTest.class.getName());
 		}else if("version".equals(type)){
 			fragment = Fragment.instantiate(this,SystemVersionTest.class.getName());
@@ -144,9 +174,19 @@ public class Main extends PreferenceActivity {
 		ft.commit();
 	}
 
-	private void showWarningDialog(){
+	private void showWarningDialog(int messageType){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.no_card);
+		switch (messageType){
+            case 0:
+                builder.setMessage(R.string.no_sd_card);
+                break;
+            case 1:
+                builder.setMessage(R.string.no_sim_card);
+                break;
+            case 2:
+                builder.setMessage(R.string.no_sd_and_sim_card);
+                break;
+        }
 		builder.setPositiveButton(android.R.string.ok,null);
 		builder.show();
 	}

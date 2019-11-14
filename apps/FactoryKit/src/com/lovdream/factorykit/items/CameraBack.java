@@ -228,6 +228,9 @@ public class CameraBack extends TestItemBase implements SurfaceHolder.Callback{
             fail(getString(R.string.camera_fail_open));
         } else {
             try {
+                if(getCameraId()==0){
+                mCamera.setDisplayOrientation(270);
+                }
                 mCamera.setPreviewDisplay(mSurfaceHolder);
             } catch (IOException exception) {
                 mCamera.release();
@@ -314,7 +317,9 @@ public class CameraBack extends TestItemBase implements SurfaceHolder.Callback{
 				if(isFlashModeOn()){
                 	parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
 				}
-				mCamera.setDisplayOrientation(getRotation());
+                if(getCameraId()==1){
+                    mCamera.setDisplayOrientation(getRotation());
+                }
                 mCamera.setParameters(parameters);
                 mCamera.startPreview();
             } catch (Exception e) {
