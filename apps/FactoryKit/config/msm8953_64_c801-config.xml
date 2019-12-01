@@ -131,7 +131,7 @@
         inPCBATest="true"
         isAutoJudge="true"
         key="key_test"
-        parameter="keyCode:KEYCODE_VOLUME_UP,KEYCODE_VOLUME_DOWN,KEYCODE_BACK,KEYCODE_HOME,KEYCODE_APP_SWITCH" />
+        parameter="keyCode:KEYCODE_VOLUME_UP,KEYCODE_VOLUME_DOWN,KEYCODE_BACK,KEYCODE_HOME,KEYCODE_APP_SWITCH,KEYCODE_F1,KEYCODE_F2" />
 
     <com.lovdream.factorykit.Config.TestItem
         displayName="按键灯"
@@ -330,6 +330,15 @@
         displayName="宫格测试"
         isAutoJudge="true"
         key="tp_grid_test" />
+    
+    <!--
+    <com.lovdream.factorykit.Config.TestItem
+        displayName="Ignition Test"
+        inAutoTest="true"
+        isAutoJudge="true"
+        key="ignition_test" />
+    -->
+
 
     <com.lovdream.factorykit.Config.TestItem
         displayName="器件信息"

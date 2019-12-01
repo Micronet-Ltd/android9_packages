@@ -141,6 +141,8 @@ public class SingleTest extends ListFragment implements TestItemBase.TestCallbac
 
 	@Override
 	public void onTestFinish(TestItemBase item){
+        Log.d("AAAAAAA", "onTestFinish");
+        Log.d("AAAAAAA", "get activity" + ((getActivity()==null)?" null":" not null"));
 		getActivity().setTitle(getTitleResId());
 		setHasOptionsMenu(true);
 		((BaseAdapter)getListAdapter()).notifyDataSetChanged();
