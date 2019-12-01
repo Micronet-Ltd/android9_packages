@@ -88,6 +88,9 @@
 
     <string name="charging_no_info">Cannot get charging info</string>
     <string name="charging_test_mesg">Battery Staus:</string>
+    <string name="ignition_test_mesg">Ignition Test</string>
+    <string name="turn_on_ignition_mesg">Please turn on an Ignition</string>
+    <string name="turn_off_ignition_mesg">Please turn off an Ignition</string>
     <string name="charging_state_none">Disconnect</string>
     <string name="charging_state_ac">AC</string>
     <string name="charging_state_usb">USB</string>
@@ -140,7 +143,7 @@
     <string name="handset_test_mesg">Please speak to headphones mic and hear speaker</string>
     <string name="media_mic_test_mesg">Please speak to headphones mic and hear speaker</string>
     <string name="memory_test_mesg">Test storage memory and run memory</string>
-        <string name="memory_test_ram">The native running memory is: </string>
+    <string name="memory_test_ram">The native running memory is: </string>
     <string name="memory_test_rom">The native storage memory is:</string>
     <string name="sub_mic_test_mesg">Please speak to USB headphones mic and hear speaker</string>
     <string name="headset_remove">Please remove headphone</string>
@@ -272,6 +275,7 @@
     <string name="wifi_test">Wi-Fi</string>
     <string name="bt_test">bluetooth</string>
     <string name="charging_test">charging</string>
+    <string name="ignition_test">ignition</string>
     <string name="light_sensor">Light sensor</string>
     <string name="button_light">Button light</string>
     <string name="flash_light">Flash light</string>
