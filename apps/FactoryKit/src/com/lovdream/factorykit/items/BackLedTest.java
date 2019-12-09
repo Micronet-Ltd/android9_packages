@@ -8,8 +8,10 @@ import android.content.Context;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import android.os.Build;
 import android.os.SystemProperties;
 import android.util.Log;
+
 import android.telephony.TelephonyManager;
 
 import java.io.FileOutputStream;
@@ -18,12 +20,18 @@ import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
 import com.swfp.utils.ProjectControlUtil;
 import com.swfp.utils.ServiceUtil;
+import com.android.server.lights.Light;
+import com.android.server.lights.LightsManager;
 
 public class BackLedTest extends TestItemBase{
 
 
-   private final String ledPath = "/sys/class/ext_dev/function/gpio_en";
     private Context mContext;
+	private boolean mIsInTest;
+	Thread t;
+    private int maxIrLedColor = 0xFFFFFFFF;
+    private int minIrLedColor = 0x80808080;
+    private int[] colors = { maxIrLedColor, minIrLedColor};
 
 	@Override
 	public String getKey(){
@@ -37,12 +45,49 @@ public class BackLedTest extends TestItemBase{
 
 	@Override
 	public void onStartTest(){
-	                mContext = getActivity();
-	                ServiceUtil.getInstance().writeToFile(ledPath, 1+"", mContext);
+        mContext = getActivity();
+		mIsInTest = true;
+		t = new Thread(mRunnable, "t1");
+		t.start();
 	}
 
 	@Override
 	public void onStopTest(){
-		ServiceUtil.getInstance().writeToFile(ledPath, 0+"", mContext);
+        t.interrupt();
+		mIsInTest = false;
+		if(Build.MODEL.equals("MSCAM")){
+            setColor(0);
+		} else {
+            setColor(0xFFFFFFFF);
+		}
+	}
+	
+		private Runnable mRunnable = new Runnable() {
+		@Override
+		public void run() {
+			while (mIsInTest) {
+				for (int color : colors) {
+				
+                    if(mIsInTest){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setColor(color);
+                        }
+                    });
+                    }
+                    try {
+                        Thread.sleep(1000);
+                        } catch (Exception e) {
+                        }
+				}
+			}
+		}
+	};
+
+	private void setColor(int color) {
+        LightsManager lm = new LightsManager(mContext);
+        Light irLed = lm.getLight(LightsManager.LIGHT_ID_BACKLIGHT);
+        irLed.setColor(color);
 	}
 }

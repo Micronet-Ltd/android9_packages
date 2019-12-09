@@ -114,9 +114,11 @@ public class WiFiTest extends TestItemBase{
 		if(connectedId != -1){
 			mWifiManager.forget(connectedId,null);
 		}
-                    enableWifi(false);
+		wifiScanResult = null;
+		mTextView.setText("");
+        //enableWifi(false);
 
-		Utils.enableWifi(mContext, false);
+		//Utils.enableWifi(mContext, false);
 		try {
 			mCountDownTimer.cancel();
 			if (true == mWifiLock.isHeld())

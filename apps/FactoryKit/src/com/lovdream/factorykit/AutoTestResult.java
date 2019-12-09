@@ -172,19 +172,19 @@ public class AutoTestResult extends Fragment{
         int type = SystemProperties.getInt("hw.board.id", -1);
         switch (type){
             case 0:
-            productType = "Tab8_full";
+            productType = "Tab8Full";
             break;
             
             case 1:
-            productType = "Tab8_LC";
+            productType = "Tab8LC";
             break;
             
             case 2:
-            productType = "SC_basic";
+            productType = "SCBasic";
             break;
             
             case 3:
-            productType = "SC_full";
+            productType = "SCFull";
             break;
         }
         return productType;

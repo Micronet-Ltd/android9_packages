@@ -26,7 +26,6 @@ import com.swfp.utils.ServiceUtil;
 
 public class IgnitionTest extends TestItemBase {
 
-    private static final String DOCK_STATE_PATH = "/sys/class/switch/dock/state";
     public static final String dockAction = "android.intent.action.DOCK_EVENT";
     private static final int IGNITION_ON = 2;
     private static final String TAG = "IgnitionTest";
@@ -90,11 +89,10 @@ public class IgnitionTest extends TestItemBase {
 			}
 		}else{
             sb.append("test pass");
-			
+			enableSuccess(true);
 		}
 		if (mInfoView != null) 
 			mInfoView.setText(sb.toString());
-        enableSuccess(true);
         }
 		
     
@@ -112,7 +110,6 @@ public class IgnitionTest extends TestItemBase {
 	}
 	
 	 private boolean getIgnState() {
-        Log.d("AAAAAAA", "ign state = " + dockState);
         if(dockState == Intent.EXTRA_DOCK_STATE_CAR)
             return true;
         else 
