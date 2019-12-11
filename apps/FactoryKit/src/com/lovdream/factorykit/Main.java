@@ -28,6 +28,8 @@ import java.util.List;
 import com.lovdream.factorykit.items.SystemVersionTest;
 
 import android.preference.PreferenceScreen;
+import android.content.res.Configuration;
+
 
 public class Main extends PreferenceActivity {
 
@@ -96,6 +98,11 @@ public class Main extends PreferenceActivity {
 		Utils.enableNfc(this, true);
 		// Utils.enableCharging(true);
 	}
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+}
 	
 	@Override
 	protected void onDestroy() {

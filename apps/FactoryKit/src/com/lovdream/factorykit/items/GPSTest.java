@@ -95,7 +95,7 @@ public class GPSTest extends TestItemBase{
 	final int MIN_SAT_NUM = 3;
 	final int MIN_VALID_SAT_NUM = 2;
 
-	final float VALID_SNR = 36;
+	final float VALID_SNR = 34;
 
 	CountDownTimer mCountDownTimer = new CountDownTimer(OUT_TIME, 3000) {
 

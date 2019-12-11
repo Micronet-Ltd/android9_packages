@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.content.BroadcastReceiver;
+import android.os.Build;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -108,10 +109,16 @@ public class ChargingTest extends TestItemBase {
 			boolean isCanPass =mCurrent>50;
 			sb.append(mContext.getString(R.string.charging_state_charging)+"\n");
 			sb.append(mContext.getString(R.string.charging_current_label, mCurrent)+"\n");
-			if(isCanPass)
-				sb.append(++insertSuccessTimes<=SINGLE_PASS?mContext.getString(R.string.charging_type_c_turn):"");
-			else
+			if(isCanPass){
+                if(Build.MODEL.equals("MSCAM")){
+                    insertSuccessTimes = 2;
+                    sb.append("");
+                }else{
+                    sb.append(++insertSuccessTimes<=SINGLE_PASS?mContext.getString(R.string.charging_type_c_turn):"");
+                }
+            }else{
 				sb.append(mContext.getString(R.string.charging_current_low)+"\n");
+				}
 		}
 		if (mInfoView != null) 
 			mInfoView.setText(sb.toString());

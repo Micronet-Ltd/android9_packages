@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
 import com.swfp.utils.Utils;
+import android.os.Build;
 
 public class MemoryTest extends TestItemBase{
 
@@ -35,14 +36,28 @@ public class MemoryTest extends TestItemBase{
 
 	public View getTestView(LayoutInflater inflater){
 		View v = inflater.inflate(R.layout.memory_test,null);
+		
+		String ramStr = Utils.getRamTotalSize(getActivity());
+		String romStr = Utils.getRomTotalSize(getActivity());
+		
 		tv_ram = (TextView)v.findViewById(R.id.ram_info);
 		tv_rom = (TextView)v.findViewById(R.id.rom_info);
+		
+		int ram = Integer.parseInt(ramStr.substring(0,ramStr.indexOf("GB"))); 
+		int rom = Integer.parseInt(romStr.substring(0,romStr.indexOf(".")));
 
-		enableSuccess(true);
+		if((Build.MODEL.equals("MSTab8") && ram == 3 && rom == 32) || (Build.MODEL.equals("MSCAM") && ram == 2 && rom == 16)){
+                enableSuccess(true);
+                postSuccess();
+		
+		} else {
+            enableSuccess(false);
+            postFail();
+		}
 
 
-		String ramInfo = getResources().getString(R.string.memory_test_ram)+Utils.getRamTotalSize(getActivity());
-		String romInfo = getResources().getString(R.string.memory_test_rom)+Utils.getRomTotalSize(getActivity());
+		String ramInfo = getResources().getString(R.string.memory_test_ram)+ramStr;
+		String romInfo = getResources().getString(R.string.memory_test_rom)+romStr;
 		tv_ram.setText(ramInfo);
 		tv_rom.setText(romInfo);
 
