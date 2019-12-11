@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.os.SystemProperties;
 import android.util.Log;
 import android.os.Vibrator;
+import android.os.Build;
 
 import java.util.ArrayList;
 
@@ -126,6 +127,9 @@ public class KeyTest extends TestItemBase{
 			case KeyEvent.KEYCODE_DVR:
 				resId = R.string.key_name_sound_record;
 				break;
+            case KeyEvent.KEYCODE_WINDOW:
+                resId = R.string.key_name_window;
+                break;
 		}
 		return resId > 0 ? getActivity().getString(resId) : KeyEvent.keyCodeToString(keyCode);
 	}
@@ -181,20 +185,29 @@ public class KeyTest extends TestItemBase{
 		filter.addAction("cit_test_recent");
 		mContext.registerReceiver(mKeyBroadCastReceiver, filter);
 		String keyNames[] = getParameter("keyCode");
+		
 		if(keyNames == null){
 			Toast.makeText(getActivity(),R.string.load_config_error,Toast.LENGTH_SHORT);
 			return;
 		}
-
+		
 		testKeys = new ArrayList<Key>();
+		
+		if(Build.MODEL.equals("MSCAM")){
+            Key key = new Key("KEYCODE_WINDOW");
+                if(key.isSupported){
+                    testKeys.add(key);
+                }
+		} else {
+            for(String keyName : keyNames){
+                Key key = new Key(keyName);
+                if(key.isSupported){
+                    testKeys.add(key);
+                }
+            }
 
-		for(String keyName : keyNames){
-			Key key = new Key(keyName);
-			if(key.isSupported){
-				testKeys.add(key);
-			}
 		}
-
+		
 		mVibrator = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 		SystemProperties.set("sys.cit_keytest","true");
 	}
