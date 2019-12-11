@@ -66,6 +66,7 @@ public final class FlagIndex{
 		"infrared_test",
 		"media_mic",
 		"sub_mic",
+		"ignition_test",
 		"hardware_info",
 		"test_flag",
 		"master_clear",

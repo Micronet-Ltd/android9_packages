@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.SystemProperties;
 import android.view.View;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class AutoTestResult extends Fragment{
             File file = new File(filename);
             file.delete();
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(("1,"));
+            //bufferedWriter.write(("1,"));
             bufferedWriter.write(data.substring(0, data.length()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,6 +126,7 @@ public class AutoTestResult extends Fragment{
         WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        results.append(getProductType() + ",");
         results.append(Build.getSerial() + ",");
         results.append(telephonyManager.getImei() + ",");
         String deviceId=telephonyManager.getImei();
@@ -136,6 +138,7 @@ public class AutoTestResult extends Fragment{
             results.append(PASS);
         }
         results.append(getBuildVersion(Build.DISPLAY) + ",");
+        results.append(getMcuVersion() + ",");
         results.append(wInfo.getMacAddress() + ",");
         results.append(getCurrent() + ",");
 
@@ -158,6 +161,33 @@ public class AutoTestResult extends Fragment{
     private String getBuildVersion(String fullVersion){
         String temp = fullVersion.substring(0, Build.DISPLAY.lastIndexOf("_"));
         return temp.substring(temp.indexOf(Build.MODEL));
+    }
+    
+    private String getMcuVersion(){
+        return SystemProperties.get("hw.build.version.mcu", "unknown");
+    }
+    
+    private String getProductType(){
+        String productType = "";
+        int type = SystemProperties.getInt("hw.board.id", -1);
+        switch (type){
+            case 0:
+            productType = "Tab8Full";
+            break;
+            
+            case 1:
+            productType = "Tab8LC";
+            break;
+            
+            case 2:
+            productType = "SCBasic";
+            break;
+            
+            case 3:
+            productType = "SCFull";
+            break;
+        }
+        return productType;
     }
     
     private int  getCurrent() {

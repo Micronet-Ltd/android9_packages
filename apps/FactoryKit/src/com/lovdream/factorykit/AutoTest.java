@@ -43,8 +43,8 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
     
     private String[] notRunOnDevType0 = {};
     private String[] notRunOnDevType1 = {};
-    private String[] notRunOnDevType2 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "back_led", "headset_test_nuno", "led_test", "charging_test", "sim_test", "compass", "lcd_test", "tp_test"};
-    private String[] notRunOnDevType3 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "back_led", "headset_test_nuno", "led_test", "charging_test", "compass", "lcd_test", "tp_test"};
+    private String[] notRunOnDevType2 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "headset_test_nuno", "sim_test", "compass", "lcd_test", "tp_test"};
+    private String[] notRunOnDevType3 = {"flash_light", "distance_sensor", "noise_mic", "key_test", "button_light", "headset_test_nuno", "compass", "lcd_test", "tp_test"};
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){

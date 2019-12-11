@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageEventListener;
 import android.os.storage.VolumeInfo;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.List;
@@ -53,21 +54,29 @@ public class OtgTest extends TestItemBase implements View.OnHoverListener{
 
 	@Override
 	public void onStartTest(){
-		mStorageManager = getActivity().getSystemService(StorageManager.class);
-        mStorageManager.registerListener(mListener);
+	
+        if(Build.MODEL.equals("MSCAM")){
+            postSuccess();
+        } else {
+            mStorageManager = getActivity().getSystemService(StorageManager.class);
+            mStorageManager.registerListener(mListener);
 
-		List<VolumeInfo> vols = mStorageManager.getVolumes();
-		for(VolumeInfo vol : vols){
-			if(isUsbVolumeMounted(vol)){
-				usbVolumeDetected = true;
-			}
+            List<VolumeInfo> vols = mStorageManager.getVolumes();
+            for(VolumeInfo vol : vols){
+                if(isUsbVolumeMounted(vol)){
+                    usbVolumeDetected = true;
+                }
+            }
 		}
 	}
 
 	@Override
 	public void onStopTest(){
-		mStorageManager.unregisterListener(mListener);
-		usbVolumeDetected = false;
+        if(!Build.MODEL.equals("MSCAM")){
+            mStorageManager.unregisterListener(mListener);
+            usbVolumeDetected = false;
+        }        
+		
 	}
 
 	@Override
