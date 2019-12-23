@@ -32,6 +32,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 import com.lovdream.factorykit.Config.TestItem;
 import com.swfp.utils.ServiceUtil;
@@ -164,7 +167,7 @@ public class AutoTestResult extends Fragment{
             File file = new File(filename);
             file.delete();
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            //bufferedWriter.write(("1,"));
+            bufferedWriter.write((resultToSha256(data.toString()) + ","));
             bufferedWriter.write(data.substring(0, data.length()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -268,5 +271,27 @@ public class AutoTestResult extends Fragment{
             return "\n The battery don't charging because of high/low temperature (now: " + (float) currentTemp/10 + ")";
         else return "";
 	}
+	
+    private String resultToSha256 (String res){
+        String noDelimiters = res.replaceAll(",", "");
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] encodedhash = digest.digest(noDelimiters.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(encodedhash);
+    }
+    
+    private static String bytesToHex(byte[] hash) {
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     
 }
