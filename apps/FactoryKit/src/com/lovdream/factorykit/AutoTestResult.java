@@ -12,24 +12,33 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.SystemProperties;
+import android.os.PowerManager;
 import android.view.View;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.Toast;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 import com.lovdream.factorykit.Config.TestItem;
 import com.swfp.utils.ServiceUtil;
+import android.os.BatteryManager;
 
 
 public class AutoTestResult extends Fragment{
@@ -43,6 +52,17 @@ public class AutoTestResult extends Fragment{
     FactoryKitApplication app;
     Config config;
     ArrayList<TestItem> mItems;
+    private static final int IGNITION_ON = 2;
+    private int dockState = -1;
+    private Context mContext;
+    int currentTemp = 0;
+    int batteryStatus = -1;
+    int currentVoltage = 0;
+    boolean isBatteryFull = false;
+    TextView tv;
+    String view;
+    String results;
+    boolean valuesReceived = false;
 
 	private String buildTestResult(){
 	
@@ -50,7 +70,7 @@ public class AutoTestResult extends Fragment{
 		config = app.getTestConfig();
 		mItems = config.getTestItems();
 		
-		saveResultsToCsv();
+		//saveResultsToCsv();
 		
 		String failItems = "";
 		for(TestItem item : mItems){
@@ -76,17 +96,57 @@ public class AutoTestResult extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+		registerBroadCastReceiver();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		TextView tv = new TextView(getActivity());
+        ScrollView sv = new ScrollView(getActivity());
+		tv = new TextView(getActivity());
 		tv.setTextSize(24);
-		tv.setText(buildTestResult());
+		results = buildTestResult();
+		view = results + getBatteryMessage() + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
+		tv.setText(view);
 		tv.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-		return tv;
+		mContext =  getActivity();
+		sv.addView(tv);
+		return sv;
 	}
+	
+	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+            goAsync();
+            if(intent.getAction().equals(Intent.ACTION_DOCK_EVENT)){
+                dockState = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
+                if(dockState != Intent.EXTRA_DOCK_STATE_CAR){
+                    PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+                    pm.shutdown(false,null,false);
+                }
+			} else if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
+                if(!valuesReceived){
+                    valuesReceived = true;
+                    currentTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
+                    batteryStatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                    isBatteryFull = (batteryStatus == BatteryManager.BATTERY_STATUS_FULL);
+                    currentVoltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
+                    Log.d("AutoTestResult", "intent battery_changed. currentTemp = " + currentTemp + "; batteryStatus = " + batteryStatus + "; currentVoltage = " + currentVoltage);
+                    view = results + getBatteryMessage() + "\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
+                    tv.setText(view);
+                    saveResultsToCsv();
+                }
 
+			}
+		}
+	};
+	
+	private void registerBroadCastReceiver(){
+		IntentFilter mFilter = new IntentFilter();
+		mFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+		mFilter.addAction(Intent.ACTION_DOCK_EVENT);
+		mContext.registerReceiver(mReceiver, mFilter);
+	}
+		
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
@@ -107,7 +167,7 @@ public class AutoTestResult extends Fragment{
             File file = new File(filename);
             file.delete();
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            //bufferedWriter.write(("1,"));
+            bufferedWriter.write((resultToSha256(data.toString()) + ","));
             bufferedWriter.write(data.substring(0, data.length()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -141,6 +201,7 @@ public class AutoTestResult extends Fragment{
         results.append(getMcuVersion() + ",");
         results.append(wInfo.getMacAddress() + ",");
         results.append(getCurrent() + ",");
+        results.append(currentVoltage + ",");
 
         for(TestItem item : mItems){
 			if(item.inAutoTest){                
@@ -202,5 +263,35 @@ public class AutoTestResult extends Fragment{
 	
 		return  mCurrent;
 	}
+	
+	private String getBatteryMessage(){
+        if(isBatteryFull)
+            return "\n\nThe battery is full, discharge the battery before retesting.";
+        else if(currentTemp > 449 || currentTemp < 1) 
+            return "\n The battery don't charging because of high/low temperature (now: " + (float) currentTemp/10 + ")";
+        else return "";
+	}
+	
+    private String resultToSha256 (String res){
+        String noDelimiters = res.replaceAll(",", "");
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] encodedhash = digest.digest(noDelimiters.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(encodedhash);
+    }
+    
+    private static String bytesToHex(byte[] hash) {
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     
 }

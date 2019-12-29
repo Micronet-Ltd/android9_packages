@@ -47,6 +47,7 @@
 	<string name="key_name_media_record">Record video</string>
 	<string name="key_name_media_rewind">Mark</string>
 	<string name="key_name_sound_record">Record voice</string>
+    <string name="key_name_window">Hardware push button</string>
 
 	<string name="lcd_test_mesg">LCD test OK Yes/No?</string>
 

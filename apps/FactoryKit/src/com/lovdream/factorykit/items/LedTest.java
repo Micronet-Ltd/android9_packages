@@ -79,12 +79,14 @@ public class LedTest extends TestItemBase {
 
 	private void setColor(int color) {
         LightsManager lm = new LightsManager(mContext);
-        Light greenRedLight = lm.getLight(LightsManager.LIGHT_ID_NOTIFICATIONS);
+        Light greenBlueLight = lm.getLight(LightsManager.LIGHT_ID_NOTIFICATIONS);
         Light redLight = lm.getLight(LightsManager.LIGHT_ID_BATTERY);
         if (color == Color.RED){
+            greenBlueLight.setColor(0x00000000);
             redLight.setColor(color);
         } else {
-            greenRedLight.setColor(color);
+            redLight.setColor(0x00000000);
+            greenBlueLight.setColor(color);
         }
 
 	}
