@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.content.BroadcastReceiver;
-import android.os.Build;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +25,6 @@ import com.swfp.utils.ServiceUtil;
 
 public class IgnitionTest extends TestItemBase {
 
-    private static final String DOCK_STATE_PATH = "/sys/class/switch/dock/state";
     public static final String dockAction = "android.intent.action.DOCK_EVENT";
     private static final int IGNITION_ON = 2;
     private static final String TAG = "IgnitionTest";
@@ -35,7 +33,6 @@ public class IgnitionTest extends TestItemBase {
 	private TextView mInfoView;
 	private Context mContext;
 	
-	private boolean isStatusChanged = false;
 	
 	@Override
 	public String getKey() {
@@ -50,7 +47,6 @@ public class IgnitionTest extends TestItemBase {
 	@Override
 	public void onStartTest() {
 		mContext =  getActivity();
-		isStatusChanged = false;
         registerBroadCastReceiver();
 	}
 	
@@ -74,7 +70,6 @@ public class IgnitionTest extends TestItemBase {
             if(intent.getAction().equals(dockAction)){
                 dockState = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
                 updateInfo(getIgnState());
-                isStatusChanged = true;
 			}
 		}
 	};	
@@ -82,19 +77,15 @@ public class IgnitionTest extends TestItemBase {
 	private void updateInfo(boolean isIgnitionOn) {
 	
 		StringBuilder sb = new StringBuilder();
-		if(!isStatusChanged){
             if(isIgnitionOn){
-                sb.append(mContext.getString(R.string.turn_off_ignition_mesg));
-            } else {
+                sb.append("test pass");
+                enableSuccess(true);
+            }else {
                 sb.append(mContext.getString(R.string.turn_on_ignition_mesg));
 			}
-		}else{
-            sb.append("test pass");
-			
-		}
+		
 		if (mInfoView != null) 
 			mInfoView.setText(sb.toString());
-        enableSuccess(true);
         }
 		
     
@@ -103,6 +94,7 @@ public class IgnitionTest extends TestItemBase {
 		mFilter.addAction(dockAction);
 		mContext.registerReceiver(mReceiver, mFilter);
 	}
+	
 	private void unRegisterBroadCastReceiver(){
 		try {
 			getActivity().unregisterReceiver(mReceiver);
@@ -112,7 +104,6 @@ public class IgnitionTest extends TestItemBase {
 	}
 	
 	 private boolean getIgnState() {
-        Log.d("AAAAAAA", "ign state = " + dockState);
         if(dockState == Intent.EXTRA_DOCK_STATE_CAR)
             return true;
         else 

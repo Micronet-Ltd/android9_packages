@@ -331,13 +331,13 @@
         isAutoJudge="true"
         key="tp_grid_test" />
     
-    <!--
+   
     <com.lovdream.factorykit.Config.TestItem
         displayName="Ignition Test"
         inAutoTest="true"
         isAutoJudge="true"
         key="ignition_test" />
-    -->
+    
 
 
     <com.lovdream.factorykit.Config.TestItem

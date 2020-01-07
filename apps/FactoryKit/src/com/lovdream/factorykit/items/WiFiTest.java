@@ -114,9 +114,11 @@ public class WiFiTest extends TestItemBase{
 		if(connectedId != -1){
 			mWifiManager.forget(connectedId,null);
 		}
-                    enableWifi(false);
+		wifiScanResult = null;
+		mTextView.setText("");
+        //enableWifi(false);
 
-		Utils.enableWifi(mContext, false);
+		//Utils.enableWifi(mContext, false);
 		try {
 			mCountDownTimer.cancel();
 			if (true == mWifiLock.isHeld())
@@ -170,7 +172,7 @@ public class WiFiTest extends TestItemBase{
 				// When screen is dim, SCAN_RESULTS_AVAILABLE_ACTION cannot be
 				// got.
 				// So get it actively
-				if (tickCount >= 4 && !scanResultAvailabe) {
+				if (tickCount >= 4 && !scanResultAvailabe && mWifiManager.getScanResults() != null) {
 					wifiScanResult = mWifiManager.getScanResults();
 					scanResultAvailabe = true;
 					mHandler.sendEmptyMessage(0);
@@ -227,7 +229,7 @@ public class WiFiTest extends TestItemBase{
 			logd(intent.getAction() + "       ,state =  "+mWifiManager.getWifiState());
 			if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent
 					.getAction())) {
-				if (!scanResultAvailabe) {
+				if (!scanResultAvailabe && mWifiManager.getScanResults() != null) {
 					wifiScanResult = mWifiManager.getScanResults();
 					scanResultAvailabe = true;
 					mHandler.sendEmptyMessage(0);
