@@ -17,6 +17,8 @@ import android.app.ActivityManager;
 import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.os.SystemProperties;
+import com.android.server.lights.Light;
+import com.android.server.lights.LightsManager;
 
 import com.lovdream.factorykit.Utils;
 import com.swfp.utils.ProjectControlUtil;
@@ -29,6 +31,7 @@ import com.lovdream.factorykit.items.SystemVersionTest;
 
 import android.preference.PreferenceScreen;
 import android.content.res.Configuration;
+import android.os.Build;
 
 
 public class Main extends PreferenceActivity {
@@ -45,6 +48,8 @@ public class Main extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle bundle){
 		super.onCreate(bundle);
+		
+		turnOffIrLed();
 
 		if (ActivityManager.isUserAMonkey()) {
 			Log.e(TAG, "user is a monkey");
@@ -257,5 +262,14 @@ public class Main extends PreferenceActivity {
 			exitTime = System.currentTimeMillis();
 			Toast.makeText(this,R.string.double_back_msg,Toast.LENGTH_SHORT).show();
 		}
+	}
+	
+	private void turnOffIrLed() {
+	if(Build.MODEL.equals("MSCAM")){
+        LightsManager lm = new LightsManager(this);
+        Light irLed = lm.getLight(LightsManager.LIGHT_ID_BACKLIGHT);
+        irLed.setColor(0x00000000);
+        }
+        
 	}
 }
