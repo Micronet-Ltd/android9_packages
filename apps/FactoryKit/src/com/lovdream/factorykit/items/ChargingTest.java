@@ -23,6 +23,7 @@ import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.Utils;
 import com.lovdream.factorykit.TestItemBase;
 import com.swfp.utils.ServiceUtil;
+import com.lovdream.factorykit.Main;
 
 public class ChargingTest extends TestItemBase {
 
@@ -32,12 +33,12 @@ public class ChargingTest extends TestItemBase {
 	private static final int NO_PASS = 0;
 	private static final int SINGLE_PASS=1;
 	private static final int DOUBLE_PASS=2;
-	
+
 	private TextView mInfoView;
 	private Context mContext;
 	
 	private  int insertSuccessTimes = NO_PASS;
-	
+// 	
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -53,8 +54,14 @@ public class ChargingTest extends TestItemBase {
 		    case BatteryManager.BATTERY_STATUS_FULL:
 		    	updateInfo(true);
 			    break;
-		}
-			
+            }
+			if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
+                    Main.currentTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
+                    Main.isBatteryFull = (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_FULL);
+                    Main.currentVoltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
+                    getBatteryMessage();
+                    updateInfo(true);
+			}
 		}
 	};
 
@@ -106,7 +113,7 @@ public class ChargingTest extends TestItemBase {
 			sb.append(mContext.getString(R.string.charging_state_none));
 		}else{
 			int mCurrent = getCurrent();
-			boolean isCanPass =mCurrent>50;
+			boolean isCanPass = mCurrent > 50;
 			sb.append(mContext.getString(R.string.charging_state_charging)+"\n");
 			sb.append(mContext.getString(R.string.charging_current_label, mCurrent)+"\n");
 			if(isCanPass){
@@ -118,6 +125,7 @@ public class ChargingTest extends TestItemBase {
                 }
             }else{
 				sb.append(mContext.getString(R.string.charging_current_low)+"\n");
+				sb.append(Main.resultString + "\n");
 				}
 		}
 		if (mInfoView != null) 
@@ -127,7 +135,7 @@ public class ChargingTest extends TestItemBase {
 	}
 
 	private int  getCurrent() {
-		int mCurrent =DEFAULT_CURRENT;
+		int mCurrent = DEFAULT_CURRENT;
 		try {
 			mCurrent=Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT));
 			mCurrent=Math.abs(mCurrent/=1000);
@@ -139,5 +147,11 @@ public class ChargingTest extends TestItemBase {
 		return  mCurrent;
 	}
 
-
+    public void getBatteryMessage(){
+        if(Main.isBatteryFull || Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT)) == 152)
+            Main.resultString = "The battery is full, discharge the battery before retesting.";
+        else if(Main.currentTemp > 449 || Main.currentTemp < 1) 
+            Main.resultString = "The battery don't charging because of high/low temperature (now: " + (float) Main.currentTemp/10 + ")";
+        else Main.resultString = "";
+	}
 }

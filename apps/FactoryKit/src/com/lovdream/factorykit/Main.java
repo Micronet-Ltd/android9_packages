@@ -44,6 +44,10 @@ public class Main extends PreferenceActivity {
 	private boolean mIsWifiEnable;
 	private boolean mIsBluetoothEnable;
 	private boolean mIsNfcEnable;
+    public static boolean isBatteryFull = false;
+    public static int currentTemp = 0;
+    public static String resultString = "";
+    public static int currentVoltage = 0;
 
 	@Override
 	protected void onCreate(Bundle bundle){

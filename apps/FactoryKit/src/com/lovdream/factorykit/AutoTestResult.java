@@ -45,6 +45,7 @@ public class AutoTestResult extends Fragment{
 
 	private static final String TAG = Main.TAG;
 	private static final String CURRENT = "/sys/class/power_supply/bms/current_now";
+	private static final String BATTERY_TYPE = "/sys/class/power_supply/bms/battery_type";
     StringBuilder data;
     public static final String PASS = "Pass,";
     public static final String FAIL = "Fail,";
@@ -55,22 +56,18 @@ public class AutoTestResult extends Fragment{
     private static final int IGNITION_ON = 2;
     private int dockState = -1;
     private Context mContext;
-    int currentTemp = 0;
-    int batteryStatus = -1;
-    int currentVoltage = 0;
-    boolean isBatteryFull = false;
     TextView tv;
     String view;
     String results;
     boolean valuesReceived = false;
-
+    
 	private String buildTestResult(){
 	
 		app = (FactoryKitApplication)getActivity().getApplication();
 		config = app.getTestConfig();
 		mItems = config.getTestItems();
 		
-		//saveResultsToCsv();
+		saveResultsToCsv();
 		
 		String failItems = "";
 		for(TestItem item : mItems){
@@ -105,7 +102,7 @@ public class AutoTestResult extends Fragment{
 		tv = new TextView(getActivity());
 		tv.setTextSize(24);
 		results = buildTestResult();
-		view = results + getBatteryMessage() + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
+		view = results + Main.resultString + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
 		tv.setText(view);
 		tv.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 		mContext =  getActivity();
@@ -123,26 +120,12 @@ public class AutoTestResult extends Fragment{
                     PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
                     pm.shutdown(false,null,false);
                 }
-			} else if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
-                if(!valuesReceived){
-                    valuesReceived = true;
-                    currentTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
-                    batteryStatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-                    isBatteryFull = (batteryStatus == BatteryManager.BATTERY_STATUS_FULL);
-                    currentVoltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-                    Log.d("AutoTestResult", "intent battery_changed. currentTemp = " + currentTemp + "; batteryStatus = " + batteryStatus + "; currentVoltage = " + currentVoltage);
-                    view = results + getBatteryMessage() + "\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
-                    tv.setText(view);
-                    saveResultsToCsv();
-                }
-
 			}
 		}
 	};
 	
 	private void registerBroadCastReceiver(){
 		IntentFilter mFilter = new IntentFilter();
-		mFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
 		mFilter.addAction(Intent.ACTION_DOCK_EVENT);
 		mContext.registerReceiver(mReceiver, mFilter);
 	}
@@ -201,7 +184,8 @@ public class AutoTestResult extends Fragment{
         results.append(getMcuVersion() + ",");
         results.append(wInfo.getMacAddress() + ",");
         results.append(getCurrent() + ",");
-        results.append(currentVoltage + ",");
+        results.append(Main.currentVoltage + ",");
+        results.append(isSmallBattery() + ",");
 
         for(TestItem item : mItems){
 			if(item.inAutoTest){                
@@ -251,7 +235,7 @@ public class AutoTestResult extends Fragment{
         return productType;
     }
     
-    private int  getCurrent() {
+    private int getCurrent() {
 		int mCurrent = 0;
 		try {
 			mCurrent=Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT));
@@ -264,12 +248,17 @@ public class AutoTestResult extends Fragment{
 		return  mCurrent;
 	}
 	
-	private String getBatteryMessage(){
-        if(isBatteryFull)
-            return "\n\nThe battery is full, discharge the battery before retesting.";
-        else if(currentTemp > 449 || currentTemp < 1) 
-            return "\n The battery don't charging because of high/low temperature (now: " + (float) currentTemp/10 + ")";
-        else return "";
+	private int isSmallBattery() {
+		String type = "";
+		try {
+			type=ServiceUtil.getInstance().readFromFile(BATTERY_TYPE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        if(type.equals("c801_fullymax_fb382030xl_4v2_135mah_20k"))
+            return  1;
+		else 
+            return 0;
 	}
 	
     private String resultToSha256 (String res){
