@@ -179,7 +179,7 @@
         inPCBATest="true"
         isAutoJudge="false"
         key="led_test"
-        parameter="colors:#FFFF0000,#FF00FF00,#FF0000FF;msg:红绿蓝三色都亮则测试通过" />
+        parameter="colors:#FFFF0000,#FF00FF00,#FF0000FF" />
 
     <!--
          	<com.lovdream.factorykit.Config.TestItem

@@ -32,6 +32,20 @@ import com.lovdream.factorykit.TestItemBase;
 
 public class WiFiTest extends TestItemBase{
 
+	private WifiLock mWifiLock;
+	private WifiManager mWifiManager;
+	private List<ScanResult> wifiScanResult;
+	private TextView mTextView;
+	final int SCAN_INTERVAL = 4000;
+	final int OUT_TIME = 40000;
+	IntentFilter mFilter = new IntentFilter();
+	static String TAG = "WiFi";
+	private boolean scanResultAvailabe = false;
+	private static Context mContext = null;
+	private int connectedId = -1;
+	private boolean isSearchStarted = false;
+	private int tickCount = 0;
+	
 	@Override
 	public String getKey(){
 		return "wifi_test";
@@ -44,6 +58,7 @@ public class WiFiTest extends TestItemBase{
 
 	@Override
 	public void onStartTest(){
+        isSearchStarted = false;
 
 		mContext = getActivity();
 		getService();
@@ -72,7 +87,7 @@ public class WiFiTest extends TestItemBase{
 		mFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 		mFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 		mFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		
+		tickCount = 0;
 		mCountDownTimer.start();
 
 		mContext.registerReceiver(mReceiver, mFilter);
@@ -92,17 +107,6 @@ public class WiFiTest extends TestItemBase{
 		return v;
 	}
 
-	private WifiLock mWifiLock;
-	private WifiManager mWifiManager;
-	private List<ScanResult> wifiScanResult;
-	private TextView mTextView;
-	final int SCAN_INTERVAL = 4000;
-	final int OUT_TIME = 30000;
-	IntentFilter mFilter = new IntentFilter();
-	static String TAG = "WiFi";
-	private boolean scanResultAvailabe = false;
-	private static Context mContext = null;
-	private int connectedId = -1;
 
 	public void stopTest() {
 		scanResultAvailabe = false;
@@ -149,7 +153,7 @@ public class WiFiTest extends TestItemBase{
 
 	CountDownTimer mCountDownTimer = new CountDownTimer(OUT_TIME, SCAN_INTERVAL){
 	
-		private int tickCount = 0;
+		//tickCount = 0;
 
 		@Override
 		public void onFinish() {
@@ -165,14 +169,18 @@ public class WiFiTest extends TestItemBase{
 		public void onTick(long arg0) {
 
 			tickCount++;
-			logd("Timer Tick");
+			logd("Timer Tick " + tickCount);
 			// At least conduct startScan() 3 times to ensure wifi's scan
 			if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
-				mWifiManager.startScan();
+
+			if (!isSearchStarted){
+                mWifiManager.startScan();
+                isSearchStarted = true;
+            }
 				// When screen is dim, SCAN_RESULTS_AVAILABLE_ACTION cannot be
 				// got.
 				// So get it actively
-				if (tickCount >= 4 && !scanResultAvailabe && mWifiManager.getScanResults() != null) {
+				if (tickCount > 10 && !scanResultAvailabe && mWifiManager.getScanResults() != null) {
 					wifiScanResult = mWifiManager.getScanResults();
 					scanResultAvailabe = true;
 					mHandler.sendEmptyMessage(0);
@@ -274,8 +282,12 @@ public class WiFiTest extends TestItemBase{
 		config.allowedProtocols.clear(); 
 		config.SSID = "\"" + getTestSSID() + "\"";   
 		config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); 
+		mWifiManager.disconnect();
 		connectedId = mWifiManager.addNetwork(config);
-		return mWifiManager.enableNetwork(connectedId, true); 
+		boolean ret =  mWifiManager.enableNetwork(connectedId, true); 
+		mWifiManager.reconnect();
+		return ret;
+		
 	}
 
 	void fail(Object msg) {

@@ -75,7 +75,7 @@ public class SystemVersionTest extends TestItemBase{
                 R.string.internal_version,R.string.baseband_version,
                 R.string.hardware_version,
                 R.string.sn,
-                R.string.tp_info,R.string.tp_version};
+                R.string.tp_info,R.string.tp_version,R.string.mcu_version};
         int length = titleIds.length;
         HashMap hashMap;
         String title,info;
@@ -109,6 +109,9 @@ public class SystemVersionTest extends TestItemBase{
                     break;
                 case R.string.hardware_version:
                     info = getHardwareVersion();
+                    break;
+                case R.string.mcu_version:
+                    info = getSystemproString("hw.build.version.mcu");
                     break;
                 default:
                     info =UNKNOWN;
