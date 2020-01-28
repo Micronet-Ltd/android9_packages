@@ -117,7 +117,8 @@ public class VideoMenu extends MenuController
                 CameraSettings.KEY_CAMERA_SAVEPATH,
                 CameraSettings.KEY_WHITE_BALANCE,
                 CameraSettings.KEY_VIDEO_HIGH_FRAME_RATE,
-                CameraSettings.KEY_DIS
+                CameraSettings.KEY_DIS,
+                CameraSettings.KEY_RESET_MODE
         };
         mOtherKeys2 = new String[] {
                 CameraSettings.KEY_VIDEOCAMERA_FLASH_MODE,
@@ -140,7 +141,8 @@ public class VideoMenu extends MenuController
                 CameraSettings.KEY_VIDEO_ROTATION,
                 CameraSettings.KEY_VIDEO_CDS_MODE,
                 CameraSettings.KEY_VIDEO_TNR_MODE,
-                CameraSettings.KEY_VIDEO_SNAPSHOT_SIZE
+                CameraSettings.KEY_VIDEO_SNAPSHOT_SIZE,
+                CameraSettings.KEY_RESET_MODE
         };
         mFrontBackSwitcher.setVisibility(View.INVISIBLE);
         initSwitchItem(CameraSettings.KEY_CAMERA_ID, mFrontBackSwitcher);
@@ -907,9 +909,31 @@ public class VideoMenu extends MenuController
         if (notSame(pref, CameraSettings.KEY_RECORD_LOCATION, "off")) {
             mActivity.requestLocationPermission();
         }
-
+        android.util.Log.w("fy",""+pref.getKey());
+        if (same(pref, CameraSettings.KEY_RESET_MODE, mActivity.getString(R.string.pref_camera_reset_default))) {
+        } else if (same(pref, CameraSettings.KEY_RESET_MODE, "on")) {
+            resetUi();
+            mActivity.getCurrentModule().restorePreferences();
+            reloadPreferences();
+        }
 
         super.onSettingChanged(pref);
+    }
+    private static boolean same(ListPreference pref, String key, String value) {
+        return (key.equals(pref.getKey()) && value.equals(pref.getValue()));
+    }
+    private void resetUi(){
+        IconListPreference filter_pref = (IconListPreference) mPreferenceGroup
+                .findPreference(CameraSettings.KEY_FILTER_MODE);
+        if (filter_pref != null)
+            ((ImageView)mFilterModeSwitcher).setImageResource(((IconListPreference) filter_pref).getLargeIconIds()[0]);
+        mFilterModeSwitcher.setEnabled(true);
+
+        IconListPreference color_pref = (IconListPreference)mPreferenceGroup.findPreference(CameraSettings.KEY_COLOR_EFFECT);
+        color_pref.setValueIndex(0);
+
+        mListMenu.reloadPreference();
+
     }
 
     public int getOrientation() {

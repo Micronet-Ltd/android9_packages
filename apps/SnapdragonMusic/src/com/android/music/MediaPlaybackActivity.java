@@ -1884,12 +1884,13 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
                 try {
                     int shuffle = mService.getShuffleMode();
                     int histSize = mService.getHistSize();
-                    if (isGoStart(shuffle, histSize)) {
+                    mService.prev();//for 16459
+                    /*if (isGoStart(shuffle, histSize)) {
                         mService.seek(0);
                         mService.play();
                     } else {
                         mService.prev();
-                    }
+                    }*/
                 } catch (RemoteException ex) {
                     ex.printStackTrace();
                 }

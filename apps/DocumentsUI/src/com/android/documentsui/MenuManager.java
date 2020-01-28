@@ -62,7 +62,7 @@ public abstract class MenuManager {
         updateCopyTo(menu.findItem(R.id.action_menu_copy_to), selection);
         updateCompress(menu.findItem(R.id.action_menu_compress), selection);
         updateExtractTo(menu.findItem(R.id.action_menu_extract_to), selection);
-        updateInspect(menu.findItem(R.id.action_menu_inspect), selection);
+       // updateInspect(menu.findItem(R.id.action_menu_inspect), selection);
         updateViewInOwner(menu.findItem(R.id.action_menu_view_in_owner), selection);
 
         Menus.disableHiddenItems(menu);
@@ -78,7 +78,7 @@ public abstract class MenuManager {
                 menu.findItem(R.id.option_menu_list));
         updateAdvanced(menu.findItem(R.id.option_menu_advanced));
         updateDebug(menu.findItem(R.id.option_menu_debug));
-        updateInspect(menu.findItem(R.id.option_menu_inspect));
+        //updateInspect(menu.findItem(R.id.option_menu_inspect));
         Menus.disableHiddenItems(menu);
     }
 

@@ -387,7 +387,14 @@ public class WaterMarkView extends FrameLayout {
             m.postRotate(getFinalRotation());
             if (b.getWidth() < b.getHeight()) {
                 int deltaX = (r.width() - widthScreen) / 2;
-                m.postTranslate((int) markLeft + deltaX, (int) markTop);
+                int deltaY = (r.height() - heightScreen) / 2;
+                //m.postTranslate((int) markLeft + deltaX, (int) markTop);
+                if (MasterImage.getImage().getFilteredImage().getWidth() >MasterImage.getImage().getFilteredImage().getHeight()) {
+                    m.postTranslate((int) markLeft + deltaX, (int) markTop);
+                } else {
+                    float a =(int) markTop + deltaX;
+                    m.postTranslate((int) markLeft + deltaX,(int) markTop + deltaX -110.0f);
+                }
             } else {
                 int deltaY = (r.height() - heightScreen) / 2;
                 m.postTranslate((int) markLeft, (int) markTop + deltaY);

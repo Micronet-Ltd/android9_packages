@@ -28,10 +28,19 @@ import java.util.List;
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.Utils;
 import com.lovdream.factorykit.TestItemBase;
+import com.swfp.model.WifiModel;
+import com.swfp.model.WifiModel.WifiBack;
+import com.swfp.utils.WifiUtil;
 
 
-public class WiFiTest extends TestItemBase{
+public class WiFiTest extends TestItemBase implements WifiBack{
 
+	WifiUtil wifiUtil;
+	WifiModel wifiModel;
+    static Context mContext = null;
+    TextView mTextView;
+    
+	
 	@Override
 	public String getKey(){
 		return "wifi_test";
@@ -39,50 +48,26 @@ public class WiFiTest extends TestItemBase{
 
 	@Override
 	public String getTestMessage(){
-		return getActivity().getString(R.string.wifi_test_title);
+		return mContext.getString(R.string.wifi_test_title);
 	}
 
 	@Override
 	public void onStartTest(){
 
 		mContext = getActivity();
-		getService();
-
-		/** Keep Wi-Fi awake */
-		mWifiLock = mWifiManager.createWifiLock(
-				WifiManager.WIFI_MODE_SCAN_ONLY, "WiFi");
-		if (false == mWifiLock.isHeld())
-			mWifiLock.acquire();
-
-		switch (mWifiManager.getWifiState()) {
-			case WifiManager.WIFI_STATE_DISABLED:
-				enableWifi(true);
-				break;
-			case WifiManager.WIFI_STATE_DISABLING:
-                                      enableWifi(true);
-				//fail(getString(R.string.wifi_is_closing));
-				break;
-			case WifiManager.WIFI_STATE_UNKNOWN:
-				fail(getString(R.string.wifi_state_unknown));
-				break;
-			default:
-				break;
-		}
-
-		mFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-		mFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-		mFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		
-		mCountDownTimer.start();
-
-		mContext.registerReceiver(mReceiver, mFilter);
+		initWifiModel();
+		wifiUtil = new WifiUtil(mContext,wifiModel).start();
+	
+	}
+	
+	private void initWifiModel(){
+		wifiModel = new WifiModel(this);
+		wifiModel.testSSID = getTestSSID();
 	}
 
 	@Override
 	public void onStopTest(){
-		mContext.unregisterReceiver(mReceiver);
-
-		stopTest();
+		wifiUtil.stop();
 	}
 
 	@Override
@@ -92,230 +77,53 @@ public class WiFiTest extends TestItemBase{
 		return v;
 	}
 
-	private WifiLock mWifiLock;
-	private WifiManager mWifiManager;
-	private List<ScanResult> wifiScanResult;
-	private TextView mTextView;
-	final int SCAN_INTERVAL = 4000;
-	final int OUT_TIME = 30000;
-	IntentFilter mFilter = new IntentFilter();
-	static String TAG = "WiFi";
-	private boolean scanResultAvailabe = false;
-	private static Context mContext = null;
-	private int connectedId = -1;
 
-	public void stopTest() {
-		scanResultAvailabe = false;
-		// User may press back key while showing the AP list.
-		if (wifiScanResult != null && wifiScanResult.size() > 0) {
-			loge("wifi scan success");
-		}
-
-		if(connectedId != -1){
-			mWifiManager.forget(connectedId,null);
-		}
-		wifiScanResult = null;
-		mTextView.setText("");
-        //enableWifi(false);
-
-		//Utils.enableWifi(mContext, false);
-		try {
-			mCountDownTimer.cancel();
-			if (true == mWifiLock.isHeld())
-				mWifiLock.release();
-		} catch (Exception e) {
-			loge(e);
-		}
-	}
-
-	private void enableWifi(boolean enable) {
-
-		if (mWifiManager != null)
-			mWifiManager.setWifiEnabled(enable);
-	}
-
+	 
 	void bindView(View v) {
 
 		mTextView = (TextView) v.findViewById(R.id.wifi_hint);
 		mTextView.setText(getString(R.string.wifi_test_mesg));
 	}
 
-	void getService() {
 
-		mWifiManager = (WifiManager) getActivity()
-				.getSystemService(Context.WIFI_SERVICE);
-		
-	}
-
-	CountDownTimer mCountDownTimer = new CountDownTimer(OUT_TIME, SCAN_INTERVAL){
-	
-		private int tickCount = 0;
-
-		@Override
-		public void onFinish() {
-
-			logd("Timer Finish");
-			if (wifiScanResult == null || wifiScanResult.size() == 0) {
-				fail(getString(R.string.wifi_scan_null));
-			}
-			tickCount = 0;
-		}
-
-		@Override
-		public void onTick(long arg0) {
-
-			tickCount++;
-			logd("Timer Tick");
-			// At least conduct startScan() 3 times to ensure wifi's scan
-			if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
-				mWifiManager.startScan();
-				// When screen is dim, SCAN_RESULTS_AVAILABLE_ACTION cannot be
-				// got.
-				// So get it actively
-				if (tickCount >= 4 && !scanResultAvailabe) {
-					wifiScanResult = mWifiManager.getScanResults();
-					scanResultAvailabe = true;
-					mHandler.sendEmptyMessage(0);
-				}
-			}
-
-		}
-	};
-
-	static String wifiInfos = "";
-	Handler mHandler = new Handler() {
-
-		public void handleMessage(Message msg) {
-
-			String s = mContext.getString(R.string.wifi_test_mesg) + "\n\n" + "AP List:\n";
-			wifiInfos = "";
-			if (wifiScanResult != null && wifiScanResult.size() > 0) {
-				for (int i = 0; i < wifiScanResult.size(); i++) {
-					logd(wifiScanResult.get(i));
-					s += " " + i + ": " + wifiScanResult.get(i).SSID + "\n\n";
-					wifiInfos += " " + i + ": "
-							+ wifiScanResult.get(i).toString() + "\n\n";
-					mTextView.setText(s);
-				}
-				if(!connectTestAp()){
-					String connection_fall_msg = getString(R.string.connection_fall,getTestSSID());
-					fail(connection_fall_msg);
-				}
-
-			} else {
-				fail(getString(R.string.wifi_scan_null));
-			}
-		};
-	};
-
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-		public void onReceive(Context c, Intent intent) {
-                            switch (mWifiManager.getWifiState()) {
-                                case WifiManager.WIFI_STATE_DISABLED://11
-                                    enableWifi(true);
-                                    break;
-                                case WifiManager.WIFI_STATE_DISABLING://0
-                                    enableWifi(true);
-                                    //fail(getString(R.string.wifi_is_closing));
-                                    break;
-                                case WifiManager.WIFI_STATE_UNKNOWN:
-                                    fail(getString(R.string.wifi_state_unknown));
-                                    break;
-                                default:
-                                    break;
-                            }
-
-			logd(intent.getAction() + "       ,state =  "+mWifiManager.getWifiState());
-			if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent
-					.getAction())) {
-				if (!scanResultAvailabe) {
-					wifiScanResult = mWifiManager.getScanResults();
-					scanResultAvailabe = true;
-					mHandler.sendEmptyMessage(0);
-				}
-			}else if(WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction())){
-				NetworkInfo ni = (NetworkInfo)intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-				if((ni != null) && !ni.isConnected()){
-					return;
-				}
-				WifiInfo info = (WifiInfo)intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
-				if((info == null)){
-					 info = mWifiManager.getConnectionInfo();
-				}
-				logd(info);
-				if((info != null) && getTestSSID().equals(formatSSID(info.getSSID()))){
-					String connection_success_msg = getString(R.string.connection_success,getTestSSID());
-					toast(connection_success_msg);
-					pass(null);
-				}
-			}
-		}
-
-	};
-
-	private String formatSSID(String ssid){
-		if(ssid == null){
-			return "";
-		}
-		return ssid.replace("\"","").trim();
-	}
 
 	protected String getTestSSID(){
 		return "lovdream";
 	}
-
-	private boolean connectTestAp(){
-		WifiConfiguration config = new WifiConfiguration();
-		config.allowedAuthAlgorithms.clear(); 
-		config.allowedGroupCiphers.clear(); 
-		config.allowedKeyManagement.clear(); 
-		config.allowedPairwiseCiphers.clear(); 
-		config.allowedProtocols.clear(); 
-		config.SSID = "\"" + getTestSSID() + "\"";   
-		config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); 
-		connectedId = mWifiManager.addNetwork(config);
-		return mWifiManager.enableNetwork(connectedId, true); 
+	
+	protected boolean  isFrequencyRight(int frequency){
+		return frequency>2000 && frequency<5000;
 	}
 
-	void fail(Object msg) {
+	
 
-		loge(msg);
+	@Override
+	public void pass() {
+		postSuccess();
+	}
+
+	@Override
+	public void failed(String msg) {
 		toast(msg);
 		postFail();
 	}
 
-	void pass(String msg) {
-
-		//Utils.enableWifi(mContext, false);
-		postSuccess();
+	@Override
+	public boolean isFrequencyNotErr(int fre) {
+		return isFrequencyRight(fre);
 	}
 
-	public void toast(Object s) {
+	@Override
+	public void showMsg(String msg) {
+		mTextView.setText(msg);
+	}
 
+	@Override
+	public void toast(String s) {
 		if (s == null)
 			return;
 		Toast.makeText(mContext, s + "", Toast.LENGTH_SHORT).show();
+		
 	}
 
-	private void loge(Object e) {
-
-		if (e == null)
-			return;
-		Thread mThread = Thread.currentThread();
-		StackTraceElement[] mStackTrace = mThread.getStackTrace();
-		String mMethodName = mStackTrace[3].getMethodName();
-		e = "[" + mMethodName + "] " + e;
-		Log.e(TAG, e + "");
-	}
-
-	private void logd(Object s) {
-
-		Thread mThread = Thread.currentThread();
-		StackTraceElement[] mStackTrace = mThread.getStackTrace();
-		String mMethodName = mStackTrace[3].getMethodName();
-
-		s = "[" + mMethodName + "] " + s;
-		Log.d(TAG, s + "");
-	}
 }
