@@ -47,6 +47,7 @@
 	<string name="key_name_media_record">Record video</string>
 	<string name="key_name_media_rewind">Mark</string>
 	<string name="key_name_sound_record">Record voice</string>
+    <string name="key_name_window">Hardware push button</string>
 
 	<string name="lcd_test_mesg">LCD test OK Yes/No?</string>
 
@@ -154,7 +155,7 @@
     <string name="fingerup">Finger up</string>
     <string name="tp_test_mesg">"touchscreen test successful?"</string>
 
-    <string name="two_color_led_test_mesg">"LED Test"</string>
+    <string name="two_color_led_test_mesg">"Do you see three colors (blinking: red, green, blue)"</string>
 
     <string name="mcp_info">MCP</string>
     <string name="lcd_info">LCD</string>
@@ -224,6 +225,7 @@
 	<string name="product_info">Product information</string>
     <string name="model">Model</string>
     <string name="soft_version">SW Version</string>
+    <string name="mcu_version">MCU Version</string>
     <string name="hardware_version">hardware Version</string>
     <string name="internal_version">Custom version</string>
     <string name="baseband_version">Baseband version</string>

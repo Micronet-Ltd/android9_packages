@@ -12,30 +12,40 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.SystemProperties;
+import android.os.PowerManager;
 import android.view.View;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.Toast;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 import com.lovdream.factorykit.Config.TestItem;
 import com.swfp.utils.ServiceUtil;
+import android.os.BatteryManager;
 
 
 public class AutoTestResult extends Fragment{
 
 	private static final String TAG = Main.TAG;
 	private static final String CURRENT = "/sys/class/power_supply/bms/current_now";
+	private static final String BATTERY_TYPE = "/sys/class/power_supply/bms/battery_type";
     StringBuilder data;
     public static final String PASS = "Pass,";
     public static final String FAIL = "Fail,";
@@ -43,7 +53,14 @@ public class AutoTestResult extends Fragment{
     FactoryKitApplication app;
     Config config;
     ArrayList<TestItem> mItems;
-
+    private static final int IGNITION_ON = 2;
+    private int dockState = -1;
+    private Context mContext;
+    TextView tv;
+    String view;
+    String results;
+    boolean valuesReceived = false;
+    
 	private String buildTestResult(){
 	
 		app = (FactoryKitApplication)getActivity().getApplication();
@@ -76,17 +93,43 @@ public class AutoTestResult extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
 		super.onActivityCreated(savedInstanceState);
+		registerBroadCastReceiver();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		TextView tv = new TextView(getActivity());
+        ScrollView sv = new ScrollView(getActivity());
+		tv = new TextView(getActivity());
 		tv.setTextSize(24);
-		tv.setText(buildTestResult());
+		results = buildTestResult();
+		view = results + Main.resultString + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
+		tv.setText(view);
 		tv.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-		return tv;
+		mContext =  getActivity();
+		sv.addView(tv);
+		return sv;
 	}
-
+	
+	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+            goAsync();
+            if(intent.getAction().equals(Intent.ACTION_DOCK_EVENT)){
+                dockState = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
+                if(dockState != Intent.EXTRA_DOCK_STATE_CAR){
+                    PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+                    pm.shutdown(false,null,false);
+                }
+			}
+		}
+	};
+	
+	private void registerBroadCastReceiver(){
+		IntentFilter mFilter = new IntentFilter();
+		mFilter.addAction(Intent.ACTION_DOCK_EVENT);
+		mContext.registerReceiver(mReceiver, mFilter);
+	}
+		
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
@@ -107,7 +150,7 @@ public class AutoTestResult extends Fragment{
             File file = new File(filename);
             file.delete();
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            //bufferedWriter.write(("1,"));
+            bufferedWriter.write((resultToSha256(data.toString()) + ","));
             bufferedWriter.write(data.substring(0, data.length()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -141,6 +184,8 @@ public class AutoTestResult extends Fragment{
         results.append(getMcuVersion() + ",");
         results.append(wInfo.getMacAddress() + ",");
         results.append(getCurrent() + ",");
+        results.append(Main.currentVoltage + ",");
+        results.append(isSmallBattery() + ",");
 
         for(TestItem item : mItems){
 			if(item.inAutoTest){                
@@ -190,7 +235,7 @@ public class AutoTestResult extends Fragment{
         return productType;
     }
     
-    private int  getCurrent() {
+    private int getCurrent() {
 		int mCurrent = 0;
 		try {
 			mCurrent=Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT));
@@ -202,5 +247,40 @@ public class AutoTestResult extends Fragment{
 	
 		return  mCurrent;
 	}
+	
+	private int isSmallBattery() {
+		String type = "";
+		try {
+			type=ServiceUtil.getInstance().readFromFile(BATTERY_TYPE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        if(type.equals("c801_fullymax_fb382030xl_4v2_135mah_20k"))
+            return  1;
+		else 
+            return 0;
+	}
+	
+    private String resultToSha256 (String res){
+        String noDelimiters = res.replaceAll(",", "");
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] encodedhash = digest.digest(noDelimiters.getBytes(StandardCharsets.UTF_8));
+        return bytesToHex(encodedhash);
+    }
+    
+    private static String bytesToHex(byte[] hash) {
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if(hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     
 }
