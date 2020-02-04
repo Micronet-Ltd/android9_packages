@@ -204,6 +204,7 @@ public class ModuleSwitcher extends RotateImageView
         for (int i = mDrawIds.length - 1; i >= 0; i--) {
             RotateImageView item = new RotateImageView(getContext());
             item.setImageResource(mDrawIds[i]);
+            item.setFocusable(false);
             item.setScaleType(ImageView.ScaleType.CENTER);
             item.setBackgroundResource(R.drawable.bg_pressed);
             final int index = i;

@@ -1103,7 +1103,6 @@ public class PhotoUI implements PieListener,
     }
 
     public void setDisplayOrientation(int orientation) {
-	//orientation=0;
         if (mFaceView != null) {
             mFaceView.setDisplayOrientation(orientation);
         }
@@ -1411,8 +1410,6 @@ public class PhotoUI implements PieListener,
 
     public void setOrientation(int orientation, boolean animation) {
         mOrientation = orientation;
-	//orientation=0;
-	//animation=true; 
         mCameraControls.setOrientation(orientation, animation);
         if (mMenuHelp != null)
             mMenuHelp.setOrientation(orientation, animation);

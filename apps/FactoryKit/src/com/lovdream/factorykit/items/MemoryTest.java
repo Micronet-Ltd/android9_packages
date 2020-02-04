@@ -11,7 +11,7 @@ import android.os.Build;
 
 public class MemoryTest extends TestItemBase{
 
-
+	
 	TextView tv_ram;
 	TextView tv_rom;
 
@@ -26,14 +26,14 @@ public class MemoryTest extends TestItemBase{
 
 	@Override
 	public void onStartTest() {
-
+		
 	}
 
 	@Override
 	public void onStopTest() {
-
+		
 	}
-
+	
 	public View getTestView(LayoutInflater inflater){
 		View v = inflater.inflate(R.layout.memory_test,null);
 		
@@ -60,7 +60,7 @@ public class MemoryTest extends TestItemBase{
 		String romInfo = getResources().getString(R.string.memory_test_rom)+romStr;
 		tv_ram.setText(ramInfo);
 		tv_rom.setText(romInfo);
-
+		
 		return v;
 	}
 

@@ -207,8 +207,11 @@
 
     <!-- Settings screen, setting title text -->
     <string name="pref_camera_recordlocation_title">GPS location</string>
+        <string name="pref_camera_reset_title">Reset</string>
+
 
     <string name="pref_camera_recordlocation_default" translatable="false">none</string>
+    <string name="pref_camera_reset_default" translatable="false">off</string>
 
     <!--  Label for record location preference [CHAR LIMIT=50] -->
     <string name="pref_camera_location_label">LOCATION</string>
@@ -490,6 +493,7 @@
 
     <!-- Low-memory dialog message [CHAR LIMIT=NONE] -->
     <string name="spaceIsLow_content" product="default">Out of space. Change the quality setting or delete some images or other files.</string>
+
     <!-- Camera format string for new image files. Passed to java.text.SimpleDateFormat. -->
     <string name="image_file_name_format" translatable="false">"'IMG'_yyyyMMdd_HHmmss"</string>
 

@@ -1518,6 +1518,7 @@ public class PhotoModule
             if (!mRefocus || (mRefocus && mReceivedSnapNum == 7)) {
                 ExifInterface exif = Exif.getExif(jpegData);
                 int orientation = Exif.getOrientation(exif);
+                exif.addMakeAndModelTag();
                 if(mCameraId == CameraHolder.instance().getFrontCameraId()) {
                     IconListPreference selfieMirrorPref = (IconListPreference) mPreferenceGroup
                             .findPreference(CameraSettings.KEY_SELFIE_MIRROR);
@@ -2410,6 +2411,7 @@ public class PhotoModule
             } else {
                 ExifInterface exif = Exif.getExif(data);
                 int orientation = Exif.getOrientation(exif);
+                exif.addMakeAndModelTag();
                 Bitmap bitmap = CameraUtil.makeBitmap(data, 50 * 1024);
                 bitmap = CameraUtil.rotate(bitmap, orientation);
                 mActivity.setResultEx(Activity.RESULT_OK,
@@ -2791,6 +2793,14 @@ public class PhotoModule
         mAnimateCapture = SystemProperties.getBoolean(
                 PERSIST_CAPTURE_ANIMATION, true);
     }
+    @Override
+    public void restorePreferences() {
+        CameraSettings settings = new CameraSettings(mActivity, mInitialParams,
+                mCameraId, CameraHolder.instance().getCameraInfo());
+        mParameters = mCameraDevice.getParameters();
+        mPreferences = ComboPreferences.get(mActivity);
+        settings.restorePreferences(mActivity,mPreferences,mParameters);
+    }
 
     @Override
     public void onPauseBeforeSuper() {
@@ -3121,12 +3131,9 @@ public class PhotoModule
     }
 
     private void setDisplayOrientation() {
-        mDisplayRotation = CameraUtil.getDisplayRotation(mActivity);        
-        
-        mDisplayOrientation = CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId);                
-        
-        mCameraDisplayOrientation = mDisplayOrientation;        
-	 
+        mDisplayRotation = CameraUtil.getDisplayRotation(mActivity);
+        mDisplayOrientation = CameraUtil.getDisplayOrientation(mDisplayRotation, mCameraId);
+        mCameraDisplayOrientation = mDisplayOrientation;
         // This will be called again in checkDisplayRotation(), so there
         // should not be any problem even if mUI is null.
         if (mUI != null) {
@@ -3135,10 +3142,14 @@ public class PhotoModule
         if (mFocusManager != null) {
             mFocusManager.setDisplayOrientation(mDisplayOrientation);
         }
-        // Change the camera display orientation	
-        if (mCameraDevice != null) {	 	      
-	  mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
-        }     
+        // Change the camera display orientation
+        if (mCameraDevice != null) {
+            if(true){
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation);
+            } else {
+                mCameraDevice.setDisplayOrientation(mCameraDisplayOrientation+180);
+            }
+        }
     }
 
     /** Only called by UI thread. */
