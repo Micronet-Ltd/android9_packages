@@ -3,14 +3,13 @@ package com.lovdream.factorykit.items;
 import android.view.View;
 import android.os.Vibrator;
 import android.os.BatteryManager;
+import android.os.SystemProperties;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.content.BroadcastReceiver;
-import android.os.Build;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,7 +116,7 @@ public class ChargingTest extends TestItemBase {
 			sb.append(mContext.getString(R.string.charging_state_charging)+"\n");
 			sb.append(mContext.getString(R.string.charging_current_label, mCurrent)+"\n");
 			if(isCanPass){
-                if(Build.MODEL.equals("MSCAM")){
+                if(SystemProperties.getInt("hw.board.id", 0) >= 2){
                     insertSuccessTimes = 2;
                     sb.append("");
                 }else{
