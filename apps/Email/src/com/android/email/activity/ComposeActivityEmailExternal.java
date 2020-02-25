@@ -16,10 +16,20 @@
 
 package com.android.email.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import com.android.mail.compose.ComposeActivity;
+
 /**
  * A subclass of {@link ComposeActivityEmail} which is exported for other Android packages to open.
  */
 public class ComposeActivityEmailExternal extends ComposeActivityEmail {
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    sanitizeIntent();
+    super.onCreate(savedInstanceState);
+  }
 
   /**
    * Only relevant when WebView Compose is enabled. Change this when WebView
@@ -28,5 +38,18 @@ public class ComposeActivityEmailExternal extends ComposeActivityEmail {
   @Override
   public boolean isExternal() {
       return false;
+  }
+
+  /**
+   * Overrides the value of {@code #getIntent()} so any future callers will get a sanitized version
+   * of the intent.
+   */
+  // See b/114493057 for context.
+  private void sanitizeIntent() {
+    Intent sanitizedIntent = getIntent();
+    if (sanitizedIntent != null) {
+      sanitizedIntent.removeExtra(ComposeActivity.EXTRA_IN_REFERENCE_TO_MESSAGE_URI);
+      setIntent(sanitizedIntent);
+    }
   }
 }

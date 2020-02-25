@@ -321,7 +321,7 @@
     <string name="sarsensor_test">Sar感应</string>
     <string name="side_charging_test">侧面充电测试</string>
     <string name="test_usb">USB板测试</string>
-   
+    
     
     
     
@@ -642,5 +642,6 @@
     <string name="side_charging_test2">Side charge test</string>
     <string name="test_usb2">"USB Test"</string>
 
+    
     
 </resources>

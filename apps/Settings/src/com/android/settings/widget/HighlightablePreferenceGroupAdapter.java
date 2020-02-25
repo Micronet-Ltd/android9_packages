@@ -83,6 +83,10 @@ public class HighlightablePreferenceGroupAdapter extends PreferenceGroupAdapter 
                 return;
             }
         }
+        if (true) {
+            screen.setInitialExpandedChildrenCount(Integer.MAX_VALUE);
+            return;
+        }
 
         final int initialCount = host.getInitialExpandedChildCount();
         if (initialCount <= 0) {

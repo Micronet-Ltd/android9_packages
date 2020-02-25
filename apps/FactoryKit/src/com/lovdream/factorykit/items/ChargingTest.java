@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.content.BroadcastReceiver;
+import android.os.Build;
+import android.hardware.usb.UsbManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +43,14 @@ public class ChargingTest extends TestItemBase {
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if(action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED) || action.equals(Intent.ACTION_POWER_DISCONNECTED)){
+				Log.d("xxf999", "111");
+				int mCurrent = getCurrent();
+				boolean isCanPass =mCurrent>50;
+				if(isCanPass)insertSuccessTimes++;
+			}
+			Log.d("xxf999", "action--->"+action);
 			final int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
 					BatteryManager.BATTERY_STATUS_UNKNOWN);
 			switch (status) {
@@ -96,6 +106,7 @@ public class ChargingTest extends TestItemBase {
 		IntentFilter mFilter = new IntentFilter();
 		mFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
 		mFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+		mFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
 		mContext.registerReceiver(mReceiver, mFilter);
 	}
 	private void uinRegisterBroadCastReceiver(){

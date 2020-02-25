@@ -44,6 +44,7 @@ android:key="main"
 		</intent>
 	</PreferenceScreen> -->
 
+
 	<PreferenceScreen
 		android:title="@string/auto_test"
 		>

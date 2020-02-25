@@ -71,7 +71,10 @@ import java.util.Set;
 import com.lovdream.util.SystemUtil;
 import com.lovdream.factorykit.Config.TestItem;
 import com.lovdream.factorykit.libs.GridFragment;
+import com.swfp.model.WifiModel;
+import com.swfp.model.WifiModel.WifiBack;
 import com.swfp.utils.ProjectControlUtil;
+import com.swfp.utils.WifiUtil;
 
 @SuppressLint("NewApi")
 public class PCBATest extends GridFragment implements
@@ -132,15 +135,15 @@ public class PCBATest extends GridFragment implements
      //add by xxf
             AutoTest();
             initGps();
-            initWifi();
             mConfig=Config.getInstance(mActivity);
             if (mConfig.getPCBAFlag(findIndex("wifi_test")) == Config.TEST_FLAG_NO_TEST) {
-                startWifi();
-            } else if(mConfig.getPCBAFlag(findIndex("wifi_5g_test")) == Config.TEST_FLAG_NO_TEST){
-                start5GWifi();
+                startWifi(getActivity());
+            } 
+            if(mConfig.getPCBAFlag(findIndex("wifi_5g_test")) == Config.TEST_FLAG_NO_TEST){
+                start5GWifi(getActivity());
             }
-        }
     }
+}
 
     private void AutoTest() {
         new Thread(new Runnable() {
@@ -164,8 +167,6 @@ public class PCBATest extends GridFragment implements
     private static final int MSG_BT_TEST = 4;
     private static final int MSG_SAR_TEST = 5;
     private static final int MSG_4GTF_TEST = 6;
-    private static final int MSG_WIFI_TEST = 7;
-    private static final int MSG_5G_WIFI_TEST = 8;
     private MyHandler mHandler;
     private static final String isTestPass = "isTestPass";
 
@@ -191,28 +192,13 @@ public class PCBATest extends GridFragment implements
             case MSG_SAR_TEST:
                 mConfig.savePCBAFlag(findIndex("sarsensor_test"), isPass);
                 break;
-            case MSG_WIFI_TEST:
-                if (wifiScanResult != null && wifiScanResult.size() > 0) {
-                    if (!connectTestAp()) {
-                        mConfig.savePCBAFlag(findIndex("wifi_test"), false);
-                    }
-                } else {
-                    mConfig.savePCBAFlag(findIndex("wifi_test"), false);
-                }
-
-                break;
-            case MSG_5G_WIFI_TEST:
-                if (wifi5GScanResult != null && wifi5GScanResult.size() > 0) {
-                    if (!connectWifi5GTestAp()) {
-                        mConfig.savePCBAFlag(findIndex("wifi_5g_test"), false);
-                    }
-                } else {
-                    mConfig.savePCBAFlag(findIndex("wifi_5g_test"), false);
-                }
-                break;
-            }
-            ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
         }
+            ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
+    }
+  }
+    
+    private void updateUI(){
+    	 ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
     }
 
     private int findIndex(String key) {
@@ -262,25 +248,12 @@ public class PCBATest extends GridFragment implements
     super.onStop();
     if(ProjectControlUtil.isC601 || ProjectControlUtil.isC802){
 
-            if (connectedId != -1) {
-                mWifiManager.forget(connectedId, null);
-            }
-
-            Utils.enableWifi(mContext, false);
-            try {
-                mCountDownTimer.cancel();
-                mCountDownTimer_5g.cancel();
-                if (true == mWifiLock.isHeld())
-                    mWifiLock.release();
-            } catch (Exception e) {
-            }
-            if(startWifiStatus)
-                mContext.unregisterReceiver(mWifiReceiver);
-            if(start5GStatus)
-                mContext.unregisterReceiver(mWifi5gReceiver);
+            
+    stopWifi();
+    stopWifi_5G();
             mSensorManager.unregisterListener(mListener);
             stopGPS();
-            start5GStatus=false;
+
         }
     }
 
@@ -495,9 +468,10 @@ public class PCBATest extends GridFragment implements
     private void initSIMTest() {
         Log.w(TAG, "initSIMTest");
         Message m = mHandler.obtainMessage(MSG_SIM_TEST, 0, 0, null);
-        m.getData().putBoolean(isTestPass, SimUtil.getInstance(mContext).searchSim().isSimReady);
+        m.getData().putBoolean(isTestPass, SimUtil.getInstance(getActivity()).searchSim().isSimReady);
         m.sendToTarget();
     }
+
     private Sensor mOrieSensor;
     private SensorEventListener mOrieSensorListener = new OrieSensorListener();
     private SensorManager mSensorManager;
@@ -756,6 +730,11 @@ public class PCBATest extends GridFragment implements
         }
     }
     private GpsStatus gpsStatus;
+    final int MIN_SAT_NUM = 3;
+    final int MIN_VALID_SAT_NUM = 2;
+    final float VALID_SNR = 36;
+    private GpsStatus mGpsStatus;
+    private Iterable<GpsSatellite> mSatellites;
 
     private class GpsStatusListner implements GpsStatus.Listener {
         @Override
@@ -794,294 +773,102 @@ public class PCBATest extends GridFragment implements
         }
     }
 
-    final int MIN_SAT_NUM = 3;
-    final int MIN_VALID_SAT_NUM = 2;
-    final float VALID_SNR = 36;
-    private GpsStatus mGpsStatus;
-    private Iterable<GpsSatellite> mSatellites;
 
-    private WifiLock mWifiLock;
-    private WifiManager mWifiManager;
-    private List<ScanResult> wifiScanResult;
-    private List<ScanResult> wifi5GScanResult;
-    private TextView mTextView;
-    final int SCAN_INTERVAL = 4000;
-    final int OUT_TIME = 30000;
-    IntentFilter mFilter = new IntentFilter();
-    private boolean scanResultAvailabe = false;
-    private boolean scan5GResultAvailabe = false;
-    private static Context mContext = null;
-    private int connectedId = -1;
 
-    void getService() {
-        if(mActivity!=null){
-        mWifiManager = (WifiManager) mActivity.getSystemService(
-                Context.WIFI_SERVICE);
-        }
-    }
+   
+	private void startWifi(Context mContext) {
+		WifiModel wifiModel = new WifiModel(new WifiBack() {
 
-    private void initWifi() {
-        Log.w(TAG, "initWifi");
-        scanResultAvailabe = false;
-        scan5GResultAvailabe = false;
-        mContext = getActivity();
-        getService();
+			@Override
+			public void showMsg(String msg) {
 
-        /** Keep Wi-Fi awake */
-        mWifiLock = mWifiManager.createWifiLock(
-                WifiManager.WIFI_MODE_SCAN_ONLY, "WiFi");
-        if (false == mWifiLock.isHeld())
-            mWifiLock.acquire();
+			}
 
-        switch (mWifiManager.getWifiState()) {
-        case WifiManager.WIFI_STATE_DISABLED:
-            if (mWifiManager != null)
-                mWifiManager.setWifiEnabled(true);
-            break;
-        case WifiManager.WIFI_STATE_DISABLING:
-            if (mWifiManager != null)
-                mWifiManager.setWifiEnabled(true);
-            break;
-        default:
-            break;
-        }
-        ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-        mFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        mFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        mFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+			@Override
+			public void pass() {
+				mConfig.savePCBAFlag(findIndex("wifi_test"), true);
+				stopWifi();
+			}
 
-    }
-    private boolean startWifiStatus=false;
-    private void startWifi(){
-        startWifiStatus = true;
-        mCountDownTimer.start();
-        mContext.registerReceiver(mWifiReceiver, mFilter);
-    }
-    private boolean start5GStatus=false;
-    private void start5GWifi() {
-           start5GStatus = true;
-           mCountDownTimer_5g.start();
-           mContext.registerReceiver(mWifi5gReceiver, mFilter);
-       }
+			@Override
+			public boolean isFrequencyNotErr(int fre) {
+				return fre>2000 && fre<5000;
+			}
 
-    CountDownTimer mCountDownTimer = new CountDownTimer(OUT_TIME, SCAN_INTERVAL) {
+			@Override
+			public void failed(String msg) {
+				mConfig.savePCBAFlag(findIndex("wifi_test"), false);
+				stopWifi();
+			}
 
-        private int tickCount = 0;
+			@Override
+			public void toast(String msg) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		wifiModel.testSSID = "lovdream";
+		wifiUtil = new WifiUtil(mContext, wifiModel).start();
 
-        @Override
-        public void onFinish() {
-            Log.w("fy","mCountDownTimer finish");
-            if (wifiScanResult == null || wifiScanResult.size() == 0) {
-                mConfig.savePCBAFlag(findIndex("wifi_test"), false);
-                ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-            }
-            if (wifiScanResult != null && wifiScanResult.size() > 0) {
-                if (!connectTestAp()) {
-                    mConfig.savePCBAFlag(findIndex("wifi_test"), false);
-                }
-            }
-            startWifiStatus = false;
-             mContext.unregisterReceiver(mWifiReceiver);
-            if (!start5GStatus){
-                if(mConfig.getPCBAFlag(findIndex("wifi_5g_test")) == Config.TEST_FLAG_NO_TEST){
-                    start5GWifi();
-                }
-            }
-        }
+	}
 
-        @Override
-        public void onTick(long arg0) {
-            tickCount++;
-            // At least conduct startScan() 3 times to ensure wifi's scan
-            if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
-                mWifiManager.startScan();
-                // When screen is dim, SCAN_RESULTS_AVAILABLE_ACTION cannot be
-                // got.
-                // So get it actively
-                if (tickCount >= 4 && !scanResultAvailabe) {
-                    wifiScanResult = mWifiManager.getScanResults();
-                    scanResultAvailabe = true;
-                    mHandler.obtainMessage(MSG_WIFI_TEST, 0, 0, null)
-                            .sendToTarget();
-                }
-            }
-        }
-    };
-     CountDownTimer mCountDownTimer_5g = new CountDownTimer(OUT_TIME, SCAN_INTERVAL) {
+	
+	WifiUtil wifiUtil;
+	WifiUtil wifiUtil_5g;
+	
+	private void stopWifi(){
+		try {
+			updateUI();
+			if (wifiUtil != null)
+				wifiUtil.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void stopWifi_5G(){
+		try {
+			updateUI();
+			if (wifiUtil_5g != null)
+				wifiUtil_5g.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void start5GWifi(Context mContext) {
+		WifiModel wifiModel = new WifiModel(new WifiBack() {
 
-        private int tickCount = 0;
+			@Override
+			public void showMsg(String msg) {
 
-        @Override
-        public void onFinish() {
-            Log.w("fy","mCountDownTimer_5g finish");
-            start5GStatus = false;
-            if (wifiScanResult == null || wifiScanResult.size() == 0) {
-                mConfig.savePCBAFlag(findIndex("wifi_5g_test"), false);
-                ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-            }
-            mContext.unregisterReceiver(mWifi5gReceiver);
-        }
+			}
 
-        @Override
-        public void onTick(long arg0) {
-            tickCount++;
-            // At least conduct startScan() 3 times to ensure wifi's scan
-            if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED) {
-                mWifiManager.startScan();
-                // When screen is dim, SCAN_RESULTS_AVAILABLE_ACTION cannot be
-                // got.
-                // So get it actively
-                if (tickCount >= 4 && !scan5GResultAvailabe) {
-                    wifi5GScanResult = mWifiManager.getScanResults();
-                    scan5GResultAvailabe = true;
-                    mHandler.obtainMessage(MSG_5G_WIFI_TEST, 0, 0, null)
-                            .sendToTarget();
-                }
-            }
-        }
-    };
-    static String wifiInfos = "";
+			@Override
+			public void pass() {
+				mConfig.savePCBAFlag(findIndex("wifi_5g_test"), true);
+				stopWifi_5G();
+			}
 
-    private BroadcastReceiver mWifiReceiver = new BroadcastReceiver() {
+			@Override
+			public boolean isFrequencyNotErr(int fre) {
+				return fre>5000;
+			}
 
-        public void onReceive(Context c, Intent intent) {
-            Log.w("fy","mWifiReceiver"+intent.getAction());
-            switch (mWifiManager.getWifiState()) {
-            case WifiManager.WIFI_STATE_DISABLED:
-                if (mWifiManager != null)
-                    mWifiManager.setWifiEnabled(true);
-                break;
-            case WifiManager.WIFI_STATE_DISABLING:
-                if (mWifiManager != null)
-                    mWifiManager.setWifiEnabled(true);
-                break;
-            default:
-                break;
-            }
+			@Override
+			public void failed(String msg) {
+				mConfig.savePCBAFlag(findIndex("wifi_5g_test"), false);
+				stopWifi_5G();
+			}
 
-            if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent
-                    .getAction())) {
-                if (!scanResultAvailabe) {
-                    wifiScanResult = mWifiManager.getScanResults();
-                    scanResultAvailabe = true;
-                    mHandler.obtainMessage(MSG_WIFI_TEST, 0, 0, null)
-                            .sendToTarget();
-                }
-            } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent
-                    .getAction())) {
-                NetworkInfo ni = (NetworkInfo) intent
-                        .getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                if ((ni != null) && !ni.isConnected()) {
-                    return;
-                }
-                WifiInfo info = (WifiInfo) intent
-                        .getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
-                
-               if(info==null){
-            	   info = mWifiManager.getConnectionInfo();
-               }
+			@Override
+			public void toast(String msg) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		wifiModel.testSSID = "lovdream5G";
+		wifiUtil_5g = new WifiUtil(mContext, wifiModel).start();
+	}
 
-                if ((info != null)
-                        && getTestSSID().equals(formatSSID(info.getSSID()))) {
-                    mConfig.savePCBAFlag(findIndex("wifi_test"), true);
-                    ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-                    if (!start5GStatus){
-                        if(mConfig.getPCBAFlag(findIndex("wifi_5g_test")) == Config.TEST_FLAG_NO_TEST){
-                            start5GWifi();
-                        }
-                    }
-                }
-            }
-        }
 
-    };
-    private BroadcastReceiver mWifi5gReceiver = new BroadcastReceiver() {
-
-        public void onReceive(Context c, Intent intent) {
-            
-            Log.w("fy","wifi_5g_test");
-            switch (mWifiManager.getWifiState()) {
-            case WifiManager.WIFI_STATE_DISABLED:
-                if (mWifiManager != null)
-                    mWifiManager.setWifiEnabled(true);
-                break;
-            case WifiManager.WIFI_STATE_DISABLING:
-                if (mWifiManager != null)
-                    mWifiManager.setWifiEnabled(true);
-                break;
-            default:
-                break;
-            }
-
-            if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent
-                    .getAction())) {
-                if (!scan5GResultAvailabe) {
-                    wifi5GScanResult = mWifiManager.getScanResults();
-                    scan5GResultAvailabe = true;
-                    mHandler.obtainMessage(MSG_5G_WIFI_TEST, 0, 0, null)
-                            .sendToTarget();
-                }
-            } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent
-                    .getAction())) {
-                NetworkInfo ni = (NetworkInfo) intent
-                        .getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                if ((ni != null) && !ni.isConnected()) {
-                    return;
-                }
-                WifiInfo info = (WifiInfo) intent
-                        .getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
-                if((info == null)){
-					 info = mWifiManager.getConnectionInfo();
-				}
-                if ((info != null)
-                        && getTest5GSSID().equals(formatSSID(info.getSSID()))) {
-                    mConfig.savePCBAFlag(findIndex("wifi_5g_test"), true);
-                    ((MyAdapter) getGridAdapter()).notifyDataSetChanged();
-                }
-            }
-        }
-
-    };
-
-    private String formatSSID(String ssid) {
-        if (ssid == null) {
-            return "";
-        }
-        return ssid.replace("\"", "").trim();
-    }
-
-    protected String getTestSSID() {
-        return "lovdream";
-    }
-
-    protected String getTest5GSSID() {
-        return "lovdream5G";
-    }
-
-    private boolean connectTestAp() {
-        WifiConfiguration config = new WifiConfiguration();
-        config.allowedAuthAlgorithms.clear();
-        config.allowedGroupCiphers.clear();
-        config.allowedKeyManagement.clear();
-        config.allowedPairwiseCiphers.clear();
-        config.allowedProtocols.clear();
-        config.SSID = "\"" + getTestSSID() + "\"";
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        connectedId = mWifiManager.addNetwork(config);
-        return mWifiManager.enableNetwork(connectedId, true);
-    }
-
-    private boolean connectWifi5GTestAp() {
-        WifiConfiguration config = new WifiConfiguration();
-        config.allowedAuthAlgorithms.clear();
-        config.allowedGroupCiphers.clear();
-        config.allowedKeyManagement.clear();
-        config.allowedPairwiseCiphers.clear();
-        config.allowedProtocols.clear();
-        config.SSID = "\"" + getTest5GSSID() + "\"";
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        connectedId = mWifiManager.addNetwork(config);
-        return mWifiManager.enableNetwork(connectedId, true);
-    }
 
 }

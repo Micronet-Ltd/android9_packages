@@ -77,7 +77,13 @@ public class CreateDirectoryFragment extends DialogFragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        createDirectory(editText.getText().toString());
+                    	//add by xxf
+                    	String name = editText.getText().toString();
+                    	if(name==null || name.equals("")){
+                    		name = getResources().getString(R.string.menu_create_dir);
+                    	}
+                        createDirectory(name);
+                      //add by xxf
                     }
                 });
 

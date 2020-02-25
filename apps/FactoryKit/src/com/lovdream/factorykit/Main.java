@@ -32,7 +32,6 @@ import com.lovdream.factorykit.items.SystemVersionTest;
 import android.preference.PreferenceScreen;
 import android.content.res.Configuration;
 
-
 public class Main extends PreferenceActivity {
 
 	public static final String TAG = "factorykit";

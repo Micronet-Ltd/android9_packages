@@ -33,6 +33,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 	private static final int MSG_RECORD = 0x12;
 	private static final int STATE_RECORDING = 1;
 	private static final int STATE_PLAYING = 2;
+	private boolean isCanPlay = true;
 
 	private static final String RECORD_FILE = "/data/vendor/audio/ftm_pcm_record.wav";
 
@@ -108,7 +109,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 				Log.d(TAG,"process exit");
 				
 				mHandler.sendEmptyMessage(MSG_PLAY);
-				ServiceUtil.getInstance().startPlayFm(mContext);
+				if(isCanPlay)ServiceUtil.getInstance().startPlayFm(mContext);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -132,6 +133,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 
 	@Override
 	public void onStartTest(){
+		isCanPlay =true;
 		mContext = getActivity();
 		String arg[] = getParameter("tc");
 		if ((arg != null) && (arg[0] != null)) {
@@ -143,6 +145,7 @@ public class NoiseMicTest extends TestItemBase implements Runnable{
 
 	@Override
 	public void onStopTest(){
+		isCanPlay =false;
 		running = false;
 		if(mTestProcess != null){
 			mTestProcess.destroy();
