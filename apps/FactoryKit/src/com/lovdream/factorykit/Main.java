@@ -195,6 +195,12 @@ public class Main extends PreferenceActivity {
                 builder.setMessage(R.string.no_sd_card);
                 break;
             case 1:
+                builder.setMessage(R.string.no_sim_card);
+                break;
+            case 2:
+                builder.setMessage(R.string.no_sd_and_sim_card);
+                break;
+        }
 		builder.setMessage(R.string.no_card);
 		builder.setPositiveButton(android.R.string.ok,null);
 		builder.show();
