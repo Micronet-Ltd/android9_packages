@@ -100,6 +100,32 @@
             android:id="@+id/fpga_version_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        
+        <TextView
+            style="@style/device_info_dialog_label"
+            android:id="@+id/sw_version_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sw_version"/>
+        
+        <TextView
+            style="@style/device_info_dialog_value"
+            android:id="@+id/sw_version_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        
+        <TextView
+            style="@style/device_info_dialog_label"
+            android:id="@+id/module_version_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/module_version"/>
+        
+        <TextView
+            style="@style/device_info_dialog_value"
+            android:id="@+id/module_version_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             style="@style/device_info_dialog_label"
