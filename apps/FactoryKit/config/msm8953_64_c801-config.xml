@@ -71,6 +71,7 @@
         inSPCBATest="true"
         displayName="内存测试"
         inPCBATest="true"
+        inAutoTest="true"
         isAutoJudge="true"
         key="memory_test" />
 
@@ -145,6 +146,7 @@
      <com.lovdream.factorykit.Config.TestItem
        displayName="背夹灯测试"
        inPCBATest="true"
+        inAutoTest="true"
        isAutoJudge="false"
        key="back_led" />
 

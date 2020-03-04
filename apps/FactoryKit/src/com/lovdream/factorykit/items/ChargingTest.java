@@ -30,6 +30,7 @@ public class ChargingTest extends TestItemBase {
 
 	private static final String CURRENT = "/sys/class/power_supply/battery/current_now";
 	private static final String ISCHARGING = "/sys/class/power_supply/battery/status";
+	private static final String BATTERY_TYPE = "/sys/class/power_supply/bms/battery_type";
 	private static final int DEFAULT_CURRENT = 0;
 	private static final int NO_PASS = 0;
 	private static final int SINGLE_PASS=1;
@@ -38,7 +39,7 @@ public class ChargingTest extends TestItemBase {
 	private TextView mInfoView;
 	private Context mContext;
 	
-	private  int insertSuccessTimes = NO_PASS;
+	private  int insertSuccessTimes = SINGLE_PASS;
 // 	
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
@@ -58,18 +59,22 @@ public class ChargingTest extends TestItemBase {
 		    case BatteryManager.BATTERY_STATUS_DISCHARGING:
 		    case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
 		    	updateInfo(false);
+		    	getBatteryMessage(false);
 		    	 break;
 		    case BatteryManager.BATTERY_STATUS_CHARGING:
 		    case BatteryManager.BATTERY_STATUS_FULL:
 		    	updateInfo(true);
+		    	getBatteryMessage(true);
 			    break;
             }
 			if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)){
                     Main.currentTemp = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
                     Main.isBatteryFull = (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_FULL);
                     Main.currentVoltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-                    getBatteryMessage();
-                    updateInfo(true);
+                    int stat = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN);
+                    boolean isConnected = (stat == BatteryManager.BATTERY_STATUS_CHARGING || Main.isBatteryFull);
+                    getBatteryMessage(isConnected);
+                    updateInfo(isConnected);
 			}
 		}
 	};
@@ -86,7 +91,7 @@ public class ChargingTest extends TestItemBase {
 
 	@Override
 	public void onStartTest() {
-		insertSuccessTimes =NO_PASS;
+		insertSuccessTimes =SINGLE_PASS;
 		mContext =  getActivity();
 		registerBroadCastReceiver();
 	}
@@ -123,7 +128,12 @@ public class ChargingTest extends TestItemBase {
 			sb.append(mContext.getString(R.string.charging_state_none));
 		}else{
 			int mCurrent = getCurrent();
-			boolean isCanPass = mCurrent > 50;
+            boolean isCanPass;
+			if(isSmallBattery()){
+                isCanPass = (Main.currentVoltage >= 3900 && Main.currentVoltage <= 4200);
+			}else{
+                isCanPass = mCurrent > 50;
+            }
 			sb.append(mContext.getString(R.string.charging_state_charging)+"\n");
 			sb.append(mContext.getString(R.string.charging_current_label, mCurrent)+"\n");
 			if(isCanPass){
@@ -157,11 +167,34 @@ public class ChargingTest extends TestItemBase {
 		return  mCurrent;
 	}
 
-    public void getBatteryMessage(){
-        if(Main.isBatteryFull || Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT)) == 152)
-            Main.resultString = "The battery is full, discharge the battery before retesting.";
-        else if(Main.currentTemp > 449 || Main.currentTemp < 1) 
-            Main.resultString = "The battery don't charging because of high/low temperature (now: " + (float) Main.currentTemp/10 + ")";
-        else Main.resultString = "";
+    public void getBatteryMessage(boolean isConnected){
+        if(!isConnected){
+            Main.resultString = "Battery is not connected to charging";
+        } else {
+            if(isSmallBattery()){
+                if(Main.currentVoltage < 3900 || Main.currentVoltage > 4200)
+                    Main.resultString = "Voltage is not correct";
+                else Main.resultString = "";   
+            }else{ 
+                if(Main.isBatteryFull || Integer.valueOf(ServiceUtil.getInstance().readFromFile(CURRENT)) == 152)
+                    Main.resultString = "The battery is full, discharge the battery before retesting.";
+                else if(Main.currentTemp > 449 || Main.currentTemp < 1) 
+                    Main.resultString = "The battery don't charging because of high/low temperature (now: " + (float) Main.currentTemp/10 + ")";
+                else Main.resultString = "";
+            }
+        }    
+	}
+	
+	private boolean isSmallBattery() {
+		String type = "";
+		try {
+			type=ServiceUtil.getInstance().readFromFile(BATTERY_TYPE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        if(type.equals("c801_fullymax_fb382030xl_4v2_135mah_20k"))
+            return true;
+		else 
+            return false;
 	}
 }
