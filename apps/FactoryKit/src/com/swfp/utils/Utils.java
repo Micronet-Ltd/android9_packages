@@ -339,8 +339,8 @@ public class Utils {
       StatFs stat = new StatFs(path.getPath()); 
       long blockSize = stat.getBlockSize(); 
       long totalBlocks = stat.getBlockCount(); */
-    //return getPrivateStorageInfo(context);
-      return getRomFromEmmc(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
+      return getPrivateStorageInfo(context);
+   //   return getRomFromEmmc(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
     } 
     
     public static final String STORAGE_INFO = "/sys/block/mmcblk0/size";

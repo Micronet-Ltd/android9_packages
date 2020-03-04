@@ -31,7 +31,6 @@ import com.lovdream.factorykit.items.SystemVersionTest;
 
 import android.preference.PreferenceScreen;
 import android.content.res.Configuration;
-import android.os.Build;
 
 public class Main extends PreferenceActivity {
 
@@ -130,14 +129,29 @@ public class Main extends PreferenceActivity {
 		}
 		String type = intent.getStringExtra("test_type");
 		Fragment fragment = null;
+		boolean sdMounted = Utils.isSdMounted(this);
+		boolean simReady = Utils.isSimReady();
 		if("single".equals(type)){
 			Utils2.getInstance().currentTestMode=Utils2.SINGLE;
 			fragment = Fragment.instantiate(this,SingleTest.class.getName());
 		}else if("auto".equals(type)){
-			if(!Utils.isSdMounted(this) || !Utils.isSimReady()){
-				showWarningDialog();
-				return;
-			}
+            if(SystemProperties.getInt("hw.board.id", -1) == 2){
+                 if(!sdMounted){
+                        showWarningDialog(0);
+                        return;
+                }
+            } else {
+                if(!sdMounted && !simReady){
+                    showWarningDialog(2);
+                    return;
+                } else if(!sdMounted){
+                    showWarningDialog(0);
+                    return;
+                } else if(!simReady){
+                    showWarningDialog(1);
+                    return;
+                }
+            }
 			fragment = Fragment.instantiate(this,AutoTest.class.getName());
 		}else if("pcba".equals(type)){
 			Utils2.getInstance().currentTestMode=Utils2.PCBA_1;
@@ -174,8 +188,19 @@ public class Main extends PreferenceActivity {
 		ft.commit();
 	}
 
-	private void showWarningDialog(){
+	private void showWarningDialog(int messageType){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		switch (messageType){
+            case 0:
+                builder.setMessage(R.string.no_sd_card);
+                break;
+            case 1:
+                builder.setMessage(R.string.no_sim_card);
+                break;
+            case 2:
+                builder.setMessage(R.string.no_sd_and_sim_card);
+                break;
+        }
 		builder.setMessage(R.string.no_card);
 		builder.setPositiveButton(android.R.string.ok,null);
 		builder.show();
@@ -243,7 +268,7 @@ public class Main extends PreferenceActivity {
 	}
 	
 	private void turnOffIrLed() {
-	if(Build.MODEL.equals("MSCAM")){
+	if(SystemProperties.getInt("hw.board.id", 0) >= 2){
         LightsManager lm = new LightsManager(this);
         Light irLed = lm.getLight(LightsManager.LIGHT_ID_BACKLIGHT);
         irLed.setColor(0x00000000);

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.widget.Toast;
 import android.widget.TextView;
 import android.widget.LinearLayout;
-import android.os.Build;
 import android.os.SystemProperties;
 import android.util.Log;
 
@@ -55,7 +54,7 @@ public class BackLedTest extends TestItemBase{
 	public void onStopTest(){
         t.interrupt();
 		mIsInTest = false;
-		if(Build.MODEL.equals("MSCAM")){
+		if(SystemProperties.getInt("hw.board.id", 0) >= 2){
             setColor(0);
 		} else {
             setColor(0xFFFFFFFF);
