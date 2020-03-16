@@ -231,7 +231,7 @@ public class AutoTestResult extends Fragment{
             productType = "SCBasic";
             break;
             
-            case 3:
+            case 6:
             productType = "SCFull";
             break;
         }

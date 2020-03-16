@@ -37,7 +37,7 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
 	private final int SMART_TAB_LTE = 0;
 	private final int SMART_TAB_LOW_COST = 1;
 	private final int SMART_CAM_BASIC = 2;
-	private final int SMART_CAM_FULL = 3;
+	private final int SMART_CAM_FULL = 6;
 	private Handler mHandler = new Handler();
 	private boolean quitTest;
     
@@ -182,7 +182,7 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
                 return SMART_TAB_LOW_COST;
             case 2:
                 return SMART_CAM_BASIC;
-            case 3: 
+            case 6: 
                 return SMART_CAM_FULL;
             default: 
                 return -1;
@@ -198,7 +198,7 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
             return notRunOnDevType1;
         case 2:
             return notRunOnDevType2;
-        case 3: 
+        case 6:
             return notRunOnDevType3;    
         }
         return null;
