@@ -13,15 +13,15 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 public class Utils {
-
     private static final String TAG = "Utils";
 
 	public Utils() {
@@ -283,6 +283,8 @@ public class Utils {
         return v3;
     }
     
+    
+    
     public static String getRamTotalSize(Context context){//GB
         String path = "/proc/meminfo";
         String firstLine = null;
@@ -301,6 +303,7 @@ public class Utils {
 
         return totalRam + "GB";//返回1GB/2GB/3GB/4GB
     }
+    
     
     /** 
     * 获得SD卡总大小 
@@ -336,10 +339,53 @@ public class Utils {
       StatFs stat = new StatFs(path.getPath()); 
       long blockSize = stat.getBlockSize(); 
       long totalBlocks = stat.getBlockCount(); */
-      return getPrivateStorageInfo(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
+      return getPrivateStorageInfo(context);
+   //   return getRomFromEmmc(context);//Formatter.formatFileSize(context, blockSize * totalBlocks); 
     } 
     
-     public static String getPrivateStorageInfo(Context mContext) {
+    public static final String STORAGE_INFO = "/sys/block/mmcblk0/size";
+    private static long roundStorageSize(long size) {
+        long val = 1;
+        long pow = 1;
+        while ((val * pow) < size) {
+            val <<= 1;
+            if (val > 512) {
+                val = 1;
+                pow *= 1000;
+            }
+        }
+        return val * pow;
+    }
+    private static String getRomFromEmmc(Context context){
+    	  String storage_info= "";
+          long storageValue = 0;
+          try {
+              storage_info = readFile(STORAGE_INFO);
+             String storage_info1 = storage_info.substring(0);
+              storageValue = Long.valueOf(storage_info1);
+              storageValue = roundStorageSize(storageValue * 512);
+          } catch (Exception e) {
+              // TODO: handle exception
+          }
+
+          return Formatter.formatFileSize(context, storageValue);
+    }
+    
+    private static String readFile(String filePath) {
+        String res = "";
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filePath))))) {
+            String str = null;
+            while ((str = br.readLine()) != null) {
+                res += str;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+    
+    
+    public static String getPrivateStorageInfo(Context mContext) {
     	StorageManager sm = mContext.getSystemService(StorageManager.class);
         long totalInternalStorage = sm.getPrimaryStorageSize();
         long privateFreeBytes = 0;
@@ -353,7 +399,7 @@ public class Utils {
             privateFreeBytes += path.getFreeSpace();
         }
         return   Formatter.formatFileSize(mContext, privateTotalBytes);
-
+        
     }
     
     public static long getTotalSize(VolumeInfo info, long totalInternalStorage) {

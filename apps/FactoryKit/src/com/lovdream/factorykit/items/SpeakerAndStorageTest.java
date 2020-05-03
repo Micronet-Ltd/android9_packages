@@ -32,6 +32,7 @@ public class SpeakerAndStorageTest extends TestItemBase{
     private static final String TAG = "SpeakerAndStorageTest";
     public static String TEST_FILE;
     private MyAsyncTask mMyAsyncTask;
+    private boolean isCanPlay = true;
     private Handler mHandler = new Handler();
     @Override
     public String getKey() {
@@ -45,12 +46,28 @@ public class SpeakerAndStorageTest extends TestItemBase{
 
     @Override
     public void onStartTest() {
+    	isCanPlay = true;
     }
 
     @Override
     public void onStopTest() {
+    	// stopAnything();
     }
 
+    private void stopAnything(){
+    	isCanPlay =false;
+    	  try {
+              mService.stopMusic();
+              if (mMyAsyncTask != null){
+                  mMyAsyncTask.cancel(true);
+                  mMyAsyncTask = null;
+              }
+              getActivity().unbindService(mServiceConnection);
+          }catch (Exception e){
+              e.printStackTrace();
+          }
+        
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -62,16 +79,7 @@ public class SpeakerAndStorageTest extends TestItemBase{
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            mService.stopMusic();
-        }catch (RemoteException e){
-            e.printStackTrace();
-        }
-        if (mMyAsyncTask != null){
-            mMyAsyncTask.cancel(true);
-            mMyAsyncTask = null;
-        }
-        getActivity().unbindService(mServiceConnection);
+        stopAnything();
     }
 
     private ISpeakerAndStorageHelper mService;
@@ -177,7 +185,7 @@ public class SpeakerAndStorageTest extends TestItemBase{
                 showToast(R.string.sd_read_write_error);
             }
             try {
-                mService.playMusic(TEST_FILE);
+                if(isCanPlay) mService.playMusic(TEST_FILE);
             }catch (RemoteException e){
                 e.printStackTrace();
             }

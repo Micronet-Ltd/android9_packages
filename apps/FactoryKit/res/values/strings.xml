@@ -144,7 +144,7 @@
     <string name="handset_test_mesg">Please speak to headphones mic and hear speaker</string>
     <string name="media_mic_test_mesg">Please speak to headphones mic and hear speaker</string>
     <string name="memory_test_mesg">Test storage memory and run memory</string>
-    <string name="memory_test_ram">The native running memory is: </string>
+        <string name="memory_test_ram">The native running memory is: </string>
     <string name="memory_test_rom">The native storage memory is:</string>
     <string name="sub_mic_test_mesg">Please speak to USB headphones mic and hear speaker</string>
     <string name="headset_remove">Please remove headphone</string>
@@ -315,6 +315,7 @@
     <string name="satellite_List">"%1$s prn %2$s snr %3$s"</string>
     <string name="connection_fall">"Hotspot %1$s connection failed"</string>
     <string name="connection_success">"Hotspot %1$s connection success"</string>
+    <string name="frequency_wrong">"Hot band mismatch"</string>
     <string name="calibration">"Calibration"</string>
     <string name="calibration_success">"Calibration Success"</string>
     <string name="calibration_failed">"Calibration Failed"</string>
@@ -325,7 +326,7 @@
     <string name="sarsensor_test">Sar Test</string>
     <string name="side_charging_test">Side charge test</string>
     <string name="test_usb">"USB Test"</string>
-   
+    
     
     
     

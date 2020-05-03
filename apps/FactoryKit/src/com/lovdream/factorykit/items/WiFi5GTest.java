@@ -19,5 +19,9 @@ public class WiFi5GTest extends WiFiTest{
 	protected String getTestSSID(){
 		return "lovdream5G";
 	}
+	
+	protected boolean  isFrequencyRight(int frequency){
+		return  frequency>5000;
+	}
 
 }

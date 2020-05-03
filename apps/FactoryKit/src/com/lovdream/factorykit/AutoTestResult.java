@@ -36,6 +36,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
 
+import com.android.internal.util.ArrayUtils;
 import com.lovdream.factorykit.Config.TestItem;
 import com.swfp.utils.ServiceUtil;
 import android.os.BatteryManager;
@@ -150,7 +151,9 @@ public class AutoTestResult extends Fragment{
             File file = new File(filename);
             file.delete();
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write((resultToSha256(data.toString()) + ","));
+            String dataWithoutImeiTest = removeWordFromData(data.toString(), 3);
+            String dataWithoutSmallBatteryIndex = removeWordFromData(dataWithoutImeiTest.toString(), 9);
+            bufferedWriter.write(resultToSha256(dataWithoutSmallBatteryIndex) + ",");
             bufferedWriter.write(data.substring(0, data.length()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -173,7 +176,7 @@ public class AutoTestResult extends Fragment{
         results.append(Build.getSerial() + ",");
         results.append(telephonyManager.getImei() + ",");
         String deviceId=telephonyManager.getImei();
-        if (deviceId == null || !deviceId.startsWith("35343610") || deviceId.length()!=15 || !deviceId.matches("\\d+")) {
+         if (!isValidImei(deviceId)) {
             Log.e(TAG,"Bad IMEI: "+deviceId);
             results.append(FAIL);
         } else {
@@ -228,7 +231,7 @@ public class AutoTestResult extends Fragment{
             productType = "SCBasic";
             break;
             
-            case 3:
+            case 6:
             productType = "SCFull";
             break;
         }
@@ -281,6 +284,49 @@ public class AutoTestResult extends Fragment{
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+    
+    private boolean isValidImei(String s){
+        long n = Long.parseLong(s);
+        int l = s.length();
+        if(s == null || !s.matches("\\d+") || l!=15){ // If IMEI is null or length is not 15 then IMEI is Invalid
+            return false;
+        }else {
+            int d = 0, sum = 0;
+            for(int i=15; i>=1; i--){
+                d = (int)(n%10);
+                if(i%2 == 0){
+                    d = 2*d; // Doubling every alternate digit
+                }
+                sum = sum + sumDig(d); // Finding sum of the digits
+                n = n/10;
+            }
+             
+            if(sum%10==0 && sum!=0){
+                return true;
+            } else 
+                return false;
+        }
+    }
+    
+    int sumDig(int n){
+        int a = 0;
+        while(n>0){
+            a = a + n%10;
+            n = n/10;
+        }
+        return a;
+    }
+    
+    private String removeWordFromData(String data, int index){
+        String[] items = data.split("\\s*,\\s*");
+        for (String i : items){
+        }
+        items[index] = "";
+        
+        for (String i : items){
+        }
+        return String.join(",", items);
     }
     
 }

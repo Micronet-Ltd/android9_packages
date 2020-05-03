@@ -1,5 +1,6 @@
 package com.lovdream.factorykit.items;
 
+import android.os.SystemProperties;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -7,11 +8,10 @@ import android.widget.TextView;
 import com.lovdream.factorykit.R;
 import com.lovdream.factorykit.TestItemBase;
 import com.swfp.utils.Utils;
-import android.os.Build;
 
 public class MemoryTest extends TestItemBase{
 
-
+	
 	TextView tv_ram;
 	TextView tv_rom;
 
@@ -26,14 +26,14 @@ public class MemoryTest extends TestItemBase{
 
 	@Override
 	public void onStartTest() {
-
+		
 	}
 
 	@Override
 	public void onStopTest() {
-
+		
 	}
-
+	
 	public View getTestView(LayoutInflater inflater){
 		View v = inflater.inflate(R.layout.memory_test,null);
 		
@@ -46,7 +46,7 @@ public class MemoryTest extends TestItemBase{
 		int ram = Integer.parseInt(ramStr.substring(0,ramStr.indexOf("GB"))); 
 		int rom = Integer.parseInt(romStr.substring(0,romStr.indexOf(".")));
 
-		if((Build.MODEL.equals("MSTab8") && ram == 3 && rom == 32) || (Build.MODEL.equals("MSCAM") && ram == 2 && rom == 16)){
+		if((SystemProperties.getInt("hw.board.id", 0) < 2 && ram == 3 && rom == 32) || (SystemProperties.getInt("hw.board.id", 0) >=2  && ram == 2 && rom == 16)){
                 enableSuccess(true);
                 postSuccess();
 		
@@ -60,7 +60,7 @@ public class MemoryTest extends TestItemBase{
 		String romInfo = getResources().getString(R.string.memory_test_rom)+romStr;
 		tv_ram.setText(ramInfo);
 		tv_rom.setText(romInfo);
-
+		
 		return v;
 	}
 
