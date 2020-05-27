@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.os.SystemProperties;
 import android.util.Log;
 import android.os.Vibrator;
-import android.os.Build;
+import android.os.SystemProperties;
 
 import java.util.ArrayList;
 
@@ -193,7 +193,7 @@ public class KeyTest extends TestItemBase{
 		
 		testKeys = new ArrayList<Key>();
 		
-		if(Build.MODEL.equals("MSCAM")){
+		if(SystemProperties.getInt("hw.board.id", 0) >= 2){
             Key key = new Key("KEYCODE_WINDOW");
                 if(key.isSupported){
                     testKeys.add(key);

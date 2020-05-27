@@ -90,6 +90,8 @@ public class FirmwareVersionDialogFragment extends InstrumentedDialogFragment {
         new KernelVersionDialogController(this).initialize();
         new McuVersionDialogController(this).initialize();
         new FpgaVersionDialogController(this).initialize();
+        new SwVersionDialogController(this).initialize();
+        new ModuleVersionDialogController(this).initialize();
         new BuildNumberDialogController(this).initialize();
     }
 }
