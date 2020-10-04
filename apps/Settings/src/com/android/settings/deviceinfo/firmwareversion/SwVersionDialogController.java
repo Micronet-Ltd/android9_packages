@@ -41,7 +41,7 @@ public class SwVersionDialogController {
         if(SystemProperties.getInt("hw.board.id", 0) > 1)
             ver = "ver_9.10";
         else 
-            ver = "MSTAB8_9.00.2.7.0";
+            ver = "PKQ1.micronet.SmarTab-8_00.3.02.0_20200305.1231 release-keys";
         mDialog.setText(SW_VERSION_VALUE_ID, ver);
     }
     
