@@ -189,6 +189,7 @@ public class AutoTestResult extends Fragment{
         results.append(getCurrent() + ",");
         results.append(Main.currentVoltage + ",");
         results.append(isSmallBattery() + ",");
+        results.append(Main.camera_count + ",");
 
         for(TestItem item : mItems){
 			if(item.inAutoTest){                

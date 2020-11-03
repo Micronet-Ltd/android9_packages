@@ -22,6 +22,7 @@ import android.os.SystemProperties;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.lovdream.factorykit.Config.TestItem;
 
@@ -45,6 +46,8 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
     private String[] notRunOnDevType1 = {};
     private String[] notRunOnDevType2 = {"flash_light", "distance_sensor", "noise_mic", "button_light", "headset_test_nuno", "sim_test", "compass", "lcd_test", "tp_test"};
     private String[] notRunOnDevType3 = {"flash_light", "distance_sensor", "noise_mic", "button_light", "headset_test_nuno", "compass", "lcd_test", "tp_test"};
+	private String[] notRunOnDevWithOneCam = {"camera_test_front", "back_led", "light_sensor"};
+    private String[] notRunOnDevWithoutCam = {"camera_test_front", "back_led", "camera_test_back", "light_sensor", "nfc_test"};
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState){
@@ -197,9 +200,17 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
         case 1:
             return notRunOnDevType1;
         case 2:
-            return notRunOnDevType2;
+            if(Main.camera_count == 0)
+                return appendArrays(notRunOnDevType2, notRunOnDevWithoutCam);
+            else if (Main.camera_count == 1)
+                return appendArrays(notRunOnDevType2, notRunOnDevWithOneCam);
+            else return notRunOnDevType2;
         case 6:
-            return notRunOnDevType3;    
+            if(Main.camera_count == 0)
+                return appendArrays(notRunOnDevType3, notRunOnDevWithoutCam);
+            else if (Main.camera_count == 1)
+                return appendArrays(notRunOnDevType3, notRunOnDevWithOneCam);
+            else return notRunOnDevType3;    
         }
         return null;
 	
@@ -216,4 +227,10 @@ public class AutoTest extends Fragment implements TestItemBase.TestCallback{
         }
         return needThisTest;
 	}
+	
+	private <T> T[] appendArrays(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
 }

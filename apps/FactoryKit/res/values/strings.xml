@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">CIT</string>
     <string name="auto_test">Auto test</string>
+    <string name="auto_test_one_cam">Auto test with one camera</string>
+    <string name="auto_test_no_cam">Auto test without any camera</string>
     <string name="pcba_test">PCBA auto_test</string>
     <string name="spcba_test">smartCamera PCBA Test</string>
     <string name="pcba_test2">back test</string>

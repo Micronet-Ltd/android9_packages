@@ -31,6 +31,10 @@ import com.lovdream.factorykit.items.SystemVersionTest;
 
 import android.preference.PreferenceScreen;
 import android.content.res.Configuration;
+import android.widget.TextView;
+import android.widget.ListView;
+import android.view.View;
+import android.preference.Preference;
 
 public class Main extends PreferenceActivity {
 
@@ -46,6 +50,12 @@ public class Main extends PreferenceActivity {
     public static int currentTemp = 0;
     public static String resultString = "";
     public static int currentVoltage = 0;
+    public static int camera_count = 2;
+    Preference testResult;
+    Preference pcbaTest;
+    Preference smallPcb;
+    Preference citVersionInfo;
+    private int counter = 0;
 
 	@Override
 	protected void onCreate(Bundle bundle){
@@ -77,9 +87,44 @@ public class Main extends PreferenceActivity {
 		mSbManager = (StatusBarManager) getSystemService(Context.STATUS_BAR_SERVICE);
 
 		addPreferencesFromResource(R.xml.main_list);
+				
+		PreferenceScreen mainScreen = (PreferenceScreen) findPreference("main");
+		testResult = findPreference("test_result");
+		pcbaTest = findPreference("pcba_test");
+		smallPcb = findPreference("small_pcb");
+		citVersionInfo = findPreference("cit_version_info");
+		
+        ListView v = getListView();
+        TextView returnPrefs = new TextView(this);
+        returnPrefs.setText("");
+        returnPrefs.setHeight(800);
+        returnPrefs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(counter == 1){
+                    mainScreen.addPreference(testResult);
+                    mainScreen.addPreference(pcbaTest);
+                    mainScreen.addPreference(smallPcb);
+                    mainScreen.addPreference(citVersionInfo);
+                } else
+                    counter++;
+            }
+        });
+		v.addFooterView(returnPrefs);
+		
+		// Remove preferences
+        mainScreen.removePreference(testResult);
+		mainScreen.removePreference(pcbaTest);
+		mainScreen.removePreference(smallPcb);
+		mainScreen.removePreference(citVersionInfo);
+		
+		int type = SystemProperties.getInt("hw.board.id", -1);
+		if(type == 0 || type == 1) {
+            mainScreen.removePreference(findPreference("auto_test_no_cam"));
+            mainScreen.removePreference(findPreference("auto_test_one_cam"));
+		}
 
 		if (!ProjectControlUtil.isC802) {
-			PreferenceScreen mainScreen = (PreferenceScreen) findPreference("main");
 			mainScreen.removePreference(findPreference("test_usb"));
 		}
 		if (SystemProperties.getBoolean(Utils.PROP_DEBUG_ABLE, false)) {
@@ -134,7 +179,7 @@ public class Main extends PreferenceActivity {
 		if("single".equals(type)){
 			Utils2.getInstance().currentTestMode=Utils2.SINGLE;
 			fragment = Fragment.instantiate(this,SingleTest.class.getName());
-		}else if("auto".equals(type)){
+        }else if("auto".equals(type) || "auto_no_cam".equals(type) || "auto_one_cam".equals(type)){
             if(SystemProperties.getInt("hw.board.id", -1) == 2){
                  if(!sdMounted){
                         showWarningDialog(0);
@@ -152,6 +197,13 @@ public class Main extends PreferenceActivity {
                     return;
                 }
             }
+            
+            if("auto_no_cam".equals(type)){
+                camera_count = 0;
+            } else if("auto_one_cam".equals(type)){
+                camera_count = 1;
+            }
+            
 			fragment = Fragment.instantiate(this,AutoTest.class.getName());
 		}else if("pcba".equals(type)){
 			Utils2.getInstance().currentTestMode=Utils2.PCBA_1;
