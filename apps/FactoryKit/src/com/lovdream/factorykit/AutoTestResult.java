@@ -103,7 +103,7 @@ public class AutoTestResult extends Fragment{
 		tv = new TextView(getActivity());
 		tv.setTextSize(24);
 		results = buildTestResult();
-		view = results + Main.resultString + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.";
+		view = results + Main.resultString + "\n\nPlease run batch script, and after that turn off the Ignition. \n Device will shutdown.\n\n\n\n\n\n";
 		tv.setText(view);
 		tv.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 		mContext =  getActivity();

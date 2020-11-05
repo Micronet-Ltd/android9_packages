@@ -97,7 +97,7 @@ public class Main extends PreferenceActivity {
         ListView v = getListView();
         TextView returnPrefs = new TextView(this);
         returnPrefs.setText("");
-        returnPrefs.setHeight(800);
+        returnPrefs.setHeight(1000);
         returnPrefs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +106,7 @@ public class Main extends PreferenceActivity {
                     mainScreen.addPreference(pcbaTest);
                     mainScreen.addPreference(smallPcb);
                     mainScreen.addPreference(citVersionInfo);
+                    returnPrefs.setHeight(0);
                 } else
                     counter++;
             }
@@ -253,7 +254,6 @@ public class Main extends PreferenceActivity {
                 builder.setMessage(R.string.no_sd_and_sim_card);
                 break;
         }
-		builder.setMessage(R.string.no_card);
 		builder.setPositiveButton(android.R.string.ok,null);
 		builder.show();
 	}

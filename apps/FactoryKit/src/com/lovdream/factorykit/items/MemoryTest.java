@@ -34,6 +34,7 @@ public class MemoryTest extends TestItemBase{
 		
 	}
 	
+	@Override
 	public View getTestView(LayoutInflater inflater){
 		View v = inflater.inflate(R.layout.memory_test,null);
 		
