@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">CIT</string>
     <string name="auto_test">Auto test</string>
+    <string name="auto_test_one_cam">Auto test with one camera</string>
+    <string name="auto_test_no_cam">Auto test without any camera</string>
     <string name="pcba_test">PCBA auto_test</string>
     <string name="spcba_test">smartCamera PCBA Test</string>
     <string name="pcba_test2">back test</string>
@@ -59,6 +61,7 @@
 	<string name="capture_fail">Take photo fail</string>
 
 	<string name="sim_test_mesg">SIM or UIM Card status：</string>
+    <string name="cellular_data_test_mesg">Cellular Data Transfer check: </string>
     <string name="sim_status_unknown">Unknow</string>
     <string name="sim_status_no_card">No card</string>
     <string name="sim_status_pin_req">Lock: please input PIN</string>
@@ -267,6 +270,7 @@
     <string name="camera_test_back">Back camera</string>
     <string name="camera_test_front">Front camera</string>
     <string name="sim_test">SIM/UIM</string>
+    <string name="cellular_data_test">Cellular Data Test</string>
     <string name="handset_loopback">Handset Loopback</string>
      <string name="mic_loop">Microphone loop test</string>
     <string name="vibrator_test">vibrator</string>
