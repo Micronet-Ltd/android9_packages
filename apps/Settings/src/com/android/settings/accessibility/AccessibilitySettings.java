@@ -465,8 +465,7 @@ public class AccessibilitySettings extends SettingsPreferenceFragment implements
 
         // Font size.
         mFontSizePreferenceScreen = findPreference(FONT_SIZE_PREFERENCE_SCREEN);
-        removePreference(FONT_SIZE_PREFERENCE_SCREEN);
-        removePreference("accessibility_settings_screen_zoom");
+
         // Autoclick after pointer stops.
         mAutoclickPreferenceScreen = findPreference(AUTOCLICK_PREFERENCE_SCREEN);
 

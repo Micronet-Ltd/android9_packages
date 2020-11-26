@@ -345,7 +345,7 @@
 
    <!-- Entry of camera save path -->
     <string name="pref_camera_savepath_title">"存储位置"</string>
-    <string name="pref_camera_savepath_entry_0">"手机内存"</string>
+    <string name="pref_camera_savepath_entry_0">"话机"</string>
     <string name="pref_camera_savepath_entry_1">"SD卡"</string>
 
    <!-- Settings screen, Select Color effect title -->
@@ -772,6 +772,7 @@
     <string name="help_menu_switcher_1" translatable="true">"切换"</string>
     <string name="help_menu_switcher_2" translatable="true">"相机模式、视频模式"</string>
     <string name="help_menu_switcher_3" translatable="true">"和全景模式"</string>
-    <string name="pref_camera_reset_title">还原默认设置</string>
+
+
 
 </resources>

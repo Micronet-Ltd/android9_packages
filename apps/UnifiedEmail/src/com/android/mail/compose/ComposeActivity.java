@@ -171,9 +171,9 @@ public class ComposeActivity extends AppCompatActivity
 
     private static final String MAIL_TO = "mailto";
 
-    public static final String EXTRA_SUBJECT = "subject";
+    private static final String EXTRA_SUBJECT = "subject";
 
-    public static final String EXTRA_BODY = "body";
+    private static final String EXTRA_BODY = "body";
     private static final String EXTRA_TEXT_CHANGED ="extraTextChanged";
 
     private static final String EXTRA_SKIP_PARSING_BODY = "extraSkipParsingBody";
@@ -189,9 +189,9 @@ public class ComposeActivity extends AppCompatActivity
 
     // Extra that we can get passed from other activities
     @VisibleForTesting
-    public static final String EXTRA_TO = "to";
-    public static final String EXTRA_CC = "cc";
-    public static final String EXTRA_BCC = "bcc";
+    protected static final String EXTRA_TO = "to";
+    private static final String EXTRA_CC = "cc";
+    private static final String EXTRA_BCC = "bcc";
 
     public static final String ANALYTICS_CATEGORY_ERRORS = "compose_errors";
 
@@ -247,7 +247,7 @@ public class ComposeActivity extends AppCompatActivity
     private static final String EXTRA_IN_REFERENCE_TO_MESSAGE = "in-reference-to-message";
     // If this is a reply/forward then this extra will hold a uri we must query
     // to get the original message.
-    public static final String EXTRA_IN_REFERENCE_TO_MESSAGE_URI = "in-reference-to-message-uri";
+    protected static final String EXTRA_IN_REFERENCE_TO_MESSAGE_URI = "in-reference-to-message-uri";
     // If this is an action to edit an existing draft message, this extra will hold the
     // draft message
     private static final String ORIGINAL_DRAFT_MESSAGE = "original-draft-message";

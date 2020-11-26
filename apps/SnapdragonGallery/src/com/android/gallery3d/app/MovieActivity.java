@@ -79,9 +79,6 @@ import org.codeaurora.gallery3d.video.ExtensionHelper;
 import org.codeaurora.gallery3d.video.MovieTitleHelper;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 
 /**
  * This activity plays a video from a specified URI.
@@ -631,17 +628,6 @@ public class MovieActivity extends AbstractPermissionActivity {
         super.onPause();
         mMovieHooker.onPause();
     }
-    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-                if  (state == TelephonyManager.CALL_STATE_IDLE) {
-                    mPlayer.requestAudioFocus();
-                    //mPlayer.onPlayPause();
-                    mPlayer.onPausePlay();
-                }
-            }
-        };
 
     @Override
     public void onResume() {
@@ -652,9 +638,6 @@ public class MovieActivity extends AbstractPermissionActivity {
             intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
             registerReceiver(mReceiver, intentFilter);
         }
-        TelephonyManager tm =
-                (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 
         mResumed = true;
         if (isPermissionGranted()) {
@@ -707,9 +690,6 @@ public class MovieActivity extends AbstractPermissionActivity {
             super.onDestroy();
             return;
         }
-        TelephonyManager tm =
-                (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         releaseEffects();
         mPlayer.onDestroy();
         super.onDestroy();

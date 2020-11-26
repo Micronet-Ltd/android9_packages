@@ -190,9 +190,6 @@ public class TelephonyProvider extends ContentProvider
 
     private static final String DEFAULT_PROTOCOL = "IP";
     private static final String DEFAULT_ROAMING_PROTOCOL = "IP";
-    // Used to check if certain queries contain subqueries that may attempt to access sensitive
-    // fields in the carriers db.
-    private static final String SQL_SELECT_TOKEN = "select";
 
     private static final UriMatcher s_urlMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -2527,26 +2524,24 @@ public class TelephonyProvider extends ContentProvider
             qb.appendWhere(TextUtils.join(" AND ", constraints));
         }
 
-        // Determine if we need to do a check for fields in the selection
-        boolean selectionOrSortContainsSensitiveFields;
-        try {
-            selectionOrSortContainsSensitiveFields = containsSensitiveFields(selection);
-            selectionOrSortContainsSensitiveFields |= containsSensitiveFields(sort);
-        } catch (Exception e) {
-            // Malformed sql, check permission anyway.
-            selectionOrSortContainsSensitiveFields = true;
-        }
-
-        if (selectionOrSortContainsSensitiveFields) {
-            try {
-                checkPermission();
-            } catch (SecurityException e) {
-                EventLog.writeEvent(0x534e4554, "124107808", Binder.getCallingUid());
-                throw e;
-            }
-        }
-
         if (match != URL_SIMINFO) {
+            // Determine if we need to do a check for fields in the selection
+            boolean selectionContainsSensitiveFields;
+            try {
+                selectionContainsSensitiveFields = containsSensitiveFields(selection);
+            } catch (Exception e) {
+                // Malformed sql, check permission anyway.
+                selectionContainsSensitiveFields = true;
+            }
+
+            if (selectionContainsSensitiveFields) {
+                try {
+                    checkPermission();
+                } catch (SecurityException e) {
+                    EventLog.writeEvent(0x534e4554, "124107808", Binder.getCallingUid());
+                    throw e;
+                }
+            }
             if (projectionIn != null) {
                 for (String column : projectionIn) {
                     if (TYPE.equals(column) ||
@@ -2564,9 +2559,6 @@ public class TelephonyProvider extends ContentProvider
                 // null returns all columns, so need permission check
                 checkPermission();
             }
-        } else {
-            // For the sim_info table, we only require READ_PHONE_STATE
-            checkReadSimInfoPermission();
         }
 
         SQLiteDatabase db = getReadableDatabase();
@@ -2597,10 +2589,9 @@ public class TelephonyProvider extends ContentProvider
     private boolean containsSensitiveFields(String sqlStatement) {
         try {
             SqlTokenFinder.findTokens(sqlStatement, s -> {
-                switch (s.toLowerCase()) {
+                switch (s) {
                     case USER:
                     case PASSWORD:
-                    case SQL_SELECT_TOKEN:
                         throw new SecurityException();
                 }
             });
@@ -3226,23 +3217,6 @@ public class TelephonyProvider extends ContentProvider
             }
         }
         throw new SecurityException("No permission to write APN settings");
-    }
-
-    private void checkReadSimInfoPermission() {
-        try {
-            // Even if the caller doesn't have READ_PHONE_STATE, we'll let them access sim_info as
-            // long as they have the more restrictive write_apn_settings or carrier priv.
-            checkPermission();
-            return;
-        } catch (SecurityException e) {
-            int status = getContext().checkCallingOrSelfPermission(
-                    "android.permission.READ_PHONE_STATE");
-            if (status == PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            EventLog.writeEvent(0x534e4554, "124107808", Binder.getCallingUid());
-            throw new SecurityException("No READ_PHONE_STATE permission");
-        }
     }
 
     private DatabaseHelper mOpenHelper;

@@ -703,13 +703,6 @@ public class MoviePlayer implements
             onPlayVideo();
         }
     }
-    public void onPausePlay() {
-         if (mVideoView.isPlaying()) {
-             onPlayVideo();
-         } else {
-             onPauseVideo();
-         }
-     }
 
     private void onPlayVideo() {
         boolean result = playVideo();

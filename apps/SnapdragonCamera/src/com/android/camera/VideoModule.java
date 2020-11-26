@@ -1311,16 +1311,6 @@ public class VideoModule implements CameraModule,
             mUI.hideSurfaceView();
         }
     }
-    @Override
-    public void restorePreferences() {
-        CameraSettings settings = new CameraSettings(mActivity, mCameraDevice.getParameters(),
-                mCameraId, CameraHolder.instance().getCameraInfo());
-        mParameters = mCameraDevice.getParameters();
-        mPreferences = ComboPreferences.get(mActivity);
-        settings.restorePreferences(mActivity,mPreferences,mParameters);
-        setMute(false, true);
-        mUI.reflashMuteButton();
-    }
 
     @Override
     public void onPauseBeforeSuper() {
@@ -3000,7 +2990,6 @@ public class VideoModule implements CameraModule,
         long dateTaken = System.currentTimeMillis();
         String title = CameraUtil.createJpegName(dateTaken);
         ExifInterface exif = Exif.getExif(data);
-        exif.addMakeAndModelTag();
         int orientation = Exif.getOrientation(exif);
         Size s = mParameters.getPictureSize();
         mActivity.getMediaSaveService().addImage(

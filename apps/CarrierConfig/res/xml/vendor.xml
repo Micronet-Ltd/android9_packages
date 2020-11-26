@@ -3,7 +3,4 @@
      filtering rules are the same as those in carrier_config*.xml files. This
      file is read after any specific config file from the assets folder, so it
      must use explicit filters for MCC ad MNC if that is desired. -->
-<carrier_config>
-<string name="config_ims_package_override_string">com.google.android.ims</string>
-</carrier_config>
 <carrier_config_list />

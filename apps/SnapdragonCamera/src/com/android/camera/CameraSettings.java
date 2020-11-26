@@ -113,7 +113,6 @@ public class CameraSettings {
     public static final String KEY_HDR_MODE = "pref_camera_hdr_mode_key";
     public static final String KEY_HDR_NEED_1X = "pref_camera_hdr_need_1x_key";
     public static final String KEY_DEVELOPER_MENU = "pref_developer_menu_key";
-    public static final String KEY_RESET_MODE = "pref_reset_key";
 
     public static final String KEY_VIDEO_SNAPSHOT_SIZE = "pref_camera_videosnapsize_key";
     public static final String KEY_VIDEO_HIGH_FRAME_RATE = "pref_camera_hfr_key";
@@ -810,9 +809,8 @@ public class CameraSettings {
         }
 
         if (pictureFormat!= null) {
-            android.util.Log.w("fy","initpreferences");
-            //filterUnsupportedOptions(group,
-             //       pictureFormat, getSupportedPictureFormatLists());
+            filterUnsupportedOptions(group,
+                    pictureFormat, getSupportedPictureFormatLists());
         }
 
         if(advancedFeatures != null) {

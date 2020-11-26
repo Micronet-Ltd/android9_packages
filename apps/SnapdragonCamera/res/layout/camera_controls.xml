@@ -15,12 +15,10 @@
 -->
 <com.android.camera.ui.CameraControls xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/camera_controls"
-    android:focusable="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <View
-    android:focusable="false"
         android:id="@+id/blocker"
         android:layout_width="match_parent"
         android:layout_height="@dimen/switcher_size"
@@ -28,7 +26,6 @@
         android:clickable="true" />
 
     <include
-    android:focusable="false"
         android:layout_width="64dip"
         android:layout_height="64dip"
         android:layout_gravity="bottom|right"
@@ -37,21 +34,18 @@
         layout="@layout/menu_indicators" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/menu"
         style="@style/MenuButton"
         android:contentDescription="@string/accessibility_menu_button"
         android:src="@drawable/ic_settings" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/mute_button"
         style="@style/MenuButton"
         android:contentDescription="@string/mute_button_desc"
         android:src="@drawable/ic_unmuted_button" />
 
     <com.android.camera.ui.ModuleSwitcher
-    android:focusable="false"
         android:id="@+id/camera_switcher"
         style="@style/SwitcherButton"
         android:layout_gravity="bottom|left"
@@ -67,7 +61,7 @@
         android:layout_marginBottom="@dimen/shutter_offset"
         android:clickable="true"
         android:contentDescription="@string/accessibility_shutter_button"
-        android:focusable="false"
+        android:focusable="true"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_new_shutter" />
 
@@ -80,12 +74,11 @@
         android:layout_marginBottom="@dimen/shutter_offset"
         android:clickable="true"
         android:contentDescription="@string/accessibility_shutter_button"
-        android:focusable="false"
+        android:focusable="true"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_new_shutter_video" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/preview_thumb"
         android:layout_width="@dimen/capture_size"
         android:layout_height="@dimen/capture_size"
@@ -95,36 +88,26 @@
         android:scaleType="fitCenter" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/front_back_switcher"
         style="@style/ToggleButton" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/hdr_switcher"
         style="@style/ToggleButton" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/scene_mode_switcher"
         style="@style/ToggleButton" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/filter_mode_switcher"
         style="@style/ToggleButton" />
 
     <com.android.camera.ui.RotateImageView
-    android:focusable="false"
         android:id="@+id/ts_makeup_switcher"
-        style="@style/ToggleButton" />
-    <com.android.camera.ui.RotateImageView
-    android:focusable="false"
-        android:id="@+id/flash_switcher"
         style="@style/ToggleButton" />
 
     <LinearLayout
-    android:focusable="false"
         android:id="@+id/remaining_photos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -133,7 +116,6 @@
         android:visibility="gone" >
 
         <TextView
-        android:focusable="false"
             android:id="@+id/remaining_photos_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,7 +124,6 @@
             android:visibility="gone" />
 
         <ImageView
-        android:focusable="false"
             android:id="@+id/remaining_photos_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

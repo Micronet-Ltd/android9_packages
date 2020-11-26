@@ -64,11 +64,6 @@ import com.android.settingslib.RestrictedLockUtils;
 
 import java.util.List;
 
-import android.os.BatteryManager;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.widget.Toast;
-
 /**
  * Confirm and execute a reset of the device to a clean "just out of the box"
  * state.  Multiple confirmations are required: first, a general "are you sure
@@ -102,21 +97,7 @@ public class MasterClear extends InstrumentedFragment implements OnGlobalLayoutL
     @Override
     public void onGlobalLayout() {
         mInitiateButton.setEnabled(hasReachedBottom(mScrollView));
-        if (IsBatteryInadequate()){//add by fuying about battery 30% cant reset
-            Toast.makeText(context,getResources().getString(R.string.toast_reset_factory_button),Toast.LENGTH_LONG).show();
-            mInitiateButton.setEnabled(false);
-        }
     }
-    private boolean IsBatteryInadequate(){//add by fuying about battery 30% cant reset
-        Intent batteryBroadcast = context.registerReceiver(null,
-                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        final int batteryLevel = com.android.settingslib.Utils.getBatteryLevel(batteryBroadcast);
-        if (batteryLevel>30) {
-            return false;
-        } else {
-            return true;
-        }
-     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -353,12 +334,7 @@ public class MasterClear extends InstrumentedFragment implements OnGlobalLayoutL
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX,
                 int oldScrollY) {
                 if (v instanceof ScrollView && hasReachedBottom((ScrollView) v)) {
-                    if (!IsBatteryInadequate()) {//add by fuying about battery 30% cant reset
-                        mInitiateButton.setEnabled(true);
-                    } else {
-                        Toast.makeText(context,getResources().getString(R.string.toast_reset_factory_button),Toast.LENGTH_LONG).show();
-                        mInitiateButton.setEnabled(false);
-                    }
+                    mInitiateButton.setEnabled(true);
                     mScrollView.setOnScrollChangeListener(null);
                 }
             }
@@ -517,12 +493,11 @@ public class MasterClear extends InstrumentedFragment implements OnGlobalLayoutL
         final boolean hasOtherUsers = (um.getUserCount() - profilesSize) > 0;
         otherUsers.setVisibility(hasOtherUsers ? View.VISIBLE : View.GONE);
     }
-    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        context = getContext();
+        final Context context = getContext();
         final EnforcedAdmin admin = RestrictedLockUtils.checkIfRestrictionEnforced(context,
                 UserManager.DISALLOW_FACTORY_RESET, UserHandle.myUserId());
         final UserManager um = UserManager.get(context);

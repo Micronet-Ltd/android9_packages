@@ -134,7 +134,7 @@ public class SpeakerHooker extends MovieHooker {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        //mMenuSpeakerButton = menu.add(0, getMenuActivityId(MENU_SPEAKER), 0, R.string.speaker_on);
+        mMenuSpeakerButton = menu.add(0, getMenuActivityId(MENU_SPEAKER), 0, R.string.speaker_on);
         return true;
     }
 
@@ -183,7 +183,7 @@ public class SpeakerHooker extends MovieHooker {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        //updateSpeakerButton();
+        updateSpeakerButton();
         return true;
     }
 

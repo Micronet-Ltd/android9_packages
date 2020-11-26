@@ -65,7 +65,6 @@ import com.android.camera.util.CameraUtil;
 
 import org.codeaurora.snapcam.R;
 import org.codeaurora.snapcam.wrapper.ParametersWrapper;
-import java.io.File;
 
 public class PhotoMenu extends MenuController
         implements ListMenu.Listener,
@@ -96,7 +95,6 @@ public class PhotoMenu extends MenuController
     private int mSceneStatus;
     private View mHdrSwitcher;
     private View mTsMakeupSwitcher;
-    private View mFlashSwitcher;
     private View mFrontBackSwitcher;
     private View mSceneModeSwitcher;
     private View mFilterModeSwitcher;
@@ -130,7 +128,6 @@ public class PhotoMenu extends MenuController
         mFrontBackSwitcher = ui.getRootView().findViewById(R.id.front_back_switcher);
         mHdrSwitcher = ui.getRootView().findViewById(R.id.hdr_switcher);
         mTsMakeupSwitcher = ui.getRootView().findViewById(R.id.ts_makeup_switcher);
-        mFlashSwitcher = ui.getRootView().findViewById(R.id.flash_switcher);
         mSceneModeSwitcher = ui.getRootView().findViewById(R.id.scene_mode_switcher);
         mFilterModeSwitcher = ui.getRootView().findViewById(R.id.filter_mode_switcher);
         mMakeupListener = makeupListener;
@@ -165,23 +162,15 @@ public class PhotoMenu extends MenuController
         if(TsMakeupManager.HAS_TS_MAKEUP) {
             initMakeupModeButton(mTsMakeupSwitcher);
         } else {
-            mFlashSwitcher.setVisibility(View.INVISIBLE);
-            //mHdrSwitcher.setVisibility(View.INVISIBLE);
+            mHdrSwitcher.setVisibility(View.INVISIBLE);
         }
 
         mFrontBackSwitcher.setVisibility(View.INVISIBLE);
         if(!TsMakeupManager.HAS_TS_MAKEUP) {
             // HDR.
-            /*
             if (group.findPreference(CameraSettings.KEY_CAMERA_HDR) != null) {
                 mHdrSwitcher.setVisibility(View.VISIBLE);
                 initSwitchItem(CameraSettings.KEY_CAMERA_HDR, mHdrSwitcher);
-            } else {
-                mHdrSwitcher.setVisibility(View.INVISIBLE);
-            }*/
-            if (group.findPreference(CameraSettings.KEY_FLASH_MODE) != null) {
-                mFlashSwitcher.setVisibility(View.VISIBLE);
-                initSwitchItem(CameraSettings.KEY_FLASH_MODE, mFlashSwitcher);
             } else {
                 mHdrSwitcher.setVisibility(View.INVISIBLE);
             }
@@ -203,8 +192,7 @@ public class PhotoMenu extends MenuController
                 CameraSettings.KEY_QC_CHROMA_FLASH,
                 CameraSettings.KEY_REDEYE_REDUCTION,
                 CameraSettings.KEY_SELFIE_MIRROR,
-                CameraSettings.KEY_SHUTTER_SOUND,
-                CameraSettings.KEY_RESET_MODE
+                CameraSettings.KEY_SHUTTER_SOUND
         };
 
         mOtherKeys2 = new String[] {
@@ -212,7 +200,6 @@ public class PhotoMenu extends MenuController
                 CameraSettings.KEY_FLASH_MODE,
                 CameraSettings.KEY_RECORD_LOCATION,
                 CameraSettings.KEY_PICTURE_SIZE,
-                CameraSettings.KEY_RESET_MODE,
                 CameraSettings.KEY_JPEG_QUALITY,
                 CameraSettings.KEY_TIMER,
                 CameraSettings.KEY_CAMERA_SAVEPATH,
@@ -751,12 +738,8 @@ public class PhotoMenu extends MenuController
             popup1.setPreferenceEnabled(CameraSettings.KEY_INSTANT_CAPTURE, false);
 
             if(!TsMakeupManager.HAS_TS_MAKEUP) {
-                /*
                 if (mHdrSwitcher.getVisibility() == View.VISIBLE) {
                     buttonSetEnabled(mHdrSwitcher, true);
-                }*/
-                if (mFlashSwitcher.getVisibility() == View.VISIBLE) {
-                    buttonSetEnabled(mFlashSwitcher, true);
                 }
             }
         } else {
@@ -778,20 +761,14 @@ public class PhotoMenu extends MenuController
                 popup1.setPreferenceEnabled(CameraSettings.KEY_INSTANT_CAPTURE, false);
                 setPreference(CameraSettings.KEY_CAMERA_HDR, mSettingOff);
                 if(!TsMakeupManager.HAS_TS_MAKEUP) {
-                    /*if (mHdrSwitcher.getVisibility() == View.VISIBLE) {
+                    if (mHdrSwitcher.getVisibility() == View.VISIBLE) {
                         buttonSetEnabled(mHdrSwitcher, false);
-                    }*/
-                    if (mFlashSwitcher.getVisibility() == View.VISIBLE) {
-                        buttonSetEnabled(mFlashSwitcher, false);
                     }
                 }
             } else {
                 if(!TsMakeupManager.HAS_TS_MAKEUP) {
-                    /*if (mHdrSwitcher.getVisibility() == View.VISIBLE) {
+                    if (mHdrSwitcher.getVisibility() == View.VISIBLE) {
                         buttonSetEnabled(mHdrSwitcher, true);
-                    }*/
-                    if (mFlashSwitcher.getVisibility() == View.VISIBLE) {
-                        buttonSetEnabled(mFlashSwitcher, true);
                     }
                 }
             }
@@ -881,7 +858,7 @@ public class PhotoMenu extends MenuController
 
     public void initMakeupModeButton(View button) {
         if(!TsMakeupManager.HAS_TS_MAKEUP) {
-            return;//HDR
+            return;
         }
         button.setVisibility(View.INVISIBLE);
         final IconListPreference pref = (IconListPreference) mPreferenceGroup
@@ -1160,22 +1137,6 @@ public class PhotoMenu extends MenuController
             }
         });
     }
-    private void resetUi(){
-        IconListPreference filter_pref = (IconListPreference) mPreferenceGroup
-                .findPreference(CameraSettings.KEY_FILTER_MODE);
-        if (filter_pref != null)
-            ((ImageView)mFilterModeSwitcher).setImageResource(((IconListPreference) filter_pref).getLargeIconIds()[0]);
-        mFilterModeSwitcher.setEnabled(true);
-
-        IconListPreference color_pref = (IconListPreference)mPreferenceGroup.findPreference(CameraSettings.KEY_COLOR_EFFECT);
-        color_pref.setValueIndex(0);
-
-        IconListPreference scene_pref = (IconListPreference)mPreferenceGroup.findPreference(CameraSettings.KEY_SCENE_MODE);
-        scene_pref.setValueIndex(0);
-        if (scene_pref != null)
-            ((ImageView)mSceneModeSwitcher).setImageResource(scene_pref.getThumbnailIds()[0]);
-        mSceneModeSwitcher.setEnabled(true);
-    }
 
     public void addFilterMode() {
         final IconListPreference pref = (IconListPreference) mPreferenceGroup
@@ -1427,6 +1388,7 @@ public class PhotoMenu extends MenuController
     public void onSettingChanged(ListPreference pref) {
         // Reset the scene mode if HDR is set to on. Reset HDR if scene mode is
         // set to non-auto.
+
         boolean needToChangeMode = false;
         if (same(pref, CameraSettings.KEY_SCENE_MODE,
                 CameraSettings.KEY_SCENE_MODE_SNAPSHOT_BOKEH) &&
@@ -1509,6 +1471,7 @@ public class PhotoMenu extends MenuController
                 setPreference(CameraSettings.KEY_LONGSHOT, mSettingOff);
             }
         }
+
         String refocusOn = mActivity.getString(R.string
                 .pref_camera_advanced_feature_value_refocus_on);
         if (notSame(pref, CameraSettings.KEY_SCENE_MODE, refocusOn)) {
@@ -1573,14 +1536,6 @@ public class PhotoMenu extends MenuController
         } else if (notSame(pref, SettingsManager.KEY_CAMERA2, "enable")) {
             mActivity.onModuleSelected(ModuleSwitcher.PHOTO_MODULE_INDEX);
         }
-        android.util.Log.w("fy",""+pref.getValue());
-        if (same(pref, CameraSettings.KEY_RESET_MODE, mActivity.getString(R.string.pref_camera_reset_default))) {
-        } else if (same(pref, CameraSettings.KEY_RESET_MODE, "on")) {
-            resetUi();
-            mActivity.getCurrentModule().restorePreferences();
-            reloadPreferences();
-        }
-
     }
 
     public int getOrientation() {
@@ -1593,13 +1548,11 @@ public class PhotoMenu extends MenuController
             mFilterModeSwitcher.setVisibility(View.GONE);
             mFrontBackSwitcher.setVisibility(View.GONE);
             mTsMakeupSwitcher.setVisibility(View.GONE);
-            mFlashSwitcher.setVisibility(View.GONE);
         } else {
             mSceneModeSwitcher.setVisibility(View.VISIBLE);
             mFilterModeSwitcher.setVisibility(View.VISIBLE);
             mFrontBackSwitcher.setVisibility(View.VISIBLE);
-            mTsMakeupSwitcher.setVisibility(View.GONE);
-            mFlashSwitcher.setVisibility(View.VISIBLE);
+            mTsMakeupSwitcher.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1610,7 +1563,7 @@ public class PhotoMenu extends MenuController
         if (TsMakeupManager.HAS_TS_MAKEUP) {
             mTsMakeupSwitcher.setVisibility(status);
         } else {
-            mFlashSwitcher.setVisibility(status);
+            mHdrSwitcher.setVisibility(status);
         }
         mSceneModeSwitcher.setVisibility(status);
         mFilterModeSwitcher.setVisibility(status);

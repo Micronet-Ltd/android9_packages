@@ -4170,5 +4170,4 @@
     <string name="reset_network_progress_title" >"正在重置"</string>
     <!-- Reset network progress screen text [CHAR LIMIT=75] -->
     <string name="reset_network_progress_text">"请稍候…"</string>
-<string name="toast_reset_factory_button">"电量大于30%才能操作"</string>
 </resources>

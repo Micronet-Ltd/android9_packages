@@ -37,9 +37,6 @@ import com.android.settingslib.bluetooth.LocalBluetoothManager;
 
 import java.util.Collection;
 import java.util.WeakHashMap;
-import android.telephony.TelephonyManager;
-import android.content.Context;
-import android.text.TextUtils;
 
 /**
  * Parent class for settings fragments that contain a list of Bluetooth
@@ -213,17 +210,10 @@ public abstract class DeviceListPreferenceFragment extends
     @VisibleForTesting
     void updateFooterPreference(Preference myDevicePreference) {
         final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String address = telephonyManager.getBtAddr();
-        if (!TextUtils.isEmpty(address)) {
-            myDevicePreference.setTitle(getString(
-                    R.string.bluetooth_footer_mac_message,
-                    bidiFormatter.unicodeWrap(address)));
-        } else {
-            myDevicePreference.setTitle(getString(
-                    R.string.bluetooth_footer_mac_message,
-                    bidiFormatter.unicodeWrap(mLocalAdapter.getAddress())));
-        }
+
+        myDevicePreference.setTitle(getString(
+                R.string.bluetooth_footer_mac_message,
+                bidiFormatter.unicodeWrap(mLocalAdapter.getAddress())));
     }
 
     @Override

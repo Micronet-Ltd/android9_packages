@@ -94,6 +94,8 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
         final InstallAppsState appState = new InstallAppsState();
         appState.permissionRequested = hasRequestedAppOpPermission(
                 Manifest.permission.REQUEST_INSTALL_PACKAGES, packageName);
+        appState.permissionGranted = hasPermission(Manifest.permission.REQUEST_INSTALL_PACKAGES,
+                uid);
         appState.appOpMode = getAppOpMode(AppOpsManager.OP_REQUEST_INSTALL_PACKAGES, uid,
                 packageName);
         return appState;
@@ -104,6 +106,7 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
      */
     public static class InstallAppsState {
         boolean permissionRequested;
+        boolean permissionGranted;
         int appOpMode;
 
         public InstallAppsState() {
@@ -111,7 +114,11 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
         }
 
         public boolean canInstallApps() {
-            return appOpMode == AppOpsManager.MODE_ALLOWED;
+            if (appOpMode == AppOpsManager.MODE_DEFAULT) {
+                return permissionGranted;
+            } else {
+                return appOpMode == AppOpsManager.MODE_ALLOWED;
+            }
         }
 
         public boolean isPotentialAppSource() {
@@ -120,8 +127,8 @@ public class AppStateInstallAppsBridge extends AppStateBaseBridge {
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("[permissionRequested: " + permissionRequested);
+            StringBuilder sb = new StringBuilder("[permissionGranted: " + permissionGranted);
+            sb.append(", permissionRequested: " + permissionRequested);
             sb.append(", appOpMode: " + appOpMode);
             sb.append("]");
             return sb.toString();

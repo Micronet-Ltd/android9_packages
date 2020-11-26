@@ -305,13 +305,7 @@ public class VideoUI implements PieRenderer.PieListener,
         mCameraControls.setMargins(mTopMargin, mBottomMargin);
         ((ViewGroup)mRootView).removeView(mRecordingTimeRect);
     }
-    public void reflashMuteButton(){
-        if(!((VideoModule)mController).isAudioMute()) {
-            mMuteButton.setImageResource(R.drawable.ic_unmuted_button);
-        } else {
-            mMuteButton.setImageResource(R.drawable.ic_muted_button);
-        }
-    }
+
     private void calculateMargins(Point size) {
         int l = size.x > size.y ? size.x : size.y;
         int tm = mActivity.getResources().getDimensionPixelSize(R.dimen.preview_top_margin);
@@ -487,19 +481,19 @@ public class VideoUI implements PieRenderer.PieListener,
                         (int) scaledTextureHeight, Gravity.CENTER);
             }
             else{		
-            Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
-                    + ", scaledTextureHeight = " + scaledTextureHeight);
+		Log.v(TAG, "setTransformMatrix: scaledTextureWidth = " + scaledTextureWidth
+			+ ", scaledTextureHeight = " + scaledTextureHeight);
 
-            if (((rotation == 0 || rotation == 180) && scaledTextureWidth > scaledTextureHeight)
-                    || ((rotation == 90 || rotation == 270)
-                        && scaledTextureWidth < scaledTextureHeight)) {
-                lp = new FrameLayout.LayoutParams((int) scaledTextureHeight,
-                        (int) scaledTextureWidth, Gravity.CENTER);
-            } else {
-                lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
-                        (int) scaledTextureHeight, Gravity.CENTER);
+		if (((rotation == 0 || rotation == 180) && scaledTextureWidth > scaledTextureHeight)
+			|| ((rotation == 90 || rotation == 270)
+			    && scaledTextureWidth < scaledTextureHeight)) {
+		    lp = new FrameLayout.LayoutParams((int) scaledTextureHeight,
+			    (int) scaledTextureWidth, Gravity.CENTER);
+		} else {
+		    lp = new FrameLayout.LayoutParams((int) scaledTextureWidth,
+			    (int) scaledTextureHeight, Gravity.CENTER);
+		}
             }
-        }
         }        
 
         if (mSurfaceTextureUncroppedWidth != scaledTextureWidth ||
@@ -1217,6 +1211,8 @@ public class VideoUI implements PieRenderer.PieListener,
     }
 
     public void setOrientation(int orientation, boolean animation) {
+	//orientation=0;
+	//animation=true; 
         mCameraControls.setOrientation(orientation, animation);
         if (mMenuLayout != null)
             mMenuLayout.setOrientation(orientation, animation);

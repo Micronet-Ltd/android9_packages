@@ -414,7 +414,7 @@ class AndroidCameraManagerImpl implements CameraManager {
 
                     case SET_DISPLAY_ORIENTATION:
                         Log.w(TAG,"SET_DISPLAY_ORIENTATION-----"+msg.arg1);
-                        mCamera.setDisplayOrientation(msg.arg1);
+                        mCamera.setDisplayOrientation(msg.arg1%360);
                         return;
 
                     case SET_ZOOM_CHANGE_LISTENER:
